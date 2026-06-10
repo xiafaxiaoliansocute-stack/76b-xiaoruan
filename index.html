@@ -299,42 +299,10 @@ margin-bottom:8px;">
 2306-76b-实时数据汇总
 </div>
 
-<button class="run-btn" onclick="runPython()">
-🚀 Khởi chạy Python
-</button>
 
 <button class="run-btn" onclick="queryData()">
 🔍 查询数据
 </button>
-
-<!-- SCRIPT -->
-<script>
-function runPython(){
-
-    
-    fetch("http://127.0.0.1:5000/run-python")
-    .then(res => res.json())
-    .then(data => {
-
-        // nếu Python có trả output
-        let output = data.output || "Không có output";
-
-        alert("✅ Python chạy xong:\n\n" + output);
-
-       loadData();
-
-        console.log("Python result:", data); 
-
-    })
-    .catch(err => {
-
-        console.error(err);
-        alert("❌ Không kết nối được Python server\n\nHãy chắc chắn bạn đã chạy:\npython3 main.py");
-
-    });
-
-}
-</script>
 
 <table>
 <thead>
@@ -437,8 +405,7 @@ renderTab2();
 
 loadData();
 
-/* cập nhật mỗi 2 giây */
-setInterval(loadData,2000);
+// setInterval(loadData,2000);
 
 /* ================= TAB 1 (GIỮ NGUYÊN) ================= */
 function renderTab1(data){
@@ -569,31 +536,66 @@ let diffRate = recharge ? (diff/recharge*100).toFixed(2)+"%" : "0%";
 let p = d.parentList || {};
 let c = d.childList || {};
 
-let avg = 0;
 
-if(item.key==="ALL_TOTAL"){
-    avg = n.rechargeCount
-        ? (n.rechargeAmount / n.rechargeCount).toFixed(2)
+let all = globalData["ALL_TOTAL"] || {};
+
+let normal = all.normalList || {};
+let parent = all.parentList || {};
+let child = all.childList || {};
+let avg = "";
+let nextAvg = "";
+
+if(item.key==="ALL_TOTAL"){      // 大盘
+
+    avg = normal.rechargeCount
+        ? (normal.rechargeAmount / normal.rechargeCount).toFixed(2)
+        : 0;
+
+    nextAvg = normal.firstRechargeCount
+        ? (normal.firstRechargeAmount / normal.firstRechargeCount).toFixed(2)
         : 0;
 }
-/* 直推 */
-else if(item.key==="fb-h5"){
-    avg = p.rechargeCount
-        ? (p.rechargeAmount / p.rechargeCount).toFixed(2)
+else if(item.key==="fb-h5"){     // 直推
+
+    avg = parent.rechargeCount
+        ? (parent.rechargeAmount / parent.rechargeCount).toFixed(2)
+        : 0;
+
+    nextAvg = parent.firstRechargeCount
+        ? (parent.firstRechargeAmount / parent.firstRechargeCount).toFixed(2)
         : 0;
 }
-/* 裂变 */
-else if(item.key==="fb-pwa"){
-    avg = c.rechargeCount
-        ? (c.rechargeAmount / c.rechargeCount).toFixed(2)
+else if(item.key==="fb-pwa"){    // 裂变
+
+    avg = child.rechargeCount
+        ? (child.rechargeAmount / child.rechargeCount).toFixed(2)
         : 0;
-}
-/* 首存 */
-else if(item.key==="fb-ios"){
-    avg = n.firstRechargeCount
-        ? (n.firstRechargeAmount / n.firstRechargeCount).toFixed(2)
+
+    nextAvg = child.firstRechargeCount
+        ? (child.firstRechargeAmount / child.firstRechargeCount).toFixed(2)
         : 0;
+        
 }
+else if(item.key==="fb-ios"){    // 首充
+
+   console.log(
+    "首充",
+    normal.firstRechargeAmount,
+    normal.firstRechargeCount
+);
+
+avg =
+    Number(normal.firstRechargeCount) > 0
+    ? (
+        Number(normal.firstRechargeAmount) /
+        Number(normal.firstRechargeCount)
+      ).toFixed(2)
+    : "0.00";
+
+    nextAvg = "";
+}
+console.log(item.key, avg, nextAvg);
+
 let h5 = globalData["fb-h5"]?.normalList || {};
 let pwa = globalData["fb-pwa"]?.normalList || {};
 let ios = globalData["fb-ios"]?.normalList || {};
@@ -695,11 +697,17 @@ let fbFirstAvg = (
 fbFirstAvg = isFinite(fbFirstAvg)
     ? fbFirstAvg.toFixed(2)
     : 0;
-let registerCount = n.registerCount || 0;
+    /* CỘT 注册转化率 */
+let parentRegister = p.registerCount || 0;
+let parentFirstRecharge = p.firstRechargeCount || 0;
 
 let regRechargeRate =
-    registerCount > 0
-    ? ((n.rechargeCount || 0) / registerCount * 100).toFixed(2) + "%"
+    parentRegister > 0
+    ? (
+        parentFirstRecharge /
+        parentRegister *
+        100
+      ).toFixed(2) + "%"
     : "0%";
 
 html += `
@@ -764,23 +772,22 @@ item.key==="fb-ios" ? "首充" :
 
 <td>
 ${
-item.key==="tt-pwa" ||
-item.key==="kwai-pwa" ||
-item.key==="回访" ||
-item.key==="ws-h5"
-? ""
-: (n.rechargeCount ? (recharge/n.rechargeCount).toFixed(2) : "")
+item.key==="ALL_TOTAL" ||
+item.key==="fb-h5" ||
+item.key==="fb-pwa" ||
+item.key==="fb-ios"
+? avg
+: ""
 }
 </td>
 
 <td>
 ${
-item.key==="tt-pwa" ||
-item.key==="kwai-pwa" ||
-item.key==="回访" ||
-item.key==="ws-h5"
-? ""
-: (n.firstRechargeCount ? (recharge/n.firstRechargeCount).toFixed(2) : "")
+item.key==="ALL_TOTAL" ||
+item.key==="fb-h5" ||
+item.key==="fb-pwa"
+? nextAvg
+: ""
 }
 </td>
 
@@ -983,10 +990,21 @@ item.show==="FB-H5" ? "直推" :
 item.show==="FB-PWA" ? "裂变" : ""}
 </td>
 
+
+
 <td class="green">
-${item.show==="大盘" ? "33.57%" :
-item.show==="FB-H5" ? "32.05%" :
-item.show==="FB-PWA" ? "39.02%" : ""}
+${
+item.show==="大盘"
+? (globalData.repeat_rate?.first ?? 0).toFixed(2) + "%"
+
+: item.show==="FB-H5"
+? (globalData.repeat_rate?.parent ?? 0).toFixed(2) + "%"
+
+: item.show==="FB-PWA"
+? (globalData.repeat_rate?.child ?? 0).toFixed(2) + "%"
+
+: ""
+}
 </td>
 
 <td>
@@ -1065,11 +1083,6 @@ item.show==="ws-h5" ? retentionRate("kwai-pwa",13) :
 }
 
 /* PYTHON BUTTON */
-function runPython(){
-    alert("🚀 Đang chạy Python backend...");
-
-    // fetch('/run-python')
-}
 function queryData(){
 
     loadData();

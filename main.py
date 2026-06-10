@@ -305,9 +305,77 @@ for name, cid in CHANNELS.items():
 
     except Exception as e:
         print(f"❌ retention {name} error:", e)
+
+        # ======================
+# REPEAT RATE
+# ======================
+
+result_data["repeat_rate"] = {}
+
+REPEAT_TYPES = {
+    "first": "none",      # 首充
+    "parent": "direct",   # 直推首充
+    "child": "split"      # 裂变首充
+}
+
+for key, parent_type in REPEAT_TYPES.items():
+
+    try:
+
+        params = {
+            "input": json.dumps({
+                "json": {
+                    "tenantId": TENANT_ID,
+                    "regionId": REGION_ID,
+                    "startTime": today,
+                    "endTime": today,
+                    "type": "recharge",
+                    "channelIds": [],
+                    "parentType": parent_type,
+                    "page": 1,
+                    "pageSize": 50,
+                    "timeType": "days_90",
+                    "retentionDays": [0]
+                }
+            }, separators=(',', ':'))
+        }
+
+        res = requests.get(
+            RETENTION_URL,
+            headers=headers,
+            params=params,
+            timeout=30
+        )
+
+        data = (
+            res.json()
+            .get("result", {})
+            .get("data", {})
+            .get("json", {})
+            .get("data", {})
+            .get("retentionList", [])
+        )
+
+        if data:
+            row = data[-1]   # hôm nay
+
+            count = row.get("count", 0)
+            repeat = row.get("repeatRechargeCount", 0)
+
+            result_data["repeat_rate"][key] = (
+                round(repeat / count * 100, 2)
+                if count else 0
+            )
+        else:
+            result_data["repeat_rate"][key] = 0
+
+    except Exception as e:
+        print("repeat rate error:", key, e)
+        result_data["repeat_rate"][key] = 0
 # ======================
 # SAVE JSON
 # ======================
+
 
 output_file = "/Users/xiaoruan/Desktop/76b-getdata/data.json"
 
