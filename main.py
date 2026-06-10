@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 # ======================
 
 ACCOUNT = "xiaoruan2300"
-TOKEN = "41kv9ahnev4zv9uaihf5iviuaecoclw0uwsnm19t"
+TOKEN = "icp5obt3jiro5zzhwjo7fucdaue569udcz4cmag7"
 
 BASE_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.effect"
 
@@ -320,3 +320,33 @@ with open(output_file, "w", encoding="utf-8") as f:
     )
 
 print(f"✅ Saved: {output_file}")
+import subprocess
+
+try:
+    subprocess.run(
+        ["git", "add", "data.json"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+
+    result = subprocess.run(
+        ["git", "commit", "-m", "auto update data"],
+        capture_output=True,
+        text=True
+    )
+
+    if "nothing to commit" in result.stdout:
+        print("ℹ️ No data changes")
+    else:
+        print("✅ Commit success")
+
+    subprocess.run(
+        ["git", "push", "origin", "main"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+
+    print("✅ GitHub updated")
+
+except Exception as e:
+    print("❌ GitHub push error:", e)

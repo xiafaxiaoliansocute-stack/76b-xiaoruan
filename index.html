@@ -497,28 +497,22 @@ function rateClass(value){
 }
 
 /* ================= TAB 2 ================= */
-function retentionRate(channel, day){
+function retentionRate(channel, countField){
 
     const retention = globalData.retention || {};
 
-    const dates = Object.keys(retention).sort();
-
-    if(!dates.length) return "0.00%";
-
-    const latestDate = dates[dates.length - 1];
-
-    const row = retention[latestDate]?.[channel];
+    const row = retention["2026-06-09"]?.[channel];
 
     if(!row) return "0.00%";
 
     const total = Number(row.count || 0);
 
     const retain = Number(
-        row[`count${day}`] || 0
+        row[`count${countField}`] || 0
     );
 
     return total > 0
-        ? (retain / total * 100).toFixed(2) + "%"
+        ? ((retain / total) * 100).toFixed(2) + "%"
         : "0.00%";
 }
 function renderTab2(){
