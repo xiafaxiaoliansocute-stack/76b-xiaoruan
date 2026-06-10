@@ -1,0 +1,1092 @@
+<!--
+================ DASHBOARD PRO - GHI CHÚ =================
+
+1. LOGIN
+   - Giao diện đăng nhập
+   - Hàm xử lý: login()
+
+2. TAB SWITCH
+   - Chuyển TAB1/TAB2
+   - Hàm: switchTab()
+
+3. LOAD DATA
+   - Đọc data.json
+   - Hàm: loadData()
+
+4. TAB1 - 推广效果
+   - Hàm: renderTab1()
+
+5. TAB2 - 实时数据分析
+   - Hàm: renderTab2()
+
+6. 注册充值比
+   - Công thức:
+     充值人数 ÷ 注册人数 × 100%
+
+7. 存提差比例
+   - Công thức:
+     (充值金额 - 提现金额) ÷ 充值金额 × 100%
+
+8. 裂变率
+   - Công thức:
+     裂变首充人数 ÷ (充值人数 - 裂变首充人数) × 100%
+
+9. 复充率
+   - Hiện đang dùng dữ liệu cố định
+
+10. 留存率
+    - 2日、3日、4日、5日、6日、7日、10日、14日留存
+
+11. Màu sắc phần trăm
+    - green: > 0
+    - red: < 0
+==========================================================
+-->
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard PRO</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#f5f5f5;
+    margin:0;
+    padding:20px;
+}
+
+/* TAB */
+.tab-bar{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.tab-btn{
+    padding:10px 15px;
+    background:#ddd;
+    cursor:pointer;
+    border-radius:6px;
+    font-weight:bold;
+}
+
+.tab-btn.active{
+    background:#333;
+    color:#fff;
+}
+
+/* TAB 1 (GIỮ NGUYÊN) */
+.section{
+    background:#fff;
+    margin-bottom:25px;
+    border-radius:8px;
+    overflow:hidden;
+}
+
+.title{
+    background:#d9d9d9;
+    padding:10px;
+    font-weight:bold;
+    text-align:center;
+}
+
+.sub-title{
+    background:#efefef;
+    padding:8px;
+    font-weight:bold;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    border:1px solid #333;
+    padding:8px;
+    text-align:center;
+    font-size:16px;
+    width:90px;
+}
+
+th{background:#fafafa}
+
+/* TAB 2 */
+.title2{
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.group1{background:#f4b183;}
+.group2{background:#a9d18e;}
+.group3{background:#9dc3e6;}
+.group5{background:#c9daf8;}
+.group6{background:#d9d2e9;}
+
+.gray{background:#eee;}
+.red{color:red;font-weight:bold;}
+.green{color:green;font-weight:bold;}
+
+.run-btn{
+    background:#28a745;
+    color:#fff;
+    border:none;
+    padding:8px 15px;
+    border-radius:6px;
+    cursor:pointer;
+    margin-bottom:10px;
+}
+/* LOGIN */
+
+#loginPage{
+    position:fixed;
+    inset:0;
+    z-index:999999;
+    background:url("https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?auto=format&fit=crop&w=2000&q=80");
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.login-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    backdrop-filter:blur(6px);
+}
+
+.login-box{
+    position:relative;
+    width:950px;
+    height:520px;
+    display:flex;
+    border-radius:30px;
+    overflow:hidden;
+    background:rgba(255,255,255,.1);
+    backdrop-filter:blur(20px);
+    box-shadow:0 20px 80px rgba(0,0,0,.5);
+}
+
+.login-left{
+    flex:1;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(
+    135deg,
+    rgba(0,128,0,.6),
+    rgba(255,215,0,.4)
+    );
+}
+
+.login-left h1{
+    font-size:70px;
+    margin:0;
+}
+
+.login-left h2{
+    font-size:36px;
+}
+
+.login-right{
+    width:380px;
+    background:white;
+    padding:50px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.login-right input{
+    padding:15px;
+    margin-bottom:15px;
+    border:1px solid #ddd;
+    border-radius:12px;
+}
+
+.login-right button{
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:bold;
+    background:linear-gradient(
+    135deg,
+    #009739,
+    #FFD700
+    );
+}
+
+#msg{
+    margin-top:10px;
+    color:red;
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<body>
+
+<!-- LOGIN 3D BRAZIL -->
+<div id="loginPage">
+
+<div class="login-overlay"></div>
+
+<div class="login-box">
+
+<div class="login-left">
+<h1>76B实时数据 </h1>
+<h2>🫶HI HI HÁ HÁ HỐ HỐ🫶</h2>
+<p>CHÀO MỪNG BẠN ĐẾN VỚI BÌNH NGUYÊN VÔ TẬN</p>
+<p>NƠI MÀ CHÚNG TÔI CÀY HƠN CẢ TRÂU BÒ </p>
+</div>
+
+<div class="login-right">
+
+<h2>登录系统</h2>
+
+<input id="user" placeholder="账号">
+
+<input id="pass" type="password" placeholder="密码">
+
+<button onclick="login()">
+进入系统
+</button>
+
+<div id="msg"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- TAB -->
+<div class="tab-bar">
+    <div class="tab-btn active" onclick="switchTab(1)">📊 推广效果</div>
+    <div class="tab-btn" onclick="switchTab(2)">🧮 实时数据分析</div>
+</div>
+
+<!-- TAB 1 (GIỮ NGUYÊN 100%) -->
+<div id="tab1">
+    <div id="app"></div>
+</div>
+
+<!-- TAB 2 -->
+<div id="tab2" style="display:none">
+
+<div class="title2">2306-76b-实时数据汇总</div>
+
+<button class="run-btn" onclick="runPython()">
+🚀 Khởi chạy Python
+</button>
+
+<button class="run-btn" onclick="queryData()">
+🔍 查询数据
+</button>
+
+<!-- SCRIPT -->
+<script>
+function runPython(){
+
+    
+    fetch("http://127.0.0.1:5000/run-python")
+    .then(res => res.json())
+    .then(data => {
+
+        // nếu Python có trả output
+        let output = data.output || "Không có output";
+
+        alert("✅ Python chạy xong:\n\n" + output);
+
+       loadData();
+
+        console.log("Python result:", data); 
+
+    })
+    .catch(err => {
+
+        console.error(err);
+        alert("❌ Không kết nối được Python server\n\nHãy chắc chắn bạn đã chạy:\npython3 main.py");
+
+    });
+
+}
+</script>
+
+<table>
+<thead>
+<tr>
+
+    
+<th rowspan="2" style="width:280px">字段</th>
+<th rowspan="2" style="width:120px">注册充值比</th>
+
+
+    <th colspan="2" class="group1">昨日</th>
+    <th colspan="4" class="group2">今日</th>
+
+    <th rowspan="2" class="group3">加减比例</th>
+
+    <th colspan="2" class="group1">昨日</th>
+    <th colspan="2" class="group2">今日</th>
+
+    <th rowspan="2" class="group3">提现金额</th>
+    <th rowspan="2" class="group3">存提差</th>
+    <th rowspan="2" class="group3">存提差比例</th>
+
+    <th colspan="9" class="group5">📊人均表现</th>
+<th colspan="2" class="group3">🌐 裂变率</th>
+<th colspan="2" class="group3">🔄 复充率</th>
+<th colspan="5" class="group6">🔄 留存率</th>
+</tr>
+
+<tr>
+    <th>首充人数</th><th>首充金额</th>
+    <th>首充人数</th><th>首充金额</th><th>直推人数</th><th>裂变人数</th>
+
+    <th>充值人数</th><th>充值金额</th>
+    <th>充值人数</th><th>充值金额</th>
+
+   
+<th style="width:150px">类型</th>
+    <th>人均</th>
+    <th>次日人均</th>
+
+<th style="width:150px">FB-人均</th>
+<th style="width:90px">H5</th>
+<th style="width:90px">PWA</th>
+<th style="width:90px">IOS</th>
+
+<th style="width:90px">TT</th>
+<th style="width:90px">KW</th>
+
+<th style="width:250px">裂变率</th>
+<th style="width:90px">比例</th>
+
+<th style="width:140px">类型</th>
+<th style="width:90px">比例</th>
+
+<th style="width:320px">字段</th>
+<th>大盘</th>
+<th>FB</th>
+<th>TT</th>
+<th>KW</th>
+</tr>
+</thead>
+
+<tbody id="body"></tbody>
+</table>
+</div>
+
+<script>
+
+/* TAB SWITCH */
+function switchTab(n){
+    document.getElementById("tab1").style.display = n===1 ? "block":"none";
+    document.getElementById("tab2").style.display = n===2 ? "block":"none";
+
+    document.querySelectorAll(".tab-btn").forEach((b,i)=>{
+        b.classList.toggle("active", i===n-1);
+    });
+}
+
+/* DATA */
+let globalData = {};
+
+function loadData(){
+
+    fetch("data.json?t=" + Date.now())
+    .then(r=>r.json())
+    .then(data=>{
+
+        globalData = data;
+
+        renderTab1(data);
+        renderTab2();
+
+    });
+
+}
+
+loadData();
+
+/* cập nhật mỗi 2 giây */
+setInterval(loadData,2000);
+
+/* ================= TAB 1 (GIỮ NGUYÊN) ================= */
+function renderTab1(data){
+
+    const sections = [
+        { key: "ALL_TOTAL", name: "全部" },
+        { key: "fb-h5", name: "fb-h5" },
+        { key: "fb-pwa", name: "fb-pwa" },
+        { key: "fb-ios", name: "fb-ios" },
+        { key: "tt-pwa", name: "tt-pwa" },
+        { key: "kwai-pwa", name: "kwai-pwa" },
+        { key: "回访", name: "回访" }
+    ];
+
+    const blocks = [
+        { key:"normalList", name:"综合效果" },
+        { key:"parentList", name:"直播效果" },
+        { key:"childList", name:"裂变效果" }
+    ];
+
+    const fields = [
+        ["registerCount","注册人数"],
+        ["firstRechargeCount","首充人数"],
+        ["firstRechargeAmount","首充金额"],
+        ["rechargeCount","充值人数"],
+        ["rechargeAmount","充值金额"],
+        ["withdrawCount","提现人数"],
+        ["withdrawAmount","提现金额"],
+        ["betCount","投注人数"],
+        ["betAmount","投注金额"],
+        ["validBetAmount","有效投注"],
+        ["reward","赠送金额"]
+    ];
+
+    let html = "";
+
+    sections.forEach(sec=>{
+        let d = data[sec.key] || {};
+
+        html += `<div class="section">`;
+        html += `<div class="title">${sec.name}</div>`;
+
+        blocks.forEach(b=>{
+            let list = d[b.key] || {};
+
+            html += `<div class="sub-title">${b.name}</div><table><tr>`;
+
+            fields.forEach(f=>{
+                html += `<th>${f[1]}</th>`;
+            });
+
+            html += "</tr><tr>";
+
+            fields.forEach(f=>{
+                html += `<td>${list[f[0]] ?? 0}</td>`;
+            });
+
+            html += "</tr></table>";
+        });
+
+        html += "</div>";
+    });
+
+    document.getElementById("app").innerHTML = html;
+}
+function rateClass(value){
+    return value > 0
+        ? "green"
+        : value < 0
+        ? "red"
+        : "";
+}
+
+/* ================= TAB 2 ================= */
+function retentionRate(channel, day){
+
+    const retention = globalData.retention || {};
+
+    const dates = Object.keys(retention).sort();
+
+    if(!dates.length) return "0.00%";
+
+    const latestDate = dates[dates.length - 1];
+
+    const row = retention[latestDate]?.[channel];
+
+    if(!row) return "0.00%";
+
+    const total = Number(row.count || 0);
+
+    const retain = Number(
+        row[`count${day}`] || 0
+    );
+
+    return total > 0
+        ? (retain / total * 100).toFixed(2) + "%"
+        : "0.00%";
+}
+function renderTab2(){
+
+
+   const list = [
+    {show:"大盘",key:"ALL_TOTAL"},
+    {show:"FB-H5",key:"fb-h5"},
+    {show:"FB-PWA",key:"fb-pwa"},
+    {show:"FB-IOS",key:"fb-ios"},
+    {show:"TT-PWA",key:"tt-pwa"},
+    {show:"KW-PWA",key:"kwai-pwa"},
+    {show:"回访",key:"回访"},
+        {show:"ws-h5",key:"ws-h5"}
+
+];
+const avgRows = [
+    {show:"人均",type:"normal"},
+    {show:"直推人均",type:"parent"},
+    {show:"裂变人均",type:"child"},
+    {show:"首充人均",type:"first"}
+];
+    let html = "";
+
+    list.forEach(item=>{
+
+
+        let d = globalData[item.key] || {};
+let n = d.normalList || {};
+
+let recharge = n.rechargeAmount || 0;
+let withdraw = n.withdrawAmount || 0;
+
+let diff = recharge - withdraw;
+let diffRate = recharge ? (diff/recharge*100).toFixed(2)+"%" : "0%";
+
+/* 人均 */
+let p = d.parentList || {};
+let c = d.childList || {};
+
+let avg = 0;
+
+if(item.key==="ALL_TOTAL"){
+    avg = n.rechargeCount
+        ? (n.rechargeAmount / n.rechargeCount).toFixed(2)
+        : 0;
+}
+/* 直推 */
+else if(item.key==="fb-h5"){
+    avg = p.rechargeCount
+        ? (p.rechargeAmount / p.rechargeCount).toFixed(2)
+        : 0;
+}
+/* 裂变 */
+else if(item.key==="fb-pwa"){
+    avg = c.rechargeCount
+        ? (c.rechargeAmount / c.rechargeCount).toFixed(2)
+        : 0;
+}
+/* 首存 */
+else if(item.key==="fb-ios"){
+    avg = n.firstRechargeCount
+        ? (n.firstRechargeAmount / n.firstRechargeCount).toFixed(2)
+        : 0;
+}
+let h5 = globalData["fb-h5"]?.normalList || {};
+let pwa = globalData["fb-pwa"]?.normalList || {};
+let ios = globalData["fb-ios"]?.normalList || {};
+let tt = globalData["tt-pwa"]?.normalList || {};
+let ttParent = globalData["tt-pwa"]?.parentList || {};
+let ttChild = globalData["tt-pwa"]?.childList || {};
+let kw = globalData["kwai-pwa"]?.normalList || {};
+let kwParent = globalData["kwai-pwa"]?.parentList || {};
+let kwChild = globalData["kwai-pwa"]?.childList || {};
+
+
+let h5Avg = h5.rechargeCount
+    ? (h5.rechargeAmount / h5.rechargeCount).toFixed(2)
+    : 0;
+
+let pwaAvg = pwa.rechargeCount
+    ? (pwa.rechargeAmount / pwa.rechargeCount).toFixed(2)
+    : 0;
+
+let iosAvg = ios.rechargeCount
+    ? (ios.rechargeAmount / ios.rechargeCount).toFixed(2)
+    : 0;
+
+let ttAvg = tt.rechargeCount
+    ? (tt.rechargeAmount / tt.rechargeCount).toFixed(2)
+    : 0;
+
+let kwAvg = kw.rechargeCount
+    ? (kw.rechargeAmount / kw.rechargeCount).toFixed(2)
+    : 0;
+
+let fbNormalAvg = (
+    Number(h5.rechargeAmount || 0) +
+    Number(pwa.rechargeAmount || 0) +
+    Number(ios.rechargeAmount || 0)
+)
+/
+(
+    Number(h5.rechargeCount || 0) +
+    Number(pwa.rechargeCount || 0) +
+    Number(ios.rechargeCount || 0)
+);
+
+fbNormalAvg = isFinite(fbNormalAvg)
+    ? fbNormalAvg.toFixed(2)
+    : 0;
+let h5Parent = globalData["fb-h5"]?.parentList || {};
+let pwaParent = globalData["fb-pwa"]?.parentList || {};
+let iosParent = globalData["fb-ios"]?.parentList || {};
+
+let h5Child = globalData["fb-h5"]?.childList || {};
+let pwaChild = globalData["fb-pwa"]?.childList || {};
+let iosChild = globalData["fb-ios"]?.childList || {};
+let fbParentAvg = (
+    Number(h5Parent.rechargeAmount || 0) +
+    Number(pwaParent.rechargeAmount || 0) +
+    Number(iosParent.rechargeAmount || 0)
+)
+/
+(
+    Number(h5Parent.rechargeCount || 0) +
+    Number(pwaParent.rechargeCount || 0) +
+    Number(iosParent.rechargeCount || 0)
+);
+
+fbParentAvg = isFinite(fbParentAvg)
+    ? fbParentAvg.toFixed(2)
+    : 0;
+    /* 裂变人均 */
+let fbChildAvg = (
+    Number(h5Child.rechargeAmount || 0) +
+    Number(pwaChild.rechargeAmount || 0) +
+    Number(iosChild.rechargeAmount || 0)
+)
+/
+(
+    Number(h5Child.rechargeCount || 0) +
+    Number(pwaChild.rechargeCount || 0) +
+    Number(iosChild.rechargeCount || 0)
+);
+
+fbChildAvg = isFinite(fbChildAvg)
+    ? fbChildAvg.toFixed(2)
+    : 0;
+
+/* 首充人均 */
+let fbFirstAvg = (
+    Number(h5.firstRechargeAmount || 0) +
+    Number(pwa.firstRechargeAmount || 0) +
+    Number(ios.firstRechargeAmount || 0)
+)
+/
+(
+    Number(h5.firstRechargeCount || 0) +
+    Number(pwa.firstRechargeCount || 0) +
+    Number(ios.firstRechargeCount || 0)
+);
+
+fbFirstAvg = isFinite(fbFirstAvg)
+    ? fbFirstAvg.toFixed(2)
+    : 0;
+let registerCount = n.registerCount || 0;
+
+let regRechargeRate =
+    registerCount > 0
+    ? ((n.rechargeCount || 0) / registerCount * 100).toFixed(2) + "%"
+    : "0%";
+
+html += `
+<tr>
+<td class="gray">${item.show}</td>
+
+<td class="${rateClass(parseFloat(regRechargeRate))}">
+${regRechargeRate}
+</td>
+
+<td>${n.firstRechargeCount||0}</td>
+<td>${n.firstRechargeAmount||0}</td>
+
+<td>${n.firstRechargeCount||0}</td>
+<td>${n.firstRechargeAmount||0}</td>
+<td>${n.rechargeCount||0}</td>
+<td>${n.rechargeAmount||0}</td>
+
+
+<td>
+${
+n.firstRechargeCount && n.yesterdayFirstRechargeCount
+?
+(
+(
+n.firstRechargeCount -
+n.yesterdayFirstRechargeCount
+)
+/
+n.yesterdayFirstRechargeCount
+*
+100
+).toFixed(2) + "%"
+:
+"0%"
+}
+</td>
+
+<td>${n.firstRechargeCount||0}</td>
+<td>${n.firstRechargeAmount||0}</td>
+
+<td>${n.firstRechargeCount||0}</td>
+<td>${n.firstRechargeAmount||0}</td>
+
+<td>${withdraw}</td>
+
+<td class="${diff<0?'red':''}">${diff}</td>
+<td class="${rateClass(parseFloat(diffRate))}">
+    ${diffRate}
+</td>
+
+<td>
+    
+${
+item.key==="ALL_TOTAL" ? "大盘" :
+item.key==="fb-h5" ? "直推" :
+item.key==="fb-pwa" ? "裂变" :
+item.key==="fb-ios" ? "首充" :
+"&nbsp;"
+}
+</td>
+
+<td>
+${
+item.key==="tt-pwa" ||
+item.key==="kwai-pwa" ||
+item.key==="回访" ||
+item.key==="ws-h5"
+? ""
+: (n.rechargeCount ? (recharge/n.rechargeCount).toFixed(2) : "")
+}
+</td>
+
+<td>
+${
+item.key==="tt-pwa" ||
+item.key==="kwai-pwa" ||
+item.key==="回访" ||
+item.key==="ws-h5"
+? ""
+: (n.firstRechargeCount ? (recharge/n.firstRechargeCount).toFixed(2) : "")
+}
+</td>
+
+<td>
+${
+item.key==="ALL_TOTAL"
+? fbNormalAvg
+:
+item.key==="fb-h5"
+? fbParentAvg
+:
+item.key==="fb-pwa"
+? fbChildAvg
+:
+item.key==="fb-ios"
+? fbFirstAvg
+:
+""
+}
+</td>
+<td>
+${
+item.key==="ALL_TOTAL"
+? h5Avg
+:
+item.key==="fb-h5"
+? (
+    h5Parent.rechargeCount
+    ? (h5Parent.rechargeAmount / h5Parent.rechargeCount).toFixed(2)
+    : 0
+)
+:
+item.key==="fb-pwa"
+? (
+    h5Child.rechargeCount
+    ? (h5Child.rechargeAmount / h5Child.rechargeCount).toFixed(2)
+    : 0
+)
+:
+item.key==="fb-ios"
+? (
+    h5.firstRechargeCount
+    ? (h5.firstRechargeAmount / h5.firstRechargeCount).toFixed(2)
+    : 0
+)
+:
+""
+}
+</td>
+<td>
+${
+item.key==="ALL_TOTAL"
+? pwaAvg
+:
+item.key==="fb-h5"
+? (
+    pwaParent.rechargeCount
+    ? (pwaParent.rechargeAmount / pwaParent.rechargeCount).toFixed(2)
+    : 0
+)
+:
+item.key==="fb-pwa"
+? (
+    pwaChild.rechargeCount
+    ? (pwaChild.rechargeAmount / pwaChild.rechargeCount).toFixed(2)
+    : 0
+)
+:
+item.key==="fb-ios"
+? (
+    pwa.firstRechargeCount
+    ? (pwa.firstRechargeAmount / pwa.firstRechargeCount).toFixed(2)
+    : 0
+)
+:
+""
+}
+</td>
+<td>
+${
+item.key==="ALL_TOTAL"
+? iosAvg
+:
+item.key==="fb-h5"
+? (
+    iosParent.rechargeCount
+    ? (iosParent.rechargeAmount / iosParent.rechargeCount).toFixed(2)
+    : 0
+)
+:
+item.key==="fb-pwa"
+? (
+    iosChild.rechargeCount
+    ? (iosChild.rechargeAmount / iosChild.rechargeCount).toFixed(2)
+    : 0
+)
+:
+item.key==="fb-ios"
+? (
+    ios.firstRechargeCount
+    ? (ios.firstRechargeAmount / ios.firstRechargeCount).toFixed(2)
+    : 0
+)
+:
+""
+}
+</td>
+<td>
+${
+item.key==="ALL_TOTAL"
+? ttAvg
+:
+item.key==="fb-h5"
+? (
+    ttParent.rechargeCount
+    ? (ttParent.rechargeAmount / ttParent.rechargeCount).toFixed(2)
+    : 0
+)
+:
+item.key==="fb-pwa"
+? (
+    ttChild.rechargeCount
+    ? (ttChild.rechargeAmount / ttChild.rechargeCount).toFixed(2)
+    : 0
+)
+:
+item.key==="fb-ios"
+? (
+    tt.firstRechargeCount
+    ? (tt.firstRechargeAmount / tt.firstRechargeCount).toFixed(2)
+    : 0
+)
+:
+""
+}
+</td>
+<td>
+${
+item.key==="ALL_TOTAL"
+? kwAvg
+:
+item.key==="fb-h5"
+? (
+    kwParent.rechargeCount
+    ? (kwParent.rechargeAmount / kwParent.rechargeCount).toFixed(2)
+    : 0
+)
+:
+item.key==="fb-pwa"
+? (
+    kwChild.rechargeCount
+    ? (kwChild.rechargeAmount / kwChild.rechargeCount).toFixed(2)
+    : 0
+)
+:
+item.key==="fb-ios"
+? (
+    kw.firstRechargeCount
+    ? (kw.firstRechargeAmount / kw.firstRechargeCount).toFixed(2)
+    : 0
+)
+:
+""
+}
+</td>
+<td>${item.show}</td>
+
+<td class="${rateClass(
+n.rechargeCount > c.firstRechargeCount
+?
+(
+    c.firstRechargeCount /
+    (
+        n.rechargeCount -
+        c.firstRechargeCount
+    )
+    * 100
+)
+: 0
+)}">
+${
+n.rechargeCount > c.firstRechargeCount
+?
+(
+    c.firstRechargeCount /
+    (
+        n.rechargeCount -
+        c.firstRechargeCount
+    )
+    * 100
+).toFixed(2) + "%"
+:
+"0%"
+}
+</td>
+
+<td>
+${item.show==="大盘" ? "大盘" :
+item.show==="FB-H5" ? "直推" :
+item.show==="FB-PWA" ? "裂变" : ""}
+</td>
+
+<td class="green">
+${item.show==="大盘" ? "33.57%" :
+item.show==="FB-H5" ? "32.05%" :
+item.show==="FB-PWA" ? "39.02%" : ""}
+</td>
+
+<td>
+${
+    item.show?.trim() === "大盘" ? "2日留存" :
+    item.show?.trim() === "FB-H5" ? "3日留存" :
+    item.show?.trim() === "FB-PWA" ? "4日留存" :
+    item.show?.trim() === "FB-IOS" ? "5日留存" :
+    item.show?.trim() === "TT-PWA" ? "6日留存" :
+    item.show?.trim() === "KW-PWA" ? "7日留存" :
+    item.show?.trim() === "回访" ? "10日留存" :
+    item.show === "ws-h5" ? "14日留存" :
+    "-"
+}
+<td>
+${
+item.show==="大盘" ? retentionRate("ALL",1) :
+item.show==="FB-H5" ? retentionRate("fb-h5",2) :
+item.show==="FB-PWA" ? retentionRate("fb-pwa",3) :
+item.show==="FB-IOS" ? retentionRate("fb-ios",4) :
+item.show==="TT-PWA" ? retentionRate("tt-pwa",5) :
+item.show==="KW-PWA" ? retentionRate("kwai-pwa",6) :
+item.show==="回访" ? retentionRate("回访",9) :
+item.show==="ws-h5" ? retentionRate("ws-h5",13) :
+""
+}
+</td>
+
+<td>
+${
+item.show==="大盘" ? retentionRate("fb-h5",1) :
+item.show==="FB-H5" ? retentionRate("fb-h5",2) :
+item.show==="FB-PWA" ? retentionRate("fb-h5",3) :
+item.show==="FB-IOS" ? retentionRate("fb-h5",4) :
+item.show==="TT-PWA" ? retentionRate("fb-h5",5) :
+item.show==="KW-PWA" ? retentionRate("fb-h5",6) :
+item.show==="回访" ? retentionRate("fb-h5",9) :
+item.show==="ws-h5" ? retentionRate("fb-h5",13) :
+""
+}
+</td>
+
+<td>
+${
+item.show==="大盘" ? retentionRate("tt-pwa",1) :
+item.show==="FB-H5" ? retentionRate("tt-pwa",2) :
+item.show==="FB-PWA" ? retentionRate("tt-pwa",3) :
+item.show==="FB-IOS" ? retentionRate("tt-pwa",4) :
+item.show==="TT-PWA" ? retentionRate("tt-pwa",5) :
+item.show==="KW-PWA" ? retentionRate("tt-pwa",6) :
+item.show==="回访" ? retentionRate("tt-pwa",9) :
+item.show==="ws-h5" ? retentionRate("tt-pwa",13) :
+""
+}
+</td>
+
+<td>
+${
+item.show==="大盘" ? retentionRate("kwai-pwa",1) :
+item.show==="FB-H5" ? retentionRate("kwai-pwa",2) :
+item.show==="FB-PWA" ? retentionRate("kwai-pwa",3) :
+item.show==="FB-IOS" ? retentionRate("kwai-pwa",4) :
+item.show==="TT-PWA" ? retentionRate("kwai-pwa",5) :
+item.show==="KW-PWA" ? retentionRate("kwai-pwa",6) :
+item.show==="回访" ? retentionRate("kwai-pwa",9) :
+item.show==="ws-h5" ? retentionRate("kwai-pwa",13) :
+""
+}
+</td>
+
+
+        `;
+    });
+
+    document.getElementById("body").innerHTML = html;
+}
+
+/* PYTHON BUTTON */
+function runPython(){
+    alert("🚀 Đang chạy Python backend...");
+
+    // fetch('/run-python')
+}
+function queryData(){
+
+    loadData();
+
+    alert("✅ 数据已刷新");
+
+}
+
+</script>
+
+<script>
+function login(){
+
+    let user=document.getElementById("user").value;
+    let pass=document.getElementById("pass").value;
+
+    if(user==="xiaoruan" && pass==="1"){
+
+        document.getElementById("loginPage").style.display="none";
+
+    }else{
+
+        document.getElementById("msg").innerHTML="账号或密码错误";
+
+    }
+}
+</script>
+
+</body>
+</html>
