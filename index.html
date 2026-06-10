@@ -285,7 +285,19 @@ th{background:#fafafa}
 <!-- TAB 2 -->
 <div id="tab2" style="display:none">
 
-<div class="title2">2306-76b-实时数据汇总</div>
+<div id="updateTime"
+style="
+text-align:center;
+color:red;
+font-size:18px;
+font-weight:bold;
+margin-bottom:8px;">
+📅 数据更新时间：--
+</div>
+
+<div class="title2">
+2306-76b-实时数据汇总
+</div>
 
 <button class="run-btn" onclick="runPython()">
 🚀 Khởi chạy Python
@@ -410,10 +422,14 @@ function loadData(){
     .then(r=>r.json())
     .then(data=>{
 
-        globalData = data;
+globalData = data;
 
-        renderTab1(data);
-        renderTab2();
+document.getElementById("updateTime").innerHTML =
+    "📅 数据更新时间：" +
+    (data.update_time || "--");
+
+renderTab1(data);
+renderTab2();
 
     });
 
