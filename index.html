@@ -54,8 +54,14 @@ body{
     font-family: Arial;
     background:#f5f5f5;
     margin:0;
-    padding:20px;
+    padding:1vw;
 }
+
+*{
+    box-sizing:border-box;
+}
+
+
 
 /* TAB */
 .tab-bar{
@@ -119,10 +125,10 @@ table{
 
 th,td{
     border:1px solid #333;
-    padding:8px;
+    padding:0.35vw;
     text-align:center;
-    font-size:16px;
-    width:90px;
+    font-size:clamp(9px,0.65vw,16px);
+    white-space:nowrap;
 }
 
 tbody tr{
@@ -289,7 +295,8 @@ th{
 }
 .hero-banner{
     position:relative;
-    height:350px;
+    min-height:280px;
+    height:18vw;
 
     border-radius:20px;
     overflow:hidden;
@@ -315,7 +322,7 @@ th{
 }
 
 .hero-content h1{
-    font-size:48px;
+    font-size:clamp(24px,2.5vw,48px);
     margin:20px 0;
     text-shadow:0 0 20px rgba(0,0,0,.8);
     letter-spacing:2px;
@@ -328,7 +335,7 @@ th{
     background:rgba(255,255,255,.18);
     backdrop-filter:blur(10px);
     border:1px solid rgba(255,255,255,.25);
-    font-size:22px;
+    font-size:clamp(12px,1vw,22px);
     font-weight:bold;
 }
 
@@ -336,20 +343,13 @@ th{
 
 #brazilClockBox{
     position:absolute;
-    top:20px;
-    right:30px;
+        top:1vw;
+    right:1.5vw;
     text-align:center;
     z-index:10;
 }
-.clock::before{
-    content:"";
-    position:absolute;
-    inset:8px;
-    border:2px dashed rgba(0,0,0,.15);
-    border-radius:50%;
-}
-.clock{
-    .number{
+
+.number{
     position:absolute;
     font-weight:bold;
     color:#222;
@@ -370,26 +370,49 @@ th{
 .n10{top:38px;left:18px;}
 .n11{top:18px;left:38px;}
 
-    width:160px;
-    height:160px;
-
+.clock::before{
+    content:"";
+    position:absolute;
+    inset:8px;
+    border:2px dashed rgba(0,0,0,.15);
     border-radius:50%;
+}
 
-    background:
-    radial-gradient(
+.number{
+    position:absolute;
+    font-weight:bold;
+    color:#222;
+    font-size:18px;
+    text-shadow:0 1px 2px rgba(255,255,255,.8);
+}
+
+.n12{top:8px;left:50%;transform:translateX(-50%);}
+.n1{top:18px;right:38px;}
+.n2{top:38px;right:18px;}
+.n3{top:50%;right:8px;transform:translateY(-50%);}
+.n4{bottom:38px;right:18px;}
+.n5{bottom:18px;right:38px;}
+.n6{bottom:8px;left:50%;transform:translateX(-50%);}
+.n7{bottom:18px;left:38px;}
+.n8{bottom:38px;left:18px;}
+.n9{top:50%;left:8px;transform:translateY(-50%);}
+.n10{top:38px;left:18px;}
+.n11{top:18px;left:38px;}
+
+.clock{
+    width:clamp(90px,8vw,160px);
+    height:clamp(90px,8vw,160px);
+    border-radius:50%;
+    background:radial-gradient(
         circle at top left,
         rgba(255,255,255,.9),
         rgba(255,255,255,.2)
     );
-
     backdrop-filter:blur(20px);
-
     border:4px solid rgba(255,255,255,.3);
-
     box-shadow:
-    0 15px 40px rgba(0,0,0,.35),
-    inset 0 5px 15px rgba(255,255,255,.4);
-
+        0 15px 40px rgba(0,0,0,.35),
+        inset 0 5px 15px rgba(255,255,255,.4);
     position:relative;
 }
 
@@ -416,22 +439,22 @@ th{
 }
 
 .hour{
-    width:6px;
-    height:40px;
+    width:4px;
+    height:25%;
     background:#222;
     border-radius:10px;
 }
 
 .minute{
-    width:4px;
-    height:55px;
+    width:3px;
+    height:35%;
     background:#444;
     border-radius:10px;
 }
 
 .second{
     width:2px;
-    height:65px;
+    height:42%;
     background:red;
     border-radius:10px;
 }
@@ -443,6 +466,8 @@ th{
     text-shadow:0 0 8px #000;
     font-size:15px;
 }
+
+
 
 </style>
 </head>
@@ -1333,6 +1358,7 @@ ${
     item.show === "ws-h5" ? "14日留存" :
     "-"
 }
+    
 <td>
 ${
 item.show==="大盘" ? retentionRate("ALL",1) :
