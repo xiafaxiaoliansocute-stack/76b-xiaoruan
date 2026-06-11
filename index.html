@@ -65,15 +65,25 @@ body{
 }
 
 .tab-btn{
-    padding:10px 15px;
-    background:#ddd;
+    padding:12px 20px;
+    background:white;
     cursor:pointer;
-    border-radius:6px;
+    border-radius:12px;
     font-weight:bold;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+    transition:.25s;
+}
+
+.tab-btn:hover{
+    transform:translateY(-2px);
 }
 
 .tab-btn.active{
-    background:#333;
+    background:linear-gradient(
+        135deg,
+        #009739,
+        #FFD700
+    );
     color:#fff;
 }
 
@@ -101,6 +111,10 @@ body{
 table{
     width:100%;
     border-collapse:collapse;
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
 }
 
 th,td{
@@ -111,7 +125,18 @@ th,td{
     width:90px;
 }
 
-th{background:#fafafa}
+tbody tr{
+    transition:.2s;
+}
+
+tbody tr:hover{
+    background:#f3f8ff;
+}
+
+th{
+    background:#bfc5cc;
+    color:#222;
+}
 
 /* TAB 2 */
 .title2{
@@ -121,24 +146,56 @@ th{background:#fafafa}
     margin-bottom:10px;
 }
 
-.group1{background:#f4b183;}
-.group2{background:#a9d18e;}
-.group3{background:#9dc3e6;}
-.group5{background:#c9daf8;}
-.group6{background:#d9d2e9;}
+.group1{
+    background:#ffb74d;
+    color:#222;
+}
+
+.group2{
+    background:#4caf50;
+    color:white;
+}
+
+.group3{
+    background:#2196f3;
+    color:white;
+}
+
+.group5{
+    background:#7e57c2;
+    color:white;
+}
+
+.group6{
+    background:#ec407a;
+    color:white;
+}
 
 .gray{background:#eee;}
 .red{color:red;font-weight:bold;}
 .green{color:green;font-weight:bold;}
 
 .run-btn{
-    background:#28a745;
+    background:linear-gradient(135deg,#00c853,#009624);
     color:#fff;
     border:none;
-    padding:8px 15px;
-    border-radius:6px;
+    padding:12px 24px;
+    border-radius:12px;
     cursor:pointer;
     margin-bottom:10px;
+    font-weight:bold;
+    font-size:16px;
+    box-shadow:0 8px 20px rgba(0,200,83,.35);
+    transition:.25s;
+}
+
+.run-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 25px rgba(0,200,83,.45);
+}
+
+.run-btn:active{
+    transform:scale(.98);
 }
 /* LOGIN */
 
@@ -231,7 +288,13 @@ th{background:#fafafa}
     text-align:center;
 }
 .hero-banner{
+    position:relative;
     height:350px;
+
+    border-radius:20px;
+    overflow:hidden;
+    margin-bottom:20px;
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
 
     background:
     linear-gradient(
@@ -252,18 +315,199 @@ th{background:#fafafa}
 }
 
 .hero-content h1{
-    font-size:42px;
+    font-size:48px;
     margin:20px 0;
-    text-shadow:0 0 10px #000;
+    text-shadow:0 0 20px rgba(0,0,0,.8);
+    letter-spacing:2px;
 }
 
 #updateTimeHero{
+    display:inline-block;
+    padding:12px 24px;
+    border-radius:30px;
+    background:rgba(255,255,255,.18);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.25);
     font-size:22px;
     font-weight:bold;
 }
+
+/* BRAZIL CLOCK */
+
+#brazilClockBox{
+    position:absolute;
+    top:20px;
+    right:30px;
+    text-align:center;
+    z-index:10;
+}
+.clock::before{
+    content:"";
+    position:absolute;
+    inset:8px;
+    border:2px dashed rgba(0,0,0,.15);
+    border-radius:50%;
+}
+.clock{
+    .number{
+    position:absolute;
+    font-weight:bold;
+    color:#222;
+    font-size:18px;
+    text-shadow:0 1px 2px rgba(255,255,255,.8);
+}
+
+.n12{top:8px;left:50%;transform:translateX(-50%);}
+.n1{top:18px;right:38px;}
+.n2{top:38px;right:18px;}
+.n3{top:50%;right:8px;transform:translateY(-50%);}
+.n4{bottom:38px;right:18px;}
+.n5{bottom:18px;right:38px;}
+.n6{bottom:8px;left:50%;transform:translateX(-50%);}
+.n7{bottom:18px;left:38px;}
+.n8{bottom:38px;left:18px;}
+.n9{top:50%;left:8px;transform:translateY(-50%);}
+.n10{top:38px;left:18px;}
+.n11{top:18px;left:38px;}
+
+    width:160px;
+    height:160px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(
+        circle at top left,
+        rgba(255,255,255,.9),
+        rgba(255,255,255,.2)
+    );
+
+    backdrop-filter:blur(20px);
+
+    border:4px solid rgba(255,255,255,.3);
+
+    box-shadow:
+    0 15px 40px rgba(0,0,0,.35),
+    inset 0 5px 15px rgba(255,255,255,.4);
+
+    position:relative;
+}
+
+.center-dot{
+    width:14px;
+    height:14px;
+    background:#222;
+    border-radius:50%;
+
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+    z-index:999;
+}
+
+.hand{
+    position:absolute;
+    left:50%;
+    bottom:50%;
+    transform-origin:bottom center;
+}
+
+.hour{
+    width:6px;
+    height:40px;
+    background:#222;
+    border-radius:10px;
+}
+
+.minute{
+    width:4px;
+    height:55px;
+    background:#444;
+    border-radius:10px;
+}
+
+.second{
+    width:2px;
+    height:65px;
+    background:red;
+    border-radius:10px;
+}
+
+#brazilTimeText{
+    margin-top:10px;
+    color:white;
+    font-weight:bold;
+    text-shadow:0 0 8px #000;
+    font-size:15px;
+}
+
 </style>
 </head>
+<script>
 
+function updateBrazilClock(){
+
+    const now = new Date();
+
+    const brazil = new Date(
+        now.toLocaleString(
+            "en-US",
+            {
+                timeZone:"America/Sao_Paulo"
+            }
+        )
+    );
+
+    const h = brazil.getHours();
+    const m = brazil.getMinutes();
+    const s = brazil.getSeconds();
+
+    const hourDeg =
+        (h % 12) * 30 +
+        m * 0.5;
+
+    const minuteDeg =
+        m * 6 +
+        s * 0.1;
+
+    const secondDeg =
+        s * 6;
+
+    document.getElementById("hour")
+        .style.transform =
+        `translateX(-50%) rotate(${hourDeg}deg)`;
+
+    document.getElementById("minute")
+        .style.transform =
+        `translateX(-50%) rotate(${minuteDeg}deg)`;
+
+    document.getElementById("second")
+        .style.transform =
+        `translateX(-50%) rotate(${secondDeg}deg)`;
+
+    document.getElementById("brazilTimeText")
+        .innerHTML =
+        "🇧🇷 Brazil<br>" +
+        brazil.toLocaleString(
+            "pt-BR"
+        );
+}
+
+window.addEventListener("load",()=>{
+
+    updateBrazilClock();
+
+    setInterval(
+        updateBrazilClock,
+        1000
+    );
+
+});
+
+</script>
 <body>
 
 <!-- LOGIN 3D BRAZIL -->
@@ -303,6 +547,33 @@ th{background:#fafafa}
 <!-- TAB -->
  <div class="hero-banner">
 
+<div id="brazilClockBox">
+
+    <div class="clock">
+        <div class="number n12">12</div>
+<div class="number n1">1</div>
+<div class="number n2">2</div>
+<div class="number n3">3</div>
+<div class="number n4">4</div>
+<div class="number n5">5</div>
+<div class="number n6">6</div>
+<div class="number n7">7</div>
+<div class="number n8">8</div>
+<div class="number n9">9</div>
+<div class="number n10">10</div>
+<div class="number n11">11</div>
+
+        <div class="center-dot"></div>
+
+        <div id="hour" class="hand hour"></div>
+        <div id="minute" class="hand minute"></div>
+        <div id="second" class="hand second"></div>
+
+    </div>
+
+    <div id="brazilTimeText"></div>
+
+</div>
     <div class="hero-content">
 
         <div id="updateTimeHero">
@@ -766,8 +1037,8 @@ ${regRechargeRate}
 
 <td>${n.firstRechargeCount||0}</td>
 <td>${n.firstRechargeAmount||0}</td>
-<td>${n.rechargeCount||0}</td>
-<td>${n.rechargeAmount||0}</td>
+<td>${p.firstRechargeCount||0}</td>
+<td>${c.firstRechargeCount||0}</td>
 
 
 <td>
