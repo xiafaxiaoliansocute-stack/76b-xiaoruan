@@ -311,6 +311,86 @@ for name, cid in CHANNELS.items():
 # ======================
 
 result_data["repeat_rate"] = {}
+# ======================
+# NEXT AVG
+# ======================
+
+result_data["next_avg"] = {}
+
+NEXT_TYPES = {
+    "first": "none",
+    "parent": "direct",
+    "child": "split"
+}
+
+for key, parent_type in NEXT_TYPES.items():
+
+    try:
+
+        params = {
+            "input": json.dumps({
+                "json": {
+                    "tenantId": TENANT_ID,
+                    "regionId": REGION_ID,
+                    "startTime": retention_start,
+                    "endTime": today,
+                    "type": "recharge",
+                    "channelIds": [],
+                    "parentType": parent_type,
+                    "page": 1,
+                    "pageSize": 50,
+                    "timeType": "days_90",
+                    "retentionDays": [0,1]
+                }
+            }, separators=(',', ':'))
+        }
+
+        res = requests.get(
+            RETENTION_URL,
+            headers=headers,
+            params=params,
+            timeout=30
+        )
+
+        data = (
+            res.json()
+            .get("result", {})
+            .get("data", {})
+            .get("json", {})
+            .get("data", {})
+            .get("retentionList", [])
+        )
+
+        if len(data) >= 2:
+
+            yesterday = (
+                brazil_time - timedelta(days=1)
+            ).strftime("%Y-%m-%d")
+
+            row = next(
+                (r for r in data if r.get("time") == yesterday),
+                None
+            )
+
+            if row:
+
+                amount1 = row.get("amount1", 0) / 100
+                count1 = row.get("count1", 0)
+
+                result_data["next_avg"][key] = (
+                    round(amount1 / count1, 2)
+                    if count1 else 0
+                )
+
+            else:
+                result_data["next_avg"][key] = 0
+
+        else:
+            result_data["next_avg"][key] = 0
+
+    except Exception as e:
+        print("next avg error:", key, e)
+        result_data["next_avg"][key] = 0
 
 REPEAT_TYPES = {
     "first": "none",      # 首充
@@ -358,7 +438,6 @@ for key, parent_type in REPEAT_TYPES.items():
 
         if data:
             row = data[-1]   # hôm nay
-
             count = row.get("count", 0)
             repeat = row.get("repeatRechargeCount", 0)
 
@@ -372,6 +451,8 @@ for key, parent_type in REPEAT_TYPES.items():
     except Exception as e:
         print("repeat rate error:", key, e)
         result_data["repeat_rate"][key] = 0
+
+       
 # ======================
 # SAVE JSON
 # ======================

@@ -230,10 +230,39 @@ th{background:#fafafa}
     color:red;
     text-align:center;
 }
+.hero-banner{
+    height:350px;
+
+    background:
+    linear-gradient(
+        rgba(0,0,0,.35),
+        rgba(0,0,0,.35)
+    ),
+    url("https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=2000&q=80");
+
+    background-size:cover;
+    background-position:center;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:white;
+    text-align:center;
+}
+
+.hero-content h1{
+    font-size:42px;
+    margin:20px 0;
+    text-shadow:0 0 10px #000;
+}
+
+#updateTimeHero{
+    font-size:22px;
+    font-weight:bold;
+}
 </style>
 </head>
-
-<body>
 
 <body>
 
@@ -272,9 +301,43 @@ th{background:#fafafa}
 </div>
 
 <!-- TAB -->
+ <div class="hero-banner">
+
+    <div class="hero-content">
+
+        <div id="updateTimeHero">
+            📅 数据更新时间：--
+        </div>
+
+        <h1>2306-76b-实时数据汇总</h1>
+
+        <button class="run-btn" onclick="queryData()">
+            🔍 查询数据
+        </button>
+
+    </div>
+
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+
 <div class="tab-bar">
     <div class="tab-btn active" onclick="switchTab(1)">📊 推广效果</div>
     <div class="tab-btn" onclick="switchTab(2)">🧮 实时数据分析</div>
+</div>
+
+<button onclick="logout()"
+style="
+background:#dc3545;
+color:white;
+border:none;
+padding:10px 18px;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+">
+🚪退出登录
+</button>
+
 </div>
 
 <!-- TAB 1 (GIỮ NGUYÊN 100%) -->
@@ -284,25 +347,6 @@ th{background:#fafafa}
 
 <!-- TAB 2 -->
 <div id="tab2" style="display:none">
-
-<div id="updateTime"
-style="
-text-align:center;
-color:red;
-font-size:18px;
-font-weight:bold;
-margin-bottom:8px;">
-📅 数据更新时间：--
-</div>
-
-<div class="title2">
-2306-76b-实时数据汇总
-</div>
-
-
-<button class="run-btn" onclick="queryData()">
-🔍 查询数据
-</button>
 
 <table>
 <thead>
@@ -392,7 +436,7 @@ function loadData(){
 
 globalData = data;
 
-document.getElementById("updateTime").innerHTML =
+document.getElementById("updateTimeHero").innerHTML =
     "📅 数据更新时间：" +
     (data.update_time || "--");
 
@@ -544,15 +588,22 @@ let parent = all.parentList || {};
 let child = all.childList || {};
 let avg = "";
 let nextAvg = "";
+nextAvg =
+item.show==="大盘"
+? (globalData.next_avg?.first ?? 0)
+
+: item.show==="FB-H5"
+? (globalData.next_avg?.parent ?? 0)
+
+: item.show==="FB-PWA"
+? (globalData.next_avg?.child ?? 0)
+
+: "";
 
 if(item.key==="ALL_TOTAL"){      // 大盘
 
     avg = normal.rechargeCount
         ? (normal.rechargeAmount / normal.rechargeCount).toFixed(2)
-        : 0;
-
-    nextAvg = normal.firstRechargeCount
-        ? (normal.firstRechargeAmount / normal.firstRechargeCount).toFixed(2)
         : 0;
 }
 else if(item.key==="fb-h5"){     // 直推
@@ -560,21 +611,13 @@ else if(item.key==="fb-h5"){     // 直推
     avg = parent.rechargeCount
         ? (parent.rechargeAmount / parent.rechargeCount).toFixed(2)
         : 0;
-
-    nextAvg = parent.firstRechargeCount
-        ? (parent.firstRechargeAmount / parent.firstRechargeCount).toFixed(2)
-        : 0;
 }
 else if(item.key==="fb-pwa"){    // 裂变
 
     avg = child.rechargeCount
         ? (child.rechargeAmount / child.rechargeCount).toFixed(2)
         : 0;
-
-    nextAvg = child.firstRechargeCount
-        ? (child.firstRechargeAmount / child.firstRechargeCount).toFixed(2)
-        : 0;
-        
+    
 }
 else if(item.key==="fb-ios"){    // 首充
 
@@ -1094,12 +1137,15 @@ function queryData(){
 </script>
 
 <script>
+
 function login(){
 
-    let user=document.getElementById("user").value;
-    let pass=document.getElementById("pass").value;
+    let user = document.getElementById("user").value;
+    let pass = document.getElementById("pass").value;
 
     if(user==="xiaoruan" && pass==="1"){
+
+        localStorage.setItem("isLoggedIn","true");
 
         document.getElementById("loginPage").style.display="none";
 
@@ -1109,7 +1155,25 @@ function login(){
 
     }
 }
-</script>
 
+function logout(){
+
+    localStorage.removeItem("isLoggedIn");
+
+    location.reload();
+
+}
+
+window.addEventListener("load", function(){
+
+    if(localStorage.getItem("isLoggedIn")==="true"){
+
+        document.getElementById("loginPage").style.display="none";
+
+    }
+
+});
+
+</script>
 </body>
 </html>
