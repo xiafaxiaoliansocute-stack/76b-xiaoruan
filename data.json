@@ -1,44 +1,356 @@
 {
-  "update_time": "2026-06-12 04:45:23",
+  "update_time": "2026-06-12 04:48:02",
   "ALL_TOTAL": {
-    "normalList": {},
-    "parentList": {},
-    "childList": {}
+    "normalList": {
+      "registerCount": 42423,
+      "firstRechargeCount": 31030,
+      "firstRechargeAmount": 793865,
+      "rechargeCount": 49140,
+      "rechargeAmount": 2255405,
+      "withdrawCount": 16838,
+      "withdrawAmount": 2249970,
+      "withdrawFee": 0,
+      "betCount": 93805,
+      "betAmount": 16039595,
+      "validBetAmount": 16073271,
+      "reward": 72283928
+    },
+    "parentList": {
+      "registerCount": 35844,
+      "firstRechargeCount": 25465,
+      "firstRechargeAmount": 593889,
+      "rechargeCount": 39279,
+      "rechargeAmount": 1652080,
+      "withdrawCount": 12634,
+      "withdrawAmount": 1624580,
+      "withdrawFee": 0,
+      "betCount": 73022,
+      "betAmount": 11840552,
+      "validBetAmount": 11861728,
+      "reward": 49690760
+    },
+    "childList": {
+      "registerCount": 6579,
+      "firstRechargeCount": 5565,
+      "firstRechargeAmount": 199976,
+      "rechargeCount": 9861,
+      "rechargeAmount": 603325,
+      "withdrawCount": 4204,
+      "withdrawAmount": 625390,
+      "withdrawFee": 0,
+      "betCount": 20783,
+      "betAmount": 4199042,
+      "validBetAmount": 4211543,
+      "reward": 22593168
+    }
   },
   "fb-h5": {
-    "normalList": {},
-    "parentList": {},
-    "childList": {}
+    "normalList": {
+      "registerCount": 7105,
+      "firstRechargeCount": 5555,
+      "firstRechargeAmount": 165459,
+      "rechargeCount": 9718,
+      "rechargeAmount": 496827,
+      "withdrawCount": 3770,
+      "withdrawAmount": 525936,
+      "withdrawFee": 0,
+      "betCount": 20598,
+      "betAmount": 3518187,
+      "validBetAmount": 3525336,
+      "reward": 18170864
+    },
+    "parentList": {
+      "registerCount": 5269,
+      "firstRechargeCount": 3987,
+      "firstRechargeAmount": 107538,
+      "rechargeCount": 6999,
+      "rechargeAmount": 319317,
+      "withdrawCount": 2656,
+      "withdrawAmount": 352620,
+      "withdrawFee": 0,
+      "betCount": 15076,
+      "betAmount": 2320526,
+      "validBetAmount": 2321940,
+      "reward": 12616724
+    },
+    "childList": {
+      "registerCount": 1836,
+      "firstRechargeCount": 1568,
+      "firstRechargeAmount": 57921,
+      "rechargeCount": 2719,
+      "rechargeAmount": 177510,
+      "withdrawCount": 1114,
+      "withdrawAmount": 173316,
+      "withdrawFee": 0,
+      "betCount": 5522,
+      "betAmount": 1197661,
+      "validBetAmount": 1203395,
+      "reward": 5554140
+    }
   },
   "fb-pwa": {
-    "normalList": {},
-    "parentList": {},
-    "childList": {}
+    "normalList": {
+      "registerCount": 23079,
+      "firstRechargeCount": 17204,
+      "firstRechargeAmount": 407008,
+      "rechargeCount": 26091,
+      "rechargeAmount": 1123931,
+      "withdrawCount": 8373,
+      "withdrawAmount": 1052904,
+      "withdrawFee": 0,
+      "betCount": 47406,
+      "betAmount": 7956693,
+      "validBetAmount": 7975660,
+      "reward": 34366976
+    },
+    "parentList": {
+      "registerCount": 20206,
+      "firstRechargeCount": 14813,
+      "firstRechargeAmount": 323623,
+      "rechargeCount": 21586,
+      "rechargeAmount": 858424,
+      "withdrawCount": 6399,
+      "withdrawAmount": 769644,
+      "withdrawFee": 0,
+      "betCount": 37423,
+      "betAmount": 6072661,
+      "validBetAmount": 6085289,
+      "reward": 22832928
+    },
+    "childList": {
+      "registerCount": 2873,
+      "firstRechargeCount": 2391,
+      "firstRechargeAmount": 83385,
+      "rechargeCount": 4505,
+      "rechargeAmount": 265507,
+      "withdrawCount": 1974,
+      "withdrawAmount": 283260,
+      "withdrawFee": 0,
+      "betCount": 9983,
+      "betAmount": 1884032,
+      "validBetAmount": 1890371,
+      "reward": 11534048
+    }
   },
   "fb-ios": {
-    "normalList": {},
-    "parentList": {},
-    "childList": {}
+    "normalList": {
+      "registerCount": 3302,
+      "firstRechargeCount": 2132,
+      "firstRechargeAmount": 72454,
+      "rechargeCount": 3138,
+      "rechargeAmount": 204232,
+      "withdrawCount": 1060,
+      "withdrawAmount": 201062,
+      "withdrawFee": 0,
+      "betCount": 5493,
+      "betAmount": 1303655,
+      "validBetAmount": 1306726,
+      "reward": 5419914
+    },
+    "parentList": {
+      "registerCount": 2741,
+      "firstRechargeCount": 1636,
+      "firstRechargeAmount": 52313,
+      "rechargeCount": 2362,
+      "rechargeAmount": 145276,
+      "withdrawCount": 753,
+      "withdrawAmount": 141358,
+      "withdrawFee": 0,
+      "betCount": 4078,
+      "betAmount": 923577,
+      "validBetAmount": 926495,
+      "reward": 3863331
+    },
+    "childList": {
+      "registerCount": 561,
+      "firstRechargeCount": 496,
+      "firstRechargeAmount": 20141,
+      "rechargeCount": 776,
+      "rechargeAmount": 58956,
+      "withdrawCount": 307,
+      "withdrawAmount": 59704,
+      "withdrawFee": 0,
+      "betCount": 1415,
+      "betAmount": 380078,
+      "validBetAmount": 380231,
+      "reward": 1556583
+    }
   },
   "tt-pwa": {
-    "normalList": {},
-    "parentList": {},
-    "childList": {}
+    "normalList": {
+      "registerCount": 2794,
+      "firstRechargeCount": 1910,
+      "firstRechargeAmount": 45517,
+      "rechargeCount": 3334,
+      "rechargeAmount": 156162,
+      "withdrawCount": 1107,
+      "withdrawAmount": 196224,
+      "withdrawFee": 0,
+      "betCount": 6967,
+      "betAmount": 1244710,
+      "validBetAmount": 1245432,
+      "reward": 4480591
+    },
+    "parentList": {
+      "registerCount": 2474,
+      "firstRechargeCount": 1632,
+      "firstRechargeAmount": 35263,
+      "rechargeCount": 2887,
+      "rechargeAmount": 129670,
+      "withdrawCount": 919,
+      "withdrawAmount": 171559,
+      "withdrawFee": 0,
+      "betCount": 6044,
+      "betAmount": 1055946,
+      "validBetAmount": 1056632,
+      "reward": 3589073
+    },
+    "childList": {
+      "registerCount": 320,
+      "firstRechargeCount": 278,
+      "firstRechargeAmount": 10254,
+      "rechargeCount": 447,
+      "rechargeAmount": 26492,
+      "withdrawCount": 188,
+      "withdrawAmount": 24665,
+      "withdrawFee": 0,
+      "betCount": 923,
+      "betAmount": 188764,
+      "validBetAmount": 188800,
+      "reward": 891518
+    }
   },
   "kwai-pwa": {
-    "normalList": {},
-    "parentList": {},
-    "childList": {}
+    "normalList": {
+      "registerCount": 3720,
+      "firstRechargeCount": 2658,
+      "firstRechargeAmount": 58267,
+      "rechargeCount": 4187,
+      "rechargeAmount": 147076,
+      "withdrawCount": 1443,
+      "withdrawAmount": 140186,
+      "withdrawFee": 0,
+      "betCount": 7672,
+      "betAmount": 1017417,
+      "validBetAmount": 1020474,
+      "reward": 4445254
+    },
+    "parentList": {
+      "registerCount": 3375,
+      "firstRechargeCount": 2370,
+      "firstRechargeAmount": 49294,
+      "rechargeCount": 3750,
+      "rechargeAmount": 124653,
+      "withdrawCount": 1273,
+      "withdrawAmount": 119817,
+      "withdrawFee": 0,
+      "betCount": 6934,
+      "betAmount": 860761,
+      "validBetAmount": 863773,
+      "reward": 3814128
+    },
+    "childList": {
+      "registerCount": 345,
+      "firstRechargeCount": 288,
+      "firstRechargeAmount": 8973,
+      "rechargeCount": 437,
+      "rechargeAmount": 22423,
+      "withdrawCount": 170,
+      "withdrawAmount": 20369,
+      "withdrawFee": 0,
+      "betCount": 738,
+      "betAmount": 156656,
+      "validBetAmount": 156700,
+      "reward": 631126
+    }
   },
   "回访": {
-    "normalList": {},
-    "parentList": {},
-    "childList": {}
+    "normalList": {
+      "registerCount": 881,
+      "firstRechargeCount": 395,
+      "firstRechargeAmount": 8502,
+      "rechargeCount": 619,
+      "rechargeAmount": 27496,
+      "withdrawCount": 212,
+      "withdrawAmount": 24230,
+      "withdrawFee": 0,
+      "betCount": 1091,
+      "betAmount": 253562,
+      "validBetAmount": 253686,
+      "reward": 929806
+    },
+    "parentList": {
+      "registerCount": 749,
+      "firstRechargeCount": 290,
+      "firstRechargeAmount": 5595,
+      "rechargeCount": 450,
+      "rechargeAmount": 19549,
+      "withdrawCount": 148,
+      "withdrawAmount": 16513,
+      "withdrawFee": 0,
+      "betCount": 816,
+      "betAmount": 198437,
+      "validBetAmount": 198562,
+      "reward": 681575
+    },
+    "childList": {
+      "registerCount": 132,
+      "firstRechargeCount": 105,
+      "firstRechargeAmount": 2907,
+      "rechargeCount": 169,
+      "rechargeAmount": 7947,
+      "withdrawCount": 64,
+      "withdrawAmount": 7717,
+      "withdrawFee": 0,
+      "betCount": 275,
+      "betAmount": 55124,
+      "validBetAmount": 55124,
+      "reward": 248231
+    }
   },
   "ws-h5": {
-    "normalList": {},
-    "parentList": {},
-    "childList": {}
+    "normalList": {
+      "registerCount": 177,
+      "firstRechargeCount": 121,
+      "firstRechargeAmount": 2473,
+      "rechargeCount": 219,
+      "rechargeAmount": 7607,
+      "withdrawCount": 69,
+      "withdrawAmount": 5206,
+      "withdrawFee": 0,
+      "betCount": 414,
+      "betAmount": 62303,
+      "validBetAmount": 62377,
+      "reward": 285886
+    },
+    "parentList": {
+      "registerCount": 153,
+      "firstRechargeCount": 101,
+      "firstRechargeAmount": 2002,
+      "rechargeCount": 190,
+      "rechargeAmount": 6416,
+      "withdrawCount": 60,
+      "withdrawAmount": 4456,
+      "withdrawFee": 0,
+      "betCount": 370,
+      "betAmount": 52291,
+      "validBetAmount": 52292,
+      "reward": 255983
+    },
+    "childList": {
+      "registerCount": 24,
+      "firstRechargeCount": 20,
+      "firstRechargeAmount": 471,
+      "rechargeCount": 29,
+      "rechargeAmount": 1191,
+      "withdrawCount": 9,
+      "withdrawAmount": 750,
+      "withdrawFee": 0,
+      "betCount": 44,
+      "betAmount": 10012,
+      "validBetAmount": 10085,
+      "reward": 29903
+    }
   },
   "retention": {
     "2026-05-13": {
@@ -13543,9 +13855,9 @@
     }
   },
   "repeat_rate": {
-    "first": 0,
-    "parent": 0,
-    "child": 0
+    "first": 28.96,
+    "parent": 27.59,
+    "child": 35.19
   },
   "next_avg": {
     "first": 51.14,
