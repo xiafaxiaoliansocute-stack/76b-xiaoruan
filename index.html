@@ -1680,6 +1680,15 @@ document.getElementById("body").innerHTML = html;
 /* PYTHON BUTTON */
 async function queryData(){
 
+    // GitHub Pages
+    if(location.hostname.includes("github.io")){
+
+        location.reload();
+        return;
+
+    }
+
+    // Flask
     const btn = document.querySelector(".run-btn");
 
     btn.disabled = true;
@@ -1688,7 +1697,6 @@ async function queryData(){
     try{
 
         const res = await fetch("/run");
-
         const data = await res.json();
 
         if(data.success){
