@@ -1678,12 +1678,39 @@ document.getElementById("body").innerHTML = html;
 }
 
 /* PYTHON BUTTON */
-function queryData(){
+async function queryData(){
 
-    loadData();
+    const btn = document.querySelector(".run-btn");
 
-    alert("✅ 数据已刷新");
+    btn.disabled = true;
+    btn.innerHTML = "⏳ 更新中...";
 
+    try{
+
+        const res = await fetch("/run");
+
+        const data = await res.json();
+
+        if(data.success){
+
+            await loadData();
+
+            alert("✅ 数据更新成功");
+
+        }else{
+
+            alert("❌ " + data.error);
+
+        }
+
+    }catch(err){
+
+        alert("❌ " + err);
+
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = "🔍 查询数据";
 }
 
 </script>
