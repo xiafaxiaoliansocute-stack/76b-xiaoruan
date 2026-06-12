@@ -1,7 +1,7 @@
 import requests
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 # ======================
@@ -12,6 +12,7 @@ ACCOUNT = "xiaoruan2300"
 TOKEN = "icp5obt3jiro5zzhwjo7fucdaue569udcz4cmag7"
 
 BASE_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.effect"
+HOUR_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.hourReportSum"
 
 TENANT_ID = 5317688
 REGION_ID = 1
@@ -56,6 +57,7 @@ retention_start = (
 result_data = {
     "update_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 }
+result_data["hour_report"] = {}
 
 # ======================
 # SAFE PARSE
@@ -128,10 +130,25 @@ try:
     all_json = safe_get(res_all.json())
 
     result_data["ALL_TOTAL"] = {
-    "normalList": fix_amounts(all_json.get("normalList", {})),
-    "parentList": fix_amounts(all_json.get("parentList", {})),
-    "childList": fix_amounts(all_json.get("childList", {}))
-}
+        "normalList": fix_amounts(all_json.get("normalList", {})),
+        "parentList": fix_amounts(all_json.get("parentList", {})),
+        "childList": fix_amounts(all_json.get("childList", {}))
+    }
+
+    # 推广 = 直推 + 裂变
+    parent = result_data["ALL_TOTAL"]["parentList"]
+    child = result_data["ALL_TOTAL"]["childList"]
+
+    promotion = {}
+
+    for key in set(parent.keys()) | set(child.keys()):
+        p = parent.get(key, 0)
+        c = child.get(key, 0)
+
+        if isinstance(p, (int, float)) and isinstance(c, (int, float)):
+            promotion[key] = p + c
+
+    result_data["ALL_TOTAL"]["promotionList"] = promotion
 
     print("✅ ALL_TOTAL success")
 
@@ -142,7 +159,6 @@ except Exception as e:
 # ======================
 # STEP 2: GET EACH CHANNEL
 # ======================
-
 
 for name, cid in CHANNELS.items():
 
@@ -162,7 +178,13 @@ for name, cid in CHANNELS.items():
     }
 
     try:
-        res = requests.get(BASE_URL, headers=headers, params=params, timeout=30)
+        res = requests.get(
+            BASE_URL,
+            headers=headers,
+            params=params,
+            timeout=30
+        )
+
         data = safe_get(res.json())
 
         result_data[name] = {
@@ -171,15 +193,210 @@ for name, cid in CHANNELS.items():
             "childList": fix_amounts(data.get("childList", {}))
         }
 
+        # 推广 = 直推 + 裂变
+        parent = result_data[name]["parentList"]
+        child = result_data[name]["childList"]
+
+        promotion = {}
+
+        for key in set(parent.keys()) | set(child.keys()):
+            p = parent.get(key, 0)
+            c = child.get(key, 0)
+
+            if isinstance(p, (int, float)) and isinstance(c, (int, float)):
+                promotion[key] = p + c
+
+        result_data[name]["promotionList"] = promotion
+
         print(f"✅ {name} success")
 
     except Exception as e:
         print(f"❌ {name} error:", e)
+        
+def fix_hour_amounts(obj):
+    if not isinstance(obj, dict):
+        return obj
+
+    amount_fields = [
+        "firstRechargeAmount",
+        "rechargeAmount",
+        "withdrawAmount",
+        "betAmount",
+        "validBetAmount",
+        "reward",
+        "rechargeWithdrawDiff",
+        "splitFirstRechargeAmount",
+        "splitRechargeAmount",
+        "splitWithdrawAmount",
+        "splitBetAmount",
+        "splitValidBetAmount",
+        "splitReward"
+    ]
+
+    for k in amount_fields:
+        if k in obj and isinstance(obj[k], (int, float)):
+            obj[k] = round(obj[k] / 100)
+
+    return obj
 
 
+# ======================
+# HOUR REPORT
+# ======================
+
+# giờ Brazil hiện tại
+now_br = datetime.now(ZoneInfo("America/Sao_Paulo"))
+
+# cùng thời điểm của ngày hôm qua
+yesterday_same_time = now_br - timedelta(days=1)
+
+# 00:00 ngày hôm qua (Brazil)
+hour_start = yesterday_same_time.replace(
+    hour=0,
+    minute=0,
+    second=0,
+    microsecond=0
+)
+
+# giờ hiện tại của ngày hôm qua (Brazil)
+hour_end = yesterday_same_time
+
+# đổi sang UTC để gửi API
+hour_start = hour_start.astimezone(timezone.utc)
+hour_end = hour_end.astimezone(timezone.utc)
+
+print("Brazil now :", now_br)
+print("Hour start :", hour_start)
+print("Hour end   :", hour_end)
+
+# ALL TOTAL
+try:
+    params = {
+        "input": json.dumps({
+            "json": {
+                "tenantId": TENANT_ID,
+                "regionId": REGION_ID,
+                "channelId": [],
+                "page": 1,
+                "pageSize": 50,
+                "order": [
+                    {
+                        "key": "firstRechargeCount",
+                        "type": "asc"
+                    }
+                ],
+                "startTime": hour_start.isoformat().replace("+00:00", "Z"),
+                "endTime": hour_end.isoformat().replace("+00:00", "Z")
+            }
+        }, separators=(',', ':'))
+    }
+
+    res = requests.get(
+        HOUR_URL,
+        headers=headers,
+        params=params,
+        timeout=30
+    )
+
+    hour_json = (
+        res.json()
+        .get("result", {})
+        .get("data", {})
+        .get("json", {})
+    )
+
+    result_data["hour_report"]["ALL_TOTAL"] = fix_hour_amounts(hour_json)
+    result_data["hour_report"]["ALL_TOTAL"]["promotionList"] = {
+    "firstRechargeCount":
+        result_data["hour_report"]["ALL_TOTAL"].get("firstRechargeCount", 0)
+        + result_data["hour_report"]["ALL_TOTAL"].get("splitFirstRechargeCount", 0),
+
+    "firstRechargeAmount":
+        result_data["hour_report"]["ALL_TOTAL"].get("firstRechargeAmount", 0)
+        + result_data["hour_report"]["ALL_TOTAL"].get("splitFirstRechargeAmount", 0),
+
+    "rechargeCount":
+        result_data["hour_report"]["ALL_TOTAL"].get("rechargeCount", 0)
+        + result_data["hour_report"]["ALL_TOTAL"].get("splitRechargeCount", 0),
+
+    "rechargeAmount":
+        result_data["hour_report"]["ALL_TOTAL"].get("rechargeAmount", 0)
+        + result_data["hour_report"]["ALL_TOTAL"].get("splitRechargeAmount", 0)
+}
+
+    print("✅ hour ALL_TOTAL")
+
+except Exception as e:
+    print("❌ hour ALL_TOTAL", e)
+
+# EACH CHANNEL
+for name, cid in CHANNELS.items():
+    try:
+        params = {
+            "input": json.dumps({
+                "json": {
+                    "tenantId": TENANT_ID,
+                    "regionId": REGION_ID,
+                    "channelId": [],
+                    "channelPromoterId": cid,
+                    "page": 1,
+                    "pageSize": 50,
+                    "order": [
+                        {
+                            "key": "firstRechargeCount",
+                            "type": "asc"
+                        }
+                    ],
+                    "startTime": hour_start.isoformat().replace("+00:00", "Z"),
+                    "endTime": hour_end.isoformat().replace("+00:00", "Z")
+                }
+            }, separators=(',', ':'))
+        }
+
+        res = requests.get(
+            HOUR_URL,
+            headers=headers,
+            params=params,
+            timeout=30
+        )
+
+        hour_json = (
+            res.json()
+            .get("result", {})
+            .get("data", {})
+            .get("json", {})
+        )
+
+        result_data["hour_report"][name] = fix_hour_amounts(hour_json)
+        result_data["hour_report"][name]["promotionList"] = {
+    "firstRechargeCount":
+        result_data["hour_report"][name].get("firstRechargeCount", 0)
+        + result_data["hour_report"][name].get("splitFirstRechargeCount", 0),
+
+    "firstRechargeAmount":
+        result_data["hour_report"][name].get("firstRechargeAmount", 0)
+        + result_data["hour_report"][name].get("splitFirstRechargeAmount", 0),
+
+    "rechargeCount":
+        result_data["hour_report"][name].get("rechargeCount", 0)
+        + result_data["hour_report"][name].get("splitRechargeCount", 0),
+
+    "rechargeAmount":
+        result_data["hour_report"][name].get("rechargeAmount", 0)
+        + result_data["hour_report"][name].get("splitRechargeAmount", 0)
+}
+
+        print(f"✅ hour {name}")
+
+    except Exception as e:
+        print(f"❌ hour {name}", e)
+
+    
 # ======================
 # STEP 3: GET RETENTION
 # ======================
+
+
 
 RETENTION_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.dayRetention"
 
@@ -438,6 +655,7 @@ for key, parent_type in REPEAT_TYPES.items():
 
         if data:
             row = data[-1]   # hôm nay
+
             count = row.get("count", 0)
             repeat = row.get("repeatRechargeCount", 0)
 

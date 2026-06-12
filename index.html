@@ -180,6 +180,10 @@ th{
 .gray{background:#eee;}
 .red{color:red;font-weight:bold;}
 .green{color:green;font-weight:bold;}
+.label-col{
+    background:#e0e0e0 !important;
+    font-weight:bold;
+}
 
 .run-btn{
     background:linear-gradient(135deg,#00c853,#009624);
@@ -301,7 +305,12 @@ th{
     border-radius:20px;
     overflow:hidden;
     margin-bottom:20px;
-    box-shadow:0 15px 40px rgba(0,0,0,.25);
+
+    border:2px solid rgba(255,255,255,.15);
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.25),
+        0 0 25px rgba(0,255,100,.35);
 
     background:
     linear-gradient(
@@ -319,6 +328,90 @@ th{
 
     color:white;
     text-align:center;
+}
+
+.hero-banner::before{
+    content:"";
+    position:absolute;
+    inset:-3px;
+    border-radius:24px;
+
+    background:conic-gradient(
+        #00ff66,
+        #00ffff,
+        #0099ff,
+        #ff00ff,
+        #ff0000,
+        #ffff00,
+        #00ff66
+    );
+
+    animation:bannerLed 3s linear infinite;
+    z-index:0;
+}
+
+.hero-banner::after{
+    content:"";
+    position:absolute;
+    inset:3px;
+    border-radius:18px;
+    background:transparent;
+    z-index:1;
+}
+/* LED chạy quanh viền banner */
+
+.hero-banner{
+    position:relative;
+}
+
+.hero-banner::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:20px;
+    padding:3px;
+
+    background:conic-gradient(
+        from 0deg,
+        #00ff66,
+        #00ffff,
+        #0099ff,
+        #ff00ff,
+        #ff0000,
+        #ffff00,
+        #00ff66
+    );
+
+    animation:bannerLed 3s linear infinite;
+
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite:xor;
+            mask-composite:exclude;
+
+    pointer-events:none;
+    z-index:5;
+}
+
+@keyframes bannerLed{
+    from{
+        transform:rotate(0deg);
+    }
+    to{
+        transform:rotate(360deg);
+    }
+}
+.hero-content,
+#brazilClockBox{
+    position:relative;
+    z-index:2;
+}
+
+@keyframes bannerLed{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
 }
 
 .hero-content h1{
@@ -642,8 +735,8 @@ font-weight:bold;
 </div>
 
 <!-- TAB 2 -->
-<div id="tab2" style="display:none">
-
+<div id="tab2" style="display:none" class="table-rain-wrap">
+    
 <table>
 <thead>
 <tr>
@@ -665,10 +758,10 @@ font-weight:bold;
     <th rowspan="2" class="group3">存提差</th>
     <th rowspan="2" class="group3">存提差比例</th>
 
-    <th colspan="9" class="group5">📊人均表现</th>
+    <th colspan="10" class="group5">📊人均表现</th>
 <th colspan="2" class="group3">🌐 裂变率</th>
 <th colspan="2" class="group3">🔄 复充率</th>
-<th colspan="5" class="group6">🔄 留存率</th>
+<th colspan="6" class="group6">🔄 留存率</th>
 </tr>
 
 <tr>
@@ -679,7 +772,7 @@ font-weight:bold;
     <th>充值人数</th><th>充值金额</th>
 
    
-<th style="width:150px">类型</th>
+<th style="width:180px">类型</th>
     <th>人均</th>
     <th>次日人均</th>
 
@@ -690,6 +783,7 @@ font-weight:bold;
 
 <th style="width:90px">TT</th>
 <th style="width:90px">KW</th>
+<th style="width:90px">WS</th>
 
 <th style="width:250px">裂变率</th>
 <th style="width:90px">比例</th>
@@ -702,6 +796,7 @@ font-weight:bold;
 <th>FB</th>
 <th>TT</th>
 <th>KW</th>
+<th>WS</th>
 </tr>
 </thead>
 
@@ -824,15 +919,34 @@ function retentionRate(channel, countField){
 
     const retention = globalData.retention || {};
 
-    const row = retention["2026-06-09"]?.[channel];
+    const brazilNow = new Date(
+    new Date().toLocaleString(
+        "en-US",
+        {
+            timeZone: "America/Sao_Paulo"
+        }
+    )
+);
+
+brazilNow.setDate(
+    brazilNow.getDate() - countField
+);
+
+const dateKey =
+    brazilNow.toISOString().split("T")[0];
+console.log(
+    "Retention",
+    channel,
+    countField,
+    dateKey
+);
+    const row = retention[dateKey]?.[channel];
 
     if(!row) return "0.00%";
 
     const total = Number(row.count || 0);
 
-    const retain = Number(
-        row[`count${countField}`] || 0
-    );
+    const retain = Number(row[`count${countField}`] || 0);
 
     return total > 0
         ? ((retain / total) * 100).toFixed(2) + "%"
@@ -865,6 +979,7 @@ const avgRows = [
 
         let d = globalData[item.key] || {};
 let n = d.normalList || {};
+let hour = globalData.hour_report?.[item.key] || {};
 
 let recharge = n.rechargeAmount || 0;
 let withdraw = n.withdrawAmount || 0;
@@ -938,12 +1053,18 @@ console.log(item.key, avg, nextAvg);
 let h5 = globalData["fb-h5"]?.normalList || {};
 let pwa = globalData["fb-pwa"]?.normalList || {};
 let ios = globalData["fb-ios"]?.normalList || {};
+
 let tt = globalData["tt-pwa"]?.normalList || {};
 let ttParent = globalData["tt-pwa"]?.parentList || {};
 let ttChild = globalData["tt-pwa"]?.childList || {};
+
 let kw = globalData["kwai-pwa"]?.normalList || {};
 let kwParent = globalData["kwai-pwa"]?.parentList || {};
 let kwChild = globalData["kwai-pwa"]?.childList || {};
+
+let ws = globalData["ws-h5"]?.normalList || {};
+let wsParent = globalData["ws-h5"]?.parentList || {};
+let wsChild = globalData["ws-h5"]?.childList || {};
 
 
 let h5Avg = h5.rechargeCount
@@ -964,6 +1085,10 @@ let ttAvg = tt.rechargeCount
 
 let kwAvg = kw.rechargeCount
     ? (kw.rechargeAmount / kw.rechargeCount).toFixed(2)
+    : 0;
+
+let wsAvg = ws.rechargeCount
+    ? (ws.rechargeAmount / ws.rechargeCount).toFixed(2)
     : 0;
 
 let fbNormalAvg = (
@@ -1057,8 +1182,8 @@ html += `
 ${regRechargeRate}
 </td>
 
-<td>${n.firstRechargeCount||0}</td>
-<td>${n.firstRechargeAmount||0}</td>
+<td>${hour.promotionList?.firstRechargeCount || 0}</td>
+<td>${hour.promotionList?.firstRechargeAmount || 0}</td>
 
 <td>${n.firstRechargeCount||0}</td>
 <td>${n.firstRechargeAmount||0}</td>
@@ -1066,30 +1191,43 @@ ${regRechargeRate}
 <td>${c.firstRechargeCount||0}</td>
 
 
-<td>
+<td class="${
+(
+Number(n.firstRechargeCount || 0) -
+Number(hour.promotionList?.firstRechargeCount || 0)
+) > 0
+? 'green'
+:
+(
+Number(n.firstRechargeCount || 0) -
+Number(hour.promotionList?.firstRechargeCount || 0)
+) < 0
+? 'red'
+: ''
+}">
 ${
-n.firstRechargeCount && n.yesterdayFirstRechargeCount
+Number(hour.promotionList?.firstRechargeCount || 0) > 0
 ?
 (
 (
-n.firstRechargeCount -
-n.yesterdayFirstRechargeCount
+Number(n.firstRechargeCount || 0) -
+Number(hour.promotionList?.firstRechargeCount || 0)
 )
 /
-n.yesterdayFirstRechargeCount
+Number(hour.promotionList?.firstRechargeCount || 0)
 *
 100
 ).toFixed(2) + "%"
 :
-"0%"
+"0.00%"
 }
 </td>
 
-<td>${n.firstRechargeCount||0}</td>
-<td>${n.firstRechargeAmount||0}</td>
+<td>${hour.promotionList?.rechargeCount || 0}</td>
+<td>${hour.promotionList?.rechargeAmount || 0}</td>
 
-<td>${n.firstRechargeCount||0}</td>
-<td>${n.firstRechargeAmount||0}</td>
+<td>${n.rechargeCount||0}</td>
+<td>${n.rechargeAmount||0}</td>
 
 <td>${withdraw}</td>
 
@@ -1098,8 +1236,7 @@ n.yesterdayFirstRechargeCount
     ${diffRate}
 </td>
 
-<td>
-    
+<td class="label-col">
 ${
 item.key==="ALL_TOTAL" ? "大盘" :
 item.key==="fb-h5" ? "直推" :
@@ -1292,7 +1429,37 @@ item.key==="fb-ios"
 ""
 }
 </td>
-<td>${item.show}</td>
+
+<td>
+${
+item.key==="ALL_TOTAL"
+? wsAvg
+:
+item.key==="fb-h5"
+? (
+    wsParent.rechargeCount
+    ? (wsParent.rechargeAmount / wsParent.rechargeCount).toFixed(2)
+    : 0
+)
+:
+item.key==="fb-pwa"
+? (
+    wsChild.rechargeCount
+    ? (wsChild.rechargeAmount / wsChild.rechargeCount).toFixed(2)
+    : 0
+)
+:
+item.key==="fb-ios"
+? (
+    ws.firstRechargeCount
+    ? (ws.firstRechargeAmount / ws.firstRechargeCount).toFixed(2)
+    : 0
+)
+:
+""
+}
+</td>
+<td class="label-col">${item.show}</td>
 
 <td class="${rateClass(
 n.rechargeCount > c.firstRechargeCount
@@ -1307,6 +1474,7 @@ n.rechargeCount > c.firstRechargeCount
 )
 : 0
 )}">
+
 ${
 n.rechargeCount > c.firstRechargeCount
 ?
@@ -1323,7 +1491,7 @@ n.rechargeCount > c.firstRechargeCount
 }
 </td>
 
-<td>
+<td class="label-col">
 ${item.show==="大盘" ? "大盘" :
 item.show==="FB-H5" ? "直推" :
 item.show==="FB-PWA" ? "裂变" : ""}
@@ -1346,7 +1514,7 @@ item.show==="大盘"
 }
 </td>
 
-<td>
+<td class="label-col">
 ${
     item.show?.trim() === "大盘" ? "2日留存" :
     item.show?.trim() === "FB-H5" ? "3日留存" :
@@ -1358,7 +1526,8 @@ ${
     item.show === "ws-h5" ? "14日留存" :
     "-"
 }
-    
+</td>
+
 <td>
 ${
 item.show==="大盘" ? retentionRate("ALL",1) :
@@ -1415,11 +1584,49 @@ item.show==="ws-h5" ? retentionRate("kwai-pwa",13) :
 }
 </td>
 
+<td>
+${
+item.show==="大盘" ? retentionRate("ws-h5",1) :
+item.show==="FB-H5" ? retentionRate("ws-h5",2) :
+item.show==="FB-PWA" ? retentionRate("ws-h5",3) :
+item.show==="FB-IOS" ? retentionRate("ws-h5",4) :
+item.show==="TT-PWA" ? retentionRate("ws-h5",5) :
+item.show==="KW-PWA" ? retentionRate("ws-h5",6) :
+item.show==="回访" ? retentionRate("ws-h5",9) :
+item.show==="ws-h5" ? retentionRate("ws-h5",13) :
+""
+}
+</td>
+
 
         `;
     });
 
-    document.getElementById("body").innerHTML = html;
+/* 2 hàng trống dự phòng */
+for(let i=0;i<2;i++){
+
+    html += "<tr>";
+
+    for(let j=0;j<36;j++){
+
+        if(
+            j===0 ||   // 字段
+            j===16 ||   // 人均表现-类型
+            j===26 ||   // 裂变率
+            j===28 ||   // 复充率-类型
+            j===30      // 留存率-字段
+        ){
+            html += '<td class="label-col">&nbsp;</td>';
+        }else{
+            html += '<td>&nbsp;</td>';
+        }
+
+    }
+
+    html += "</tr>";
+}
+
+document.getElementById("body").innerHTML = html;
 }
 
 /* PYTHON BUTTON */
