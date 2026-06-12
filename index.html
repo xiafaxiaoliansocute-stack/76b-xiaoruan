@@ -177,6 +177,16 @@ th{
     color:white;
 }
 
+.table-main-title th{
+    background:#4b97d9;
+    color:#000;
+    font-size:22px;
+    font-weight:700;
+    text-align:center;
+    padding:8px 0;
+    border:1px solid #333;
+}
+
 .gray{background:#eee;}
 .red{color:red;font-weight:bold;}
 .green{color:green;font-weight:bold;}
@@ -330,25 +340,7 @@ th{
     text-align:center;
 }
 
-.hero-banner::before{
-    content:"";
-    position:absolute;
-    inset:-3px;
-    border-radius:24px;
 
-    background:conic-gradient(
-        #00ff66,
-        #00ffff,
-        #0099ff,
-        #ff00ff,
-        #ff0000,
-        #ffff00,
-        #00ff66
-    );
-
-    animation:bannerLed 3s linear infinite;
-    z-index:0;
-}
 
 .hero-banner::after{
     content:"";
@@ -358,60 +350,56 @@ th{
     background:transparent;
     z-index:1;
 }
-/* LED chạy quanh viền banner */
 
-.hero-banner{
-    position:relative;
-}
 
-.hero-banner::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    border-radius:20px;
-    padding:3px;
-
-    background:conic-gradient(
-        from 0deg,
-        #00ff66,
-        #00ffff,
-        #0099ff,
-        #ff00ff,
-        #ff0000,
-        #ffff00,
-        #00ff66
-    );
-
-    animation:bannerLed 3s linear infinite;
-
-    -webkit-mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-
-    -webkit-mask-composite:xor;
-            mask-composite:exclude;
-
-    pointer-events:none;
-    z-index:5;
-}
-
-@keyframes bannerLed{
-    from{
-        transform:rotate(0deg);
-    }
-    to{
-        transform:rotate(360deg);
-    }
-}
 .hero-content,
 #brazilClockBox{
     position:relative;
     z-index:2;
 }
+@keyframes carRun{
 
-@keyframes bannerLed{
-    from{transform:rotate(0deg);}
-    to{transform:rotate(360deg);}
+    0%{
+        top:-12px;
+        left:0;
+        transform:rotate(0deg);
+    }
+
+    25%{
+        top:-12px;
+        left:calc(100% - 42px);
+        transform:rotate(0deg);
+    }
+
+    26%{
+        transform:rotate(90deg);
+    }
+
+    50%{
+        top:calc(100% - 42px);
+        left:calc(100% - 42px);
+        transform:rotate(90deg);
+    }
+
+    51%{
+        transform:rotate(180deg);
+    }
+
+    75%{
+        top:calc(100% - 42px);
+        left:0;
+        transform:rotate(180deg);
+    }
+
+    76%{
+        transform:rotate(270deg);
+    }
+
+    100%{
+        top:-12px;
+        left:0;
+        transform:rotate(270deg);
+    }
 }
 
 .hero-content h1{
@@ -736,9 +724,16 @@ font-weight:bold;
 
 <!-- TAB 2 -->
 <div id="tab2" style="display:none" class="table-rain-wrap">
-    
+
 <table>
 <thead>
+
+<tr class="table-main-title">
+    <th colspan="36" id="tableMainTitle">
+        2306-76B-实时数据汇总
+    </th>
+</tr>
+
 <tr>
 
     
@@ -831,6 +826,23 @@ document.getElementById("updateTimeHero").innerHTML =
     "📅 数据更新时间：" +
     (data.update_time || "--");
 
+let brazilTime = "--";
+
+if (data.update_time) {
+
+    const updateDate = new Date(data.update_time);
+
+    brazilTime = updateDate.toLocaleString(
+        "sv-SE",
+        {
+            timeZone: "America/Sao_Paulo"
+        }
+    );
+}
+
+document.getElementById("tableMainTitle").innerHTML =
+    `2306-76B-实时数据汇总 数据更新时间(巴西)：${brazilTime}`;
+    
 renderTab1(data);
 renderTab2();
 
@@ -947,6 +959,42 @@ console.log(
     const total = Number(row.count || 0);
 
     const retain = Number(row[`count${countField}`] || 0);
+
+    return total > 0
+        ? ((retain / total) * 100).toFixed(2) + "%"
+        : "0.00%";
+}
+function retentionRateFB(countField){
+
+    const retention = globalData.retention || {};
+
+    const brazilNow = new Date(
+        new Date().toLocaleString(
+            "en-US",
+            { timeZone:"America/Sao_Paulo" }
+        )
+    );
+
+    brazilNow.setDate(
+        brazilNow.getDate() - countField
+    );
+
+    const dateKey =
+        brazilNow.toISOString().split("T")[0];
+
+    const h5  = retention[dateKey]?.["fb-h5"]  || {};
+    const pwa = retention[dateKey]?.["fb-pwa"] || {};
+    const ios = retention[dateKey]?.["fb-ios"] || {};
+
+    const total =
+        Number(h5.count || 0) +
+        Number(pwa.count || 0) +
+        Number(ios.count || 0);
+
+    const retain =
+        Number(h5[`count${countField}`] || 0) +
+        Number(pwa[`count${countField}`] || 0) +
+        Number(ios[`count${countField}`] || 0);
 
     return total > 0
         ? ((retain / total) * 100).toFixed(2) + "%"
@@ -1531,27 +1579,27 @@ ${
 <td>
 ${
 item.show==="大盘" ? retentionRate("ALL",1) :
-item.show==="FB-H5" ? retentionRate("fb-h5",2) :
-item.show==="FB-PWA" ? retentionRate("fb-pwa",3) :
-item.show==="FB-IOS" ? retentionRate("fb-ios",4) :
-item.show==="TT-PWA" ? retentionRate("tt-pwa",5) :
-item.show==="KW-PWA" ? retentionRate("kwai-pwa",6) :
-item.show==="回访" ? retentionRate("回访",9) :
-item.show==="ws-h5" ? retentionRate("ws-h5",13) :
+item.show==="FB-H5" ? retentionRate("ALL",2) :
+item.show==="FB-PWA" ? retentionRate("ALL",3) :
+item.show==="FB-IOS" ? retentionRate("ALL",4) :
+item.show==="TT-PWA" ? retentionRate("ALL",5) :
+item.show==="KW-PWA" ? retentionRate("ALL",6) :
+item.show==="回访" ? retentionRate("ALL",9) :
+item.show==="ws-h5" ? retentionRate("ALL",13) :
 ""
 }
 </td>
 
 <td>
 ${
-item.show==="大盘" ? retentionRate("fb-h5",1) :
-item.show==="FB-H5" ? retentionRate("fb-h5",2) :
-item.show==="FB-PWA" ? retentionRate("fb-h5",3) :
-item.show==="FB-IOS" ? retentionRate("fb-h5",4) :
-item.show==="TT-PWA" ? retentionRate("fb-h5",5) :
-item.show==="KW-PWA" ? retentionRate("fb-h5",6) :
-item.show==="回访" ? retentionRate("fb-h5",9) :
-item.show==="ws-h5" ? retentionRate("fb-h5",13) :
+item.show==="大盘" ? retentionRateFB(1) :
+item.show==="FB-H5" ? retentionRateFB(2) :
+item.show==="FB-PWA" ? retentionRateFB(3) :
+item.show==="FB-IOS" ? retentionRateFB(4) :
+item.show==="TT-PWA" ? retentionRateFB(5) :
+item.show==="KW-PWA" ? retentionRateFB(6) :
+item.show==="回访" ? retentionRateFB(9) :
+item.show==="ws-h5" ? retentionRateFB(13) :
 ""
 }
 </td>

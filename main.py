@@ -247,19 +247,32 @@ def fix_hour_amounts(obj):
 # giờ Brazil hiện tại
 now_br = datetime.now(ZoneInfo("America/Sao_Paulo"))
 
-# cùng thời điểm của ngày hôm qua
-yesterday_same_time = now_br - timedelta(days=1)
+# ngày hôm qua
+yesterday = now_br - timedelta(days=1)
 
-# 00:00 ngày hôm qua (Brazil)
-hour_start = yesterday_same_time.replace(
+# 00:00 hôm qua
+hour_start = yesterday.replace(
     hour=0,
     minute=0,
     second=0,
     microsecond=0
 )
 
-# giờ hiện tại của ngày hôm qua (Brazil)
-hour_end = yesterday_same_time
+# giờ kết thúc = cuối phút của giờ đã hoàn tất gần nhất hôm qua
+end_hour = now_br.hour - 1
+end_day = yesterday
+
+# nếu chạy trước 01:00 thì lùi sang hôm trước nữa
+if end_hour < 0:
+    end_hour = 23
+    end_day = yesterday - timedelta(days=1)
+
+hour_end = end_day.replace(
+    hour=end_hour,
+    minute=59,
+    second=0,
+    microsecond=999000
+)
 
 # đổi sang UTC để gửi API
 hour_start = hour_start.astimezone(timezone.utc)
