@@ -48,10 +48,16 @@ headers = {
 
 brazil_time = datetime.now(ZoneInfo("America/Sao_Paulo"))
 
-today = brazil_time.strftime("%Y-%m-%d")
+# Nếu chạy lúc 00h thì lấy ngày hôm trước
+if brazil_time.hour == 0:
+    report_time = brazil_time - timedelta(days=1)
+else:
+    report_time = brazil_time
+
+today = report_time.strftime("%Y-%m-%d")
 
 retention_start = (
-    brazil_time - timedelta(days=29)
+    report_time - timedelta(days=29)
 ).strftime("%Y-%m-%d")
 
 result_data = {
