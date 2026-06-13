@@ -1762,11 +1762,23 @@ async function queryData(){
 
     setTimeout(()=>{
 
-        clearInterval(interval);
+    clearInterval(interval);
 
-        location.reload();
+    loadData();
 
-    },6000);
+    btn.innerHTML = "✅ 数据已更新";
+
+    btn.classList.remove("loading");
+
+    setTimeout(()=>{
+
+        btn.disabled = false;
+
+        btn.innerHTML = "🔍 查询数据";
+
+    },2000);
+
+},6000);
 
     return;
 
