@@ -1,490 +1,94 @@
 <!--
-================ DASHBOARD PRO - GHI CHÚ =================
-
-1. LOGIN
-   - Giao diện đăng nhập
-   - Hàm xử lý: login()
-
-2. TAB SWITCH
-   - Chuyển TAB1/TAB2
-   - Hàm: switchTab()
-
-3. LOAD DATA
-   - Đọc data.json
-   - Hàm: loadData()
-
-4. TAB1 - 推广效果
-   - Hàm: renderTab1()
-
-5. TAB2 - 实时数据分析
-   - Hàm: renderTab2()
-
-6. 注册充值比
-   - Công thức:
-     充值人数 ÷ 注册人数 × 100%
-
-7. 存提差比例
-   - Công thức:
-     (充值金额 - 提现金额) ÷ 充值金额 × 100%
-
-8. 裂变率
-   - Công thức:
-     裂变首充人数 ÷ (充值人数 - 裂变首充人数) × 100%
-
-9. 复充率
-   - Hiện đang dùng dữ liệu cố định
-
-10. 留存率
-    - 2日、3日、4日、5日、6日、7日、10日、14日留存
-
-11. Màu sắc phần trăm
-    - green: > 0
-    - red: < 0
-==========================================================
+DASHBOARD 76B - REAL-TIME DATA ANALYSIS
+========================================
+Features:
+1. LOGIN - Xác thực người dùng
+2. TAB1 - 推广效果 (Promotion Performance)
+3. TAB2 - 实时数据分析 (Real-time Data Analysis)
+4. BRAZIL CLOCK - Đồng hồ liveGia bảo vệ Brazil
+5. DATA SYNC - Đồng bộ dữ liệu từ data.json
 -->
-
 <!DOCTYPE html>
 <html lang="zh">
-<head><link rel="icon" href="favicon.ico">
+<head>
+<link rel="icon" href="favicon.ico">
 <meta charset="UTF-8">
 <title>76bxiaoruan.vip</title>
 
 <style>
-body{
-    font-family: Arial;
-    background:#f5f5f5;
-    margin:0;
-    padding:1vw;
-}
+/* ============ GLOBAL STYLES ============ */
+body{font-family:Arial;background:#f5f5f5;margin:0;padding:1vw;}
+*{box-sizing:border-box;}
 
-*{
-    box-sizing:border-box;
-}
+/* ============ TAB NAVIGATION ============ */
+.tab-bar{display:flex;gap:10px;margin-bottom:20px;}
+.tab-btn{padding:12px 20px;background:white;cursor:pointer;border-radius:12px;font-weight:bold;box-shadow:0 4px 12px rgba(0,0,0,.08);transition:.25s;}
+.tab-btn:hover{transform:translateY(-2px);}
+.tab-btn.active{background:linear-gradient(135deg,#009739,#FFD700);color:#fff;}
 
+/* ============ TAB 1 CONTENT ============ */
+.section{background:#fff;margin-bottom:25px;border-radius:8px;overflow:hidden;}
+.title{background:#d9d9d9;padding:10px;font-weight:bold;text-align:center;}
+.sub-title{background:#efefef;padding:8px;font-weight:bold;}
+table{width:100%;border-collapse:collapse;background:white;border-radius:12px;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,.08);}
+th,td{border:1px solid #333;padding:0.35vw;text-align:center;font-size:clamp(9px,0.65vw,16px);white-space:nowrap;}
+tbody tr{transition:.2s;}
+tbody tr:hover{background:#f3f8ff;}
+th{background:#bfc5cc;color:#222;}
 
-
-/* TAB */
-.tab-bar{
-    display:flex;
-    gap:10px;
-    margin-bottom:20px;
-}
-
-.tab-btn{
-    padding:12px 20px;
-    background:white;
-    cursor:pointer;
-    border-radius:12px;
-    font-weight:bold;
-    box-shadow:0 4px 12px rgba(0,0,0,.08);
-    transition:.25s;
-}
-
-.tab-btn:hover{
-    transform:translateY(-2px);
-}
-
-.tab-btn.active{
-    background:linear-gradient(
-        135deg,
-        #009739,
-        #FFD700
-    );
-    color:#fff;
-}
-
-/* TAB 1 (GIỮ NGUYÊN) */
-.section{
-    background:#fff;
-    margin-bottom:25px;
-    border-radius:8px;
-    overflow:hidden;
-}
-
-.title{
-    background:#d9d9d9;
-    padding:10px;
-    font-weight:bold;
-    text-align:center;
-}
-
-.sub-title{
-    background:#efefef;
-    padding:8px;
-    font-weight:bold;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    background:white;
-    border-radius:12px;
-    overflow:hidden;
-    box-shadow:0 8px 25px rgba(0,0,0,.08);
-}
-
-th,td{
-    border:1px solid #333;
-    padding:0.35vw;
-    text-align:center;
-    font-size:clamp(9px,0.65vw,16px);
-    white-space:nowrap;
-}
-
-tbody tr{
-    transition:.2s;
-}
-
-tbody tr:hover{
-    background:#f3f8ff;
-}
-
-th{
-    background:#bfc5cc;
-    color:#222;
-}
-
-/* TAB 2 */
-.title2{
-    text-align:center;
-    font-size:20px;
-    font-weight:bold;
-    margin-bottom:10px;
-}
-
-.group1{
-    background:#ffb74d;
-    color:#222;
-}
-
-.group2{
-    background:#4caf50;
-    color:white;
-}
-
-.group3{
-    background:#2196f3;
-    color:white;
-}
-
-.group5{
-    background:#7e57c2;
-    color:white;
-}
-
-.group6{
-    background:#ec407a;
-    color:white;
-}
-
-.table-main-title th{
-    background:#4b97d9;
-    color:#000;
-    font-size:22px;
-    font-weight:700;
-    text-align:center;
-    padding:8px 0;
-    border:1px solid #333;
-}
-
+/* ============ TAB 2 STYLING ============ */
+.title2{text-align:center;font-size:20px;font-weight:bold;margin-bottom:10px;}
+.group1{background:#ffb74d;color:#222;}
+.group2{background:#4caf50;color:white;}
+.group3{background:#2196f3;color:white;}
+.group5{background:#7e57c2;color:white;}
+.group6{background:#ec407a;color:white;}
+.table-main-title th{background:#4b97d9;color:#000;font-size:22px;font-weight:700;text-align:center;padding:8px 0;border:1px solid #333;}
 .gray{background:#eee;}
 .red{color:red;font-weight:bold;}
 .green{color:green;font-weight:bold;}
-.label-col{
-    background:#e0e0e0 !important;
-    font-weight:bold;
-}
+.label-col{background:#e0e0e0 !important;font-weight:bold;}
 
-.run-btn{
-    background:linear-gradient(135deg,#00c853,#009624);
-    color:#fff;
-    border:none;
-    padding:12px 24px;
-    border-radius:12px;
-    cursor:pointer;
-    margin-bottom:10px;
-    font-weight:bold;
-    font-size:16px;
-    box-shadow:0 8px 20px rgba(0,200,83,.35);
-    transition:.25s;
-}
-.loading{
+/* ============ QUERY BUTTON ============ */
+.run-btn{background:linear-gradient(135deg,#00c853,#009624);color:#fff;border:none;padding:12px 24px;border-radius:12px;cursor:pointer;margin-bottom:10px;font-weight:bold;font-size:16px;box-shadow:0 8px 20px rgba(0,200,83,.35);transition:.25s;}
+.run-btn:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(0,200,83,.45);}
+.run-btn:active{transform:scale(.98);}
+.run-btn.loading{animation:pulseGlow 1.2s infinite;}
 
-    animation:pulseGlow 1s infinite;
+/* ============ LOADING OVERLAY ============ */
+.refresh-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:9999999;display:flex;flex-direction:column;justify-content:center;align-items:center;color:white;font-size:24px;font-weight:bold;animation:fadeIn .3s ease;}
+.spinner{width:90px;height:90px;border:6px solid rgba(255,255,255,.15);border-top:6px solid #00ff66;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:25px;box-shadow:0 0 15px #00ff66,0 0 35px rgba(0,255,102,.5);}
+.loading-text{margin-top:15px;font-size:34px;font-weight:900;color:#ffffff;text-shadow:0 0 10px #fff,0 0 20px #00ff66,0 0 40px #00ff66,0 0 80px #00ff66;padding:15px 35px;border-radius:20px;background:rgba(0,0,0,.45);backdrop-filter:blur(3px);animation:textPulse 1.2s infinite;}
 
-}
+/* ============ ANIMATIONS ============ */
+@keyframes pulseGlow{0%{box-shadow:0 0 10px #00ff66;}50%{box-shadow:0 0 30px #00ff66,0 0 60px #00ff66;}100%{box-shadow:0 0 10px #00ff66;}}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes textPulse{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes carRun{0%{top:-12px;left:0;transform:rotate(0deg);}25%{top:-12px;left:calc(100% - 42px);transform:rotate(0deg);}26%{transform:rotate(90deg);}50%{top:calc(100% - 42px);left:calc(100% - 42px);transform:rotate(90deg);}51%{transform:rotate(180deg);}75%{top:calc(100% - 42px);left:0;transform:rotate(180deg);}76%{transform:rotate(270deg);}100%{top:-12px;left:0;transform:rotate(270deg);}}
 
-@keyframes pulseGlow{
+/* ============ LOGIN PAGE ============ */
+#loginPage{position:fixed;inset:0;z-index:999999;background:url("https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?auto=format&fit=crop&w=2000&q=80");background-size:cover;background-position:center;display:flex;justify-content:center;align-items:center;}
+.login-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);}
+.login-box{position:relative;width:950px;height:520px;display:flex;border-radius:30px;overflow:hidden;background:rgba(255,255,255,.1);backdrop-filter:blur(20px);box-shadow:0 20px 80px rgba(0,0,0,.5);}
+.login-left{flex:1;color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;background:linear-gradient(135deg,rgba(0,128,0,.6),rgba(255,215,0,.4));}
+.login-left h1{font-size:70px;margin:0;}
+.login-left h2{font-size:36px;}
+.login-right{width:380px;background:white;padding:50px;display:flex;flex-direction:column;justify-content:center;}
+.login-right input{padding:15px;margin-bottom:15px;border:1px solid #ddd;border-radius:12px;}
+.login-right button{padding:15px;border:none;border-radius:12px;cursor:pointer;font-weight:bold;background:linear-gradient(135deg,#009739,#FFD700);}
+#msg{margin-top:10px;color:red;text-align:center;}
 
-    0%{
-        transform:scale(1);
-        filter:brightness(1);
-    }
+/* ============ HERO BANNER ============ */
+.hero-banner{position:relative;min-height:280px;height:18vw;border-radius:20px;overflow:hidden;margin-bottom:20px;border:2px solid rgba(255,255,255,.15);box-shadow:0 15px 40px rgba(0,0,0,.25),0 0 25px rgba(0,255,100,.35);background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),url("https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=2000&q=80");background-size:cover;background-position:center;display:flex;justify-content:center;align-items:center;color:white;text-align:center;}
+.hero-banner::after{content:"";position:absolute;inset:3px;border-radius:18px;background:transparent;z-index:1;}
+.hero-content,#brazilClockBox{position:relative;z-index:2;}
+.hero-content h1{font-size:clamp(24px,2.5vw,48px);margin:20px 0;text-shadow:0 0 20px rgba(0,0,0,.8);letter-spacing:2px;}
+#updateTimeHero{display:inline-block;padding:12px 24px;border-radius:30px;background:rgba(255,255,255,.18);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.25);font-size:clamp(12px,1vw,22px);font-weight:bold;}
 
-    50%{
-        transform:scale(1.08);
-        filter:brightness(1.5);
-    }
-
-    100%{
-        transform:scale(1);
-        filter:brightness(1);
-    }
-
-}
-
-.run-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 12px 25px rgba(0,200,83,.45);
-}
-
-.run-btn:active{
-    transform:scale(.98);
-}
-.run-btn.loading{
-
-    animation:pulseGlow 1.2s infinite;
-
-}
-
-@keyframes pulseGlow{
-
-    0%{
-        box-shadow:0 0 10px #00ff66;
-    }
-
-    50%{
-        box-shadow:
-            0 0 30px #00ff66,
-            0 0 60px #00ff66;
-    }
-
-    100%{
-        box-shadow:0 0 10px #00ff66;
-    }
-
-}
-/* LOGIN */
-
-#loginPage{
-    position:fixed;
-    inset:0;
-    z-index:999999;
-    background:url("https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?auto=format&fit=crop&w=2000&q=80");
-    background-size:cover;
-    background-position:center;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.login-overlay{
-    position:absolute;
-    inset:0;
-    background:rgba(0,0,0,.6);
-    backdrop-filter:blur(6px);
-}
-
-.login-box{
-    position:relative;
-    width:950px;
-    height:520px;
-    display:flex;
-    border-radius:30px;
-    overflow:hidden;
-    background:rgba(255,255,255,.1);
-    backdrop-filter:blur(20px);
-    box-shadow:0 20px 80px rgba(0,0,0,.5);
-}
-
-.login-left{
-    flex:1;
-    color:white;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(
-    135deg,
-    rgba(0,128,0,.6),
-    rgba(255,215,0,.4)
-    );
-}
-
-.login-left h1{
-    font-size:70px;
-    margin:0;
-}
-
-.login-left h2{
-    font-size:36px;
-}
-
-.login-right{
-    width:380px;
-    background:white;
-    padding:50px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-}
-
-.login-right input{
-    padding:15px;
-    margin-bottom:15px;
-    border:1px solid #ddd;
-    border-radius:12px;
-}
-
-.login-right button{
-    padding:15px;
-    border:none;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:bold;
-    background:linear-gradient(
-    135deg,
-    #009739,
-    #FFD700
-    );
-}
-
-#msg{
-    margin-top:10px;
-    color:red;
-    text-align:center;
-}
-.hero-banner{
-    position:relative;
-    min-height:280px;
-    height:18vw;
-
-    border-radius:20px;
-    overflow:hidden;
-    margin-bottom:20px;
-
-    border:2px solid rgba(255,255,255,.15);
-
-    box-shadow:
-        0 15px 40px rgba(0,0,0,.25),
-        0 0 25px rgba(0,255,100,.35);
-
-    background:
-    linear-gradient(
-        rgba(0,0,0,.35),
-        rgba(0,0,0,.35)
-    ),
-    url("https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=2000&q=80");
-
-    background-size:cover;
-    background-position:center;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    color:white;
-    text-align:center;
-}
-
-
-
-.hero-banner::after{
-    content:"";
-    position:absolute;
-    inset:3px;
-    border-radius:18px;
-    background:transparent;
-    z-index:1;
-}
-
-
-.hero-content,
-#brazilClockBox{
-    position:relative;
-    z-index:2;
-}
-@keyframes carRun{
-
-    0%{
-        top:-12px;
-        left:0;
-        transform:rotate(0deg);
-    }
-
-    25%{
-        top:-12px;
-        left:calc(100% - 42px);
-        transform:rotate(0deg);
-    }
-
-    26%{
-        transform:rotate(90deg);
-    }
-
-    50%{
-        top:calc(100% - 42px);
-        left:calc(100% - 42px);
-        transform:rotate(90deg);
-    }
-
-    51%{
-        transform:rotate(180deg);
-    }
-
-    75%{
-        top:calc(100% - 42px);
-        left:0;
-        transform:rotate(180deg);
-    }
-
-    76%{
-        transform:rotate(270deg);
-    }
-
-    100%{
-        top:-12px;
-        left:0;
-        transform:rotate(270deg);
-    }
-}
-
-.hero-content h1{
-    font-size:clamp(24px,2.5vw,48px);
-    margin:20px 0;
-    text-shadow:0 0 20px rgba(0,0,0,.8);
-    letter-spacing:2px;
-}
-
-#updateTimeHero{
-    display:inline-block;
-    padding:12px 24px;
-    border-radius:30px;
-    background:rgba(255,255,255,.18);
-    backdrop-filter:blur(10px);
-    border:1px solid rgba(255,255,255,.25);
-    font-size:clamp(12px,1vw,22px);
-    font-weight:bold;
-}
-
-/* BRAZIL CLOCK */
-
-#brazilClockBox{
-    position:absolute;
-        top:1vw;
-    right:1.5vw;
-    text-align:center;
-    z-index:10;
-}
-
-.number{
-    position:absolute;
-    font-weight:bold;
-    color:#222;
-    font-size:18px;
-    text-shadow:0 1px 2px rgba(255,255,255,.8);
-}
-
+/* ============ BRAZIL CLOCK ============ */
+#brazilClockBox{position:absolute;top:1vw;right:1.5vw;text-align:center;z-index:10;}
+.number{position:absolute;font-weight:bold;color:#222;font-size:18px;text-shadow:0 1px 2px rgba(255,255,255,.8);}
 .n12{top:8px;left:50%;transform:translateX(-50%);}
 .n1{top:18px;right:38px;}
 .n2{top:38px;right:18px;}
@@ -497,342 +101,128 @@ th{
 .n9{top:50%;left:8px;transform:translateY(-50%);}
 .n10{top:38px;left:18px;}
 .n11{top:18px;left:38px;}
-
-.clock::before{
-    content:"";
-    position:absolute;
-    inset:8px;
-    border:2px dashed rgba(0,0,0,.15);
-    border-radius:50%;
-}
-
-.number{
-    position:absolute;
-    font-weight:bold;
-    color:#222;
-    font-size:18px;
-    text-shadow:0 1px 2px rgba(255,255,255,.8);
-}
-
-.n12{top:8px;left:50%;transform:translateX(-50%);}
-.n1{top:18px;right:38px;}
-.n2{top:38px;right:18px;}
-.n3{top:50%;right:8px;transform:translateY(-50%);}
-.n4{bottom:38px;right:18px;}
-.n5{bottom:18px;right:38px;}
-.n6{bottom:8px;left:50%;transform:translateX(-50%);}
-.n7{bottom:18px;left:38px;}
-.n8{bottom:38px;left:18px;}
-.n9{top:50%;left:8px;transform:translateY(-50%);}
-.n10{top:38px;left:18px;}
-.n11{top:18px;left:38px;}
-
-.clock{
-    width:clamp(90px,8vw,160px);
-    height:clamp(90px,8vw,160px);
-    border-radius:50%;
-    background:radial-gradient(
-        circle at top left,
-        rgba(255,255,255,.9),
-        rgba(255,255,255,.2)
-    );
-    backdrop-filter:blur(20px);
-    border:4px solid rgba(255,255,255,.3);
-    box-shadow:
-        0 15px 40px rgba(0,0,0,.35),
-        inset 0 5px 15px rgba(255,255,255,.4);
-    position:relative;
-}
-
-.center-dot{
-    width:14px;
-    height:14px;
-    background:#222;
-    border-radius:50%;
-
-    position:absolute;
-
-    top:50%;
-    left:50%;
-
-    transform:translate(-50%,-50%);
-    z-index:999;
-}
-
-.hand{
-    position:absolute;
-    left:50%;
-    bottom:50%;
-    transform-origin:bottom center;
-}
-
-.hour{
-    width:4px;
-    height:25%;
-    background:#222;
-    border-radius:10px;
-}
-
-.minute{
-    width:3px;
-    height:35%;
-    background:#444;
-    border-radius:10px;
-}
-
-.second{
-    width:2px;
-    height:42%;
-    background:red;
-    border-radius:10px;
-}
-
-#brazilTimeText{
-    margin-top:10px;
-    color:white;
-    font-weight:bold;
-    text-shadow:0 0 8px #000;
-    font-size:15px;
-}
-
-
-
+.clock{width:clamp(90px,8vw,160px);height:clamp(90px,8vw,160px);border-radius:50%;background:radial-gradient(circle at top left,rgba(255,255,255,.9),rgba(255,255,255,.2));backdrop-filter:blur(20px);border:4px solid rgba(255,255,255,.3);box-shadow:0 15px 40px rgba(0,0,0,.35),inset 0 5px 15px rgba(255,255,255,.4);position:relative;}
+.clock::before{content:"";position:absolute;inset:8px;border:2px dashed rgba(0,0,0,.15);border-radius:50%;}
+.center-dot{width:14px;height:14px;background:#222;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;}
+.hand{position:absolute;left:50%;bottom:50%;transform-origin:bottom center;}
+.hour{width:4px;height:25%;background:#222;border-radius:10px;}
+.minute{width:3px;height:35%;background:#444;border-radius:10px;}
+.second{width:2px;height:42%;background:red;border-radius:10px;}
+#brazilTimeText{margin-top:10px;color:white;font-weight:bold;text-shadow:0 0 8px #000;font-size:15px;}
 </style>
 </head>
 <script>
-
+/* ============ BRAZIL CLOCK - Đồng hồ thời gian Brazil ============ */
 function updateBrazilClock(){
-
-    const now = new Date();
-
-    const brazil = new Date(
-        now.toLocaleString(
-            "en-US",
-            {
-                timeZone:"America/Sao_Paulo"
-            }
-        )
-    );
-
-    const h = brazil.getHours();
-    const m = brazil.getMinutes();
-    const s = brazil.getSeconds();
-
-    const hourDeg =
-        (h % 12) * 30 +
-        m * 0.5;
-
-    const minuteDeg =
-        m * 6 +
-        s * 0.1;
-
-    const secondDeg =
-        s * 6;
-
-    document.getElementById("hour")
-        .style.transform =
-        `translateX(-50%) rotate(${hourDeg}deg)`;
-
-    document.getElementById("minute")
-        .style.transform =
-        `translateX(-50%) rotate(${minuteDeg}deg)`;
-
-    document.getElementById("second")
-        .style.transform =
-        `translateX(-50%) rotate(${secondDeg}deg)`;
-
-    document.getElementById("brazilTimeText")
-        .innerHTML =
-        "🇧🇷 Brazil<br>" +
-        brazil.toLocaleString(
-            "pt-BR"
-        );
+const now=new Date();
+const brazil=new Date(now.toLocaleString("en-US",{timeZone:"America/Sao_Paulo"}));
+const h=brazil.getHours();const m=brazil.getMinutes();const s=brazil.getSeconds();
+const hourDeg=(h%12)*30+m*0.5;
+const minuteDeg=m*6+s*0.1;
+const secondDeg=s*6;
+document.getElementById("hour").style.transform=`translateX(-50%) rotate(${hourDeg}deg)`;
+document.getElementById("minute").style.transform=`translateX(-50%) rotate(${minuteDeg}deg)`;
+document.getElementById("second").style.transform=`translateX(-50%) rotate(${secondDeg}deg)`;
+document.getElementById("brazilTimeText").innerHTML="🇧🇷 Brazil<br>"+brazil.toLocaleString("pt-BR");
 }
-
-window.addEventListener("load",()=>{
-
-    updateBrazilClock();
-
-    setInterval(
-        updateBrazilClock,
-        1000
-    );
-
-});
-
+window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazilClock,1000);});
 </script>
 <body>
-
-<!-- LOGIN 3D BRAZIL -->
+<!-- ============ LOGIN PAGE ============ -->
 <div id="loginPage">
-
 <div class="login-overlay"></div>
-
 <div class="login-box">
-
 <div class="login-left">
-<h1>76B实时数据 </h1>
+<h1>76B实时数据</h1>
 <h2>🫶HI HI HÁ HÁ HỐ HỐ🫶</h2>
 <p>CHÀO MỪNG BẠN ĐẾN VỚI BÌNH NGUYÊN VÔ TẬN</p>
-<p>NƠI MÀ CHÚNG TÔI CÀY HƠN CẢ TRÂU BÒ </p>
+<p>NƠI MÀ CHÚNG TÔI CÀY HƠN CẢ TRÂU BÒ</p>
 </div>
-
 <div class="login-right">
-
 <h2>登录系统</h2>
-
 <input id="user" placeholder="账号">
-
 <input id="pass" type="password" placeholder="密码">
-
-<button onclick="login()">
-进入系统
-</button>
-
+<button onclick="login()">进入系统</button>
 <div id="msg"></div>
-
+</div>
+</div>
 </div>
 
-</div>
-
-</div>
-
-<!-- TAB -->
- <div class="hero-banner">
-
+<!-- ============ HERO BANNER WITH BRAZIL CLOCK ============ -->
+<div class="hero-banner">
 <div id="brazilClockBox">
-
-    <div class="clock">
-        <div class="number n12">12</div>
-<div class="number n1">1</div>
-<div class="number n2">2</div>
-<div class="number n3">3</div>
-<div class="number n4">4</div>
-<div class="number n5">5</div>
-<div class="number n6">6</div>
-<div class="number n7">7</div>
-<div class="number n8">8</div>
-<div class="number n9">9</div>
-<div class="number n10">10</div>
-<div class="number n11">11</div>
-
-        <div class="center-dot"></div>
-
-        <div id="hour" class="hand hour"></div>
-        <div id="minute" class="hand minute"></div>
-        <div id="second" class="hand second"></div>
-
-    </div>
-
-    <div id="brazilTimeText"></div>
-
+<div class="clock">
+<div class="number n12">12</div><div class="number n1">1</div><div class="number n2">2</div><div class="number n3">3</div><div class="number n4">4</div><div class="number n5">5</div><div class="number n6">6</div><div class="number n7">7</div><div class="number n8">8</div><div class="number n9">9</div><div class="number n10">10</div><div class="number n11">11</div>
+<div class="center-dot"></div>
+<div id="hour" class="hand hour"></div>
+<div id="minute" class="hand minute"></div>
+<div id="second" class="hand second"></div>
 </div>
-    <div class="hero-content">
-
-        <div id="updateTimeHero">
-            📅 数据更新时间：--
-        </div>
-
-        <h1>2306-76b-实时数据汇总</h1>
-
-        <button class="run-btn" onclick="queryData()">
-            🔍 查询数据
-        </button>
-
-    </div>
-
+<div id="brazilTimeText"></div>
 </div>
+<div class="hero-content">
+<div id="updateTimeHero">📅 数据更新时间：--</div>
+<h1>2306-76b-实时数据汇总</h1>
+<button class="run-btn" onclick="queryData()">🔍 查询数据</button>
+</div>
+</div>
+
+<!-- ============ TAB NAVIGATION ============ -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
-
 <div class="tab-bar">
-    <div class="tab-btn active" onclick="switchTab(1)">📊 推广效果</div>
-    <div class="tab-btn" onclick="switchTab(2)">🧮 实时数据分析</div>
+<div class="tab-btn active" onclick="switchTab(1)">📊 推广效果</div>
+<div class="tab-btn" onclick="switchTab(2)">🧮 实时数据分析</div>
+</div>
+<button onclick="logout()" style="background:#dc3545;color:white;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:bold;">🚪退出登录</button>
 </div>
 
-<button onclick="logout()"
-style="
-background:#dc3545;
-color:white;
-border:none;
-padding:10px 18px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-">
-🚪退出登录
-</button>
-
-</div>
-
-<!-- TAB 1 (GIỮ NGUYÊN 100%) -->
+<!-- ============ TAB 1 - PROMOTION PERFORMANCE ============ -->
 <div id="tab1">
-    <div id="app"></div>
+<div id="app"></div>
 </div>
 
-<!-- TAB 2 -->
+<!-- ============ TAB 2 - REAL-TIME DATA ANALYSIS ============ -->
 <div id="tab2" style="display:none" class="table-rain-wrap">
-
 <table>
 <thead>
-
 <tr class="table-main-title">
-    <th colspan="36" id="tableMainTitle">
-        2306-76B-实时数据汇总
-    </th>
+<th colspan="36" id="tableMainTitle">2306-76B-实时数据汇总</th>
 </tr>
-
 <tr>
-
-    
 <th rowspan="2" style="width:280px">字段</th>
 <th rowspan="2" style="width:120px">注册充值比</th>
-
-
-    <th colspan="2" class="group1">昨日</th>
-    <th colspan="4" class="group2">今日</th>
-
-    <th rowspan="2" class="group3">加减比例</th>
-
-    <th colspan="2" class="group1">昨日</th>
-    <th colspan="2" class="group2">今日</th>
-
-    <th rowspan="2" class="group3">提现金额</th>
-    <th rowspan="2" class="group3">存提差</th>
-    <th rowspan="2" class="group3">存提差比例</th>
-
-    <th colspan="10" class="group5">📊人均表现</th>
+<th colspan="2" class="group1">昨日</th>
+<th colspan="4" class="group2">今日</th>
+<th rowspan="2" class="group3">加减比例</th>
+<th colspan="2" class="group1">昨日</th>
+<th colspan="2" class="group2">今日</th>
+<th rowspan="2" class="group3">提现金额</th>
+<th rowspan="2" class="group3">存提差</th>
+<th rowspan="2" class="group3">存提差比例</th>
+<th colspan="10" class="group5">📊人均表现</th>
 <th colspan="2" class="group3">🌐 裂变率</th>
 <th colspan="2" class="group3">🔄 复充率</th>
 <th colspan="6" class="group6">🔄 留存率</th>
 </tr>
-
 <tr>
-    <th>首充人数</th><th>首充金额</th>
-    <th>首充人数</th><th>首充金额</th><th>直推人数</th><th>裂变人数</th>
-
-    <th>充值人数</th><th>充值金额</th>
-    <th>充值人数</th><th>充值金额</th>
-
-   
+<th>首充人数</th><th>首充金额</th>
+<th>首充人数</th><th>首充金额</th><th>直推人数</th><th>裂变人数</th>
+<th>充值人数</th><th>充值金额</th>
+<th>充值人数</th><th>充值金额</th>
 <th style="width:180px">类型</th>
-    <th>人均</th>
-    <th>次日人均</th>
-
+<th>人均</th>
+<th>次日人均</th>
 <th style="width:150px">FB-人均</th>
 <th style="width:90px">H5</th>
 <th style="width:90px">PWA</th>
 <th style="width:90px">IOS</th>
-
 <th style="width:90px">TT</th>
 <th style="width:90px">KW</th>
 <th style="width:90px">WS</th>
-
 <th style="width:250px">裂变率</th>
 <th style="width:90px">比例</th>
-
 <th style="width:140px">类型</th>
 <th style="width:90px">比例</th>
-
 <th style="width:320px">字段</th>
 <th>大盘</th>
 <th>FB</th>
@@ -841,1046 +231,252 @@ font-weight:bold;
 <th>WS</th>
 </tr>
 </thead>
-
 <tbody id="body"></tbody>
 </table>
 </div>
 
 <script>
-
-/* TAB SWITCH */
+/* ============ TAB SWITCHING ============ */
 function switchTab(n){
-    document.getElementById("tab1").style.display = n===1 ? "block":"none";
-    document.getElementById("tab2").style.display = n===2 ? "block":"none";
-
-    document.querySelectorAll(".tab-btn").forEach((b,i)=>{
-        b.classList.toggle("active", i===n-1);
-    });
+document.getElementById("tab1").style.display=n===1?"block":"none";
+document.getElementById("tab2").style.display=n===2?"block":"none";
+document.querySelectorAll(".tab-btn").forEach((b,i)=>{b.classList.toggle("active",i===n-1);});
 }
 
-/* DATA */
-let globalData = {};
+/* ============ GLOBAL DATA VARIABLE ============ */
+let globalData={};
 
+/* ============ LOAD DATA FROM JSON ============ */
 function loadData(){
-
-    fetch("data.json?t=" + Date.now())
-    .then(r=>r.json())
-    .then(data=>{
-
-globalData = data;
-
-document.getElementById("updateTimeHero").innerHTML =
-    "📅 数据更新时间：" +
-    (data.update_time || "--");
-
-let brazilTime = "--";
-
-if (data.update_time) {
-
-    const updateDate = new Date(data.update_time);
-
-    brazilTime = updateDate.toLocaleString(
-        "sv-SE",
-        {
-            timeZone: "America/Sao_Paulo"
-        }
-    );
+fetch("data.json?t="+Date.now())
+.then(r=>r.json())
+.then(data=>{
+globalData=data;
+document.getElementById("updateTimeHero").innerHTML="📅 数据更新时间："+(data.update_time||"--");
+let brazilTime="--";
+if(data.update_time){
+const updateDate=new Date(data.update_time);
+brazilTime=updateDate.toLocaleString("sv-SE",{timeZone:"America/Sao_Paulo"});
 }
-
-document.getElementById("tableMainTitle").innerHTML =
-    `2306-76B-实时数据汇总 数据更新时间(巴西)：${brazilTime}`;
-    
+document.getElementById("tableMainTitle").innerHTML=`2306-76B-实时数据汇总 数据更新时间(巴西)：${brazilTime}`;
 renderTab1(data);
 renderTab2();
-
-    });
-
+});
 }
-
 loadData();
 
-// setInterval(loadData,2000);
-
-/* ================= TAB 1 (GIỮ NGUYÊN) ================= */
+/* ============ RENDER TAB 1 - PROMOTION PERFORMANCE ============ */
 function renderTab1(data){
-
-    const sections = [
-        { key: "ALL_TOTAL", name: "全部" },
-        { key: "fb-h5", name: "fb-h5" },
-        { key: "fb-pwa", name: "fb-pwa" },
-        { key: "fb-ios", name: "fb-ios" },
-        { key: "tt-pwa", name: "tt-pwa" },
-        { key: "kwai-pwa", name: "kwai-pwa" },
-        { key: "回访", name: "回访" }
-    ];
-
-    const blocks = [
-        { key:"normalList", name:"综合效果" },
-        { key:"parentList", name:"直播效果" },
-        { key:"childList", name:"裂变效果" }
-    ];
-
-    const fields = [
-        ["registerCount","注册人数"],
-        ["firstRechargeCount","首充人数"],
-        ["firstRechargeAmount","首充金额"],
-        ["rechargeCount","充值人数"],
-        ["rechargeAmount","充值金额"],
-        ["withdrawCount","提现人数"],
-        ["withdrawAmount","提现金额"],
-        ["betCount","投注人数"],
-        ["betAmount","投注金额"],
-        ["validBetAmount","有效投注"],
-        ["reward","赠送金额"]
-    ];
-
-    let html = "";
-
-    sections.forEach(sec=>{
-        let d = data[sec.key] || {};
-
-        html += `<div class="section">`;
-        html += `<div class="title">${sec.name}</div>`;
-
-        blocks.forEach(b=>{
-            let list = d[b.key] || {};
-
-            html += `<div class="sub-title">${b.name}</div><table><tr>`;
-
-            fields.forEach(f=>{
-                html += `<th>${f[1]}</th>`;
-            });
-
-            html += "</tr><tr>";
-
-            fields.forEach(f=>{
-                html += `<td>${list[f[0]] ?? 0}</td>`;
-            });
-
-            html += "</tr></table>";
-        });
-
-        html += "</div>";
-    });
-
-    document.getElementById("app").innerHTML = html;
-}
-function rateClass(value){
-    return value > 0
-        ? "green"
-        : value < 0
-        ? "red"
-        : "";
+const sections=[
+{key:"ALL_TOTAL",name:"全部"},
+{key:"fb-h5",name:"fb-h5"},
+{key:"fb-pwa",name:"fb-pwa"},
+{key:"fb-ios",name:"fb-ios"},
+{key:"tt-pwa",name:"tt-pwa"},
+{key:"kwai-pwa",name:"kwai-pwa"},
+{key:"回访",name:"回访"}
+];
+const blocks=[
+{key:"normalList",name:"综合效果"},
+{key:"parentList",name:"直播效果"},
+{key:"childList",name:"裂变效果"}
+];
+const fields=[
+["registerCount","注册人数"],
+["firstRechargeCount","首充人数"],
+["firstRechargeAmount","首充金额"],
+["rechargeCount","充值人数"],
+["rechargeAmount","充值金额"],
+["withdrawCount","提现人数"],
+["withdrawAmount","提现金额"],
+["betCount","投注人数"],
+["betAmount","投注金额"],
+["validBetAmount","有效投注"],
+["reward","赠送金额"]
+];
+let html="";
+sections.forEach(sec=>{
+let d=data[sec.key]||{};
+html+=`<div class="section"><div class="title">${sec.name}</div>`;
+blocks.forEach(b=>{
+let list=d[b.key]||{};
+html+=`<div class="sub-title">${b.name}</div><table><tr>`;
+fields.forEach(f=>{html+=`<th>${f[1]}</th>`;});
+html+="</tr><tr>";
+fields.forEach(f=>{html+=`<td>${list[f[0]]??0}</td>`;});
+html+="</tr></table>";
+});
+html+="</div>";
+});
+document.getElementById("app").innerHTML=html;
 }
 
-/* ================= TAB 2 ================= */
-function retentionRate(channel, countField){
+/* ============ UTILITY FUNCTIONS ============ */
+function rateClass(value){return value>0?"green":value<0?"red":"";}
 
-    const retention = globalData.retention || {};
-
-    const brazilNow = new Date(
-    new Date().toLocaleString(
-        "en-US",
-        {
-            timeZone: "America/Sao_Paulo"
-        }
-    )
-);
-
-brazilNow.setDate(
-    brazilNow.getDate() - countField
-);
-
-const dateKey =
-    brazilNow.toISOString().split("T")[0];
-console.log(
-    "Retention",
-    channel,
-    countField,
-    dateKey
-);
-    const row = retention[dateKey]?.[channel];
-
-    if(!row) return "0.00%";
-
-    const total = Number(row.count || 0);
-
-    const retain = Number(row[`count${countField}`] || 0);
-
-    return total > 0
-        ? ((retain / total) * 100).toFixed(2) + "%"
-        : "0.00%";
+/* ============ RETENTION RATE CALCULATION ============ */
+function retentionRate(channel,countField){
+const retention=globalData.retention||{};
+const brazilNow=new Date(new Date().toLocaleString("en-US",{timeZone:"America/Sao_Paulo"}));
+brazilNow.setDate(brazilNow.getDate()-countField);
+const dateKey=brazilNow.toISOString().split("T")[0];
+const row=retention[dateKey]?.[channel];
+if(!row)return"0.00%";
+const total=Number(row.count||0);
+const retain=Number(row[`count${countField}`]||0);
+return total>0?((retain/total)*100).toFixed(2)+"%":"0.00%";
 }
+
 function retentionRateFB(countField){
-
-    const retention = globalData.retention || {};
-
-    const brazilNow = new Date(
-        new Date().toLocaleString(
-            "en-US",
-            { timeZone:"America/Sao_Paulo" }
-        )
-    );
-
-    brazilNow.setDate(
-        brazilNow.getDate() - countField
-    );
-
-    const dateKey =
-        brazilNow.toISOString().split("T")[0];
-
-    const h5  = retention[dateKey]?.["fb-h5"]  || {};
-    const pwa = retention[dateKey]?.["fb-pwa"] || {};
-    const ios = retention[dateKey]?.["fb-ios"] || {};
-
-    const total =
-        Number(h5.count || 0) +
-        Number(pwa.count || 0) +
-        Number(ios.count || 0);
-
-    const retain =
-        Number(h5[`count${countField}`] || 0) +
-        Number(pwa[`count${countField}`] || 0) +
-        Number(ios[`count${countField}`] || 0);
-
-    return total > 0
-        ? ((retain / total) * 100).toFixed(2) + "%"
-        : "0.00%";
+const retention=globalData.retention||{};
+const brazilNow=new Date(new Date().toLocaleString("en-US",{timeZone:"America/Sao_Paulo"}));
+brazilNow.setDate(brazilNow.getDate()-countField);
+const dateKey=brazilNow.toISOString().split("T")[0];
+const h5=retention[dateKey]?.["fb-h5"]||{};
+const pwa=retention[dateKey]?.["fb-pwa"]||{};
+const ios=retention[dateKey]?.["fb-ios"]||{};
+const total=Number(h5.count||0)+Number(pwa.count||0)+Number(ios.count||0);
+const retain=Number(h5[`count${countField}`]||0)+Number(pwa[`count${countField}`]||0)+Number(ios[`count${countField}`]||0);
+return total>0?((retain/total)*100).toFixed(2)+"%":"0.00%";
 }
+
+/* ============ RENDER TAB 2 - REAL-TIME DATA ANALYSIS ============ */
 function renderTab2(){
-
-
-   const list = [
-    {show:"大盘",key:"ALL_TOTAL"},
-    {show:"FB-H5",key:"fb-h5"},
-    {show:"FB-PWA",key:"fb-pwa"},
-    {show:"FB-IOS",key:"fb-ios"},
-    {show:"TT-PWA",key:"tt-pwa"},
-    {show:"KW-PWA",key:"kwai-pwa"},
-    {show:"回访",key:"回访"},
-        {show:"ws-h5",key:"ws-h5"}
-
+const list=[
+{show:"大盘",key:"ALL_TOTAL"},
+{show:"FB-H5",key:"fb-h5"},
+{show:"FB-PWA",key:"fb-pwa"},
+{show:"FB-IOS",key:"fb-ios"},
+{show:"TT-PWA",key:"tt-pwa"},
+{show:"KW-PWA",key:"kwai-pwa"},
+{show:"回访",key:"回访"},
+{show:"ws-h5",key:"ws-h5"}
 ];
-const avgRows = [
-    {show:"人均",type:"normal"},
-    {show:"直推人均",type:"parent"},
-    {show:"裂变人均",type:"child"},
-    {show:"首充人均",type:"first"}
-];
-    let html = "";
-
-    list.forEach(item=>{
-
-
-        let d = globalData[item.key] || {};
-let n = d.normalList || {};
-let hour = globalData.hour_report?.[item.key] || {};
-
-let recharge = n.rechargeAmount || 0;
-let withdraw = n.withdrawAmount || 0;
-
-let diff = recharge - withdraw;
-let diffRate = recharge ? (diff/recharge*100).toFixed(2)+"%" : "0%";
-
-/* 人均 */
-let p = d.parentList || {};
-let c = d.childList || {};
-
-
-let all = globalData["ALL_TOTAL"] || {};
-
-let normal = all.normalList || {};
-let parent = all.parentList || {};
-let child = all.childList || {};
-let avg = "";
-let nextAvg = "";
-nextAvg =
-item.show==="大盘"
-? (globalData.next_avg?.first ?? 0)
-
-: item.show==="FB-H5"
-? (globalData.next_avg?.parent ?? 0)
-
-: item.show==="FB-PWA"
-? (globalData.next_avg?.child ?? 0)
-
-: "";
-
-if(item.key==="ALL_TOTAL"){      // 大盘
-
-    avg = normal.rechargeCount
-        ? (normal.rechargeAmount / normal.rechargeCount).toFixed(2)
-        : 0;
-}
-else if(item.key==="fb-h5"){     // 直推
-
-    avg = parent.rechargeCount
-        ? (parent.rechargeAmount / parent.rechargeCount).toFixed(2)
-        : 0;
-}
-else if(item.key==="fb-pwa"){    // 裂变
-
-    avg = child.rechargeCount
-        ? (child.rechargeAmount / child.rechargeCount).toFixed(2)
-        : 0;
-    
-}
-else if(item.key==="fb-ios"){    // 首充
-
-   console.log(
-    "首充",
-    normal.firstRechargeAmount,
-    normal.firstRechargeCount
-);
-
-avg =
-    Number(normal.firstRechargeCount) > 0
-    ? (
-        Number(normal.firstRechargeAmount) /
-        Number(normal.firstRechargeCount)
-      ).toFixed(2)
-    : "0.00";
-
-    nextAvg = "";
-}
-console.log(item.key, avg, nextAvg);
-
-let h5 = globalData["fb-h5"]?.normalList || {};
-let pwa = globalData["fb-pwa"]?.normalList || {};
-let ios = globalData["fb-ios"]?.normalList || {};
-
-let tt = globalData["tt-pwa"]?.normalList || {};
-let ttParent = globalData["tt-pwa"]?.parentList || {};
-let ttChild = globalData["tt-pwa"]?.childList || {};
-
-let kw = globalData["kwai-pwa"]?.normalList || {};
-let kwParent = globalData["kwai-pwa"]?.parentList || {};
-let kwChild = globalData["kwai-pwa"]?.childList || {};
-
-let ws = globalData["ws-h5"]?.normalList || {};
-let wsParent = globalData["ws-h5"]?.parentList || {};
-let wsChild = globalData["ws-h5"]?.childList || {};
-
-
-let h5Avg = h5.rechargeCount
-    ? (h5.rechargeAmount / h5.rechargeCount).toFixed(2)
-    : 0;
-
-let pwaAvg = pwa.rechargeCount
-    ? (pwa.rechargeAmount / pwa.rechargeCount).toFixed(2)
-    : 0;
-
-let iosAvg = ios.rechargeCount
-    ? (ios.rechargeAmount / ios.rechargeCount).toFixed(2)
-    : 0;
-
-let ttAvg = tt.rechargeCount
-    ? (tt.rechargeAmount / tt.rechargeCount).toFixed(2)
-    : 0;
-
-let kwAvg = kw.rechargeCount
-    ? (kw.rechargeAmount / kw.rechargeCount).toFixed(2)
-    : 0;
-
-let wsAvg = ws.rechargeCount
-    ? (ws.rechargeAmount / ws.rechargeCount).toFixed(2)
-    : 0;
-
-let fbNormalAvg = (
-    Number(h5.rechargeAmount || 0) +
-    Number(pwa.rechargeAmount || 0) +
-    Number(ios.rechargeAmount || 0)
-)
-/
-(
-    Number(h5.rechargeCount || 0) +
-    Number(pwa.rechargeCount || 0) +
-    Number(ios.rechargeCount || 0)
-);
-
-fbNormalAvg = isFinite(fbNormalAvg)
-    ? fbNormalAvg.toFixed(2)
-    : 0;
-let h5Parent = globalData["fb-h5"]?.parentList || {};
-let pwaParent = globalData["fb-pwa"]?.parentList || {};
-let iosParent = globalData["fb-ios"]?.parentList || {};
-
-let h5Child = globalData["fb-h5"]?.childList || {};
-let pwaChild = globalData["fb-pwa"]?.childList || {};
-let iosChild = globalData["fb-ios"]?.childList || {};
-let fbParentAvg = (
-    Number(h5Parent.rechargeAmount || 0) +
-    Number(pwaParent.rechargeAmount || 0) +
-    Number(iosParent.rechargeAmount || 0)
-)
-/
-(
-    Number(h5Parent.rechargeCount || 0) +
-    Number(pwaParent.rechargeCount || 0) +
-    Number(iosParent.rechargeCount || 0)
-);
-
-fbParentAvg = isFinite(fbParentAvg)
-    ? fbParentAvg.toFixed(2)
-    : 0;
-    /* 裂变人均 */
-let fbChildAvg = (
-    Number(h5Child.rechargeAmount || 0) +
-    Number(pwaChild.rechargeAmount || 0) +
-    Number(iosChild.rechargeAmount || 0)
-)
-/
-(
-    Number(h5Child.rechargeCount || 0) +
-    Number(pwaChild.rechargeCount || 0) +
-    Number(iosChild.rechargeCount || 0)
-);
-
-fbChildAvg = isFinite(fbChildAvg)
-    ? fbChildAvg.toFixed(2)
-    : 0;
-
-/* 首充人均 */
-let fbFirstAvg = (
-    Number(h5.firstRechargeAmount || 0) +
-    Number(pwa.firstRechargeAmount || 0) +
-    Number(ios.firstRechargeAmount || 0)
-)
-/
-(
-    Number(h5.firstRechargeCount || 0) +
-    Number(pwa.firstRechargeCount || 0) +
-    Number(ios.firstRechargeCount || 0)
-);
-
-fbFirstAvg = isFinite(fbFirstAvg)
-    ? fbFirstAvg.toFixed(2)
-    : 0;
-    /* CỘT 注册转化率 */
-let parentRegister = p.registerCount || 0;
-let parentFirstRecharge = p.firstRechargeCount || 0;
-
-let regRechargeRate =
-    parentRegister > 0
-    ? (
-        parentFirstRecharge /
-        parentRegister *
-        100
-      ).toFixed(2) + "%"
-    : "0%";
-
-html += `
-<tr>
-<td class="gray">${item.show}</td>
-
-<td class="${rateClass(parseFloat(regRechargeRate))}">
-${regRechargeRate}
-</td>
-
-<td>${hour.promotionList?.firstRechargeCount || 0}</td>
-<td>${hour.promotionList?.firstRechargeAmount || 0}</td>
-
-<td>${n.firstRechargeCount||0}</td>
-<td>${n.firstRechargeAmount||0}</td>
-<td>${p.firstRechargeCount||0}</td>
-<td>${c.firstRechargeCount||0}</td>
-
-
-<td class="${
-(
-Number(n.firstRechargeCount || 0) -
-Number(hour.promotionList?.firstRechargeCount || 0)
-) > 0
-? 'green'
-:
-(
-Number(n.firstRechargeCount || 0) -
-Number(hour.promotionList?.firstRechargeCount || 0)
-) < 0
-? 'red'
-: ''
-}">
-${
-Number(hour.promotionList?.firstRechargeCount || 0) > 0
-?
-(
-(
-Number(n.firstRechargeCount || 0) -
-Number(hour.promotionList?.firstRechargeCount || 0)
-)
-/
-Number(hour.promotionList?.firstRechargeCount || 0)
-*
-100
-).toFixed(2) + "%"
-:
-"0.00%"
-}
-</td>
-
-<td>${hour.promotionList?.rechargeCount || 0}</td>
-<td>${hour.promotionList?.rechargeAmount || 0}</td>
-
-<td>${n.rechargeCount||0}</td>
-<td>${n.rechargeAmount||0}</td>
-
-<td>${withdraw}</td>
-
-<td class="${diff<0?'red':''}">${diff}</td>
-<td class="${rateClass(parseFloat(diffRate))}">
-    ${diffRate}
-</td>
-
-<td class="label-col">
-${
-item.key==="ALL_TOTAL" ? "大盘" :
-item.key==="fb-h5" ? "直推" :
-item.key==="fb-pwa" ? "裂变" :
-item.key==="fb-ios" ? "首充" :
-"&nbsp;"
-}
-</td>
-
-<td>
-${
-item.key==="ALL_TOTAL" ||
-item.key==="fb-h5" ||
-item.key==="fb-pwa" ||
-item.key==="fb-ios"
-? avg
-: ""
-}
-</td>
-
-<td>
-${
-item.key==="ALL_TOTAL" ||
-item.key==="fb-h5" ||
-item.key==="fb-pwa"
-? nextAvg
-: ""
-}
-</td>
-
-<td>
-${
-item.key==="ALL_TOTAL"
-? fbNormalAvg
-:
-item.key==="fb-h5"
-? fbParentAvg
-:
-item.key==="fb-pwa"
-? fbChildAvg
-:
-item.key==="fb-ios"
-? fbFirstAvg
-:
-""
-}
-</td>
-<td>
-${
-item.key==="ALL_TOTAL"
-? h5Avg
-:
-item.key==="fb-h5"
-? (
-    h5Parent.rechargeCount
-    ? (h5Parent.rechargeAmount / h5Parent.rechargeCount).toFixed(2)
-    : 0
-)
-:
-item.key==="fb-pwa"
-? (
-    h5Child.rechargeCount
-    ? (h5Child.rechargeAmount / h5Child.rechargeCount).toFixed(2)
-    : 0
-)
-:
-item.key==="fb-ios"
-? (
-    h5.firstRechargeCount
-    ? (h5.firstRechargeAmount / h5.firstRechargeCount).toFixed(2)
-    : 0
-)
-:
-""
-}
-</td>
-<td>
-${
-item.key==="ALL_TOTAL"
-? pwaAvg
-:
-item.key==="fb-h5"
-? (
-    pwaParent.rechargeCount
-    ? (pwaParent.rechargeAmount / pwaParent.rechargeCount).toFixed(2)
-    : 0
-)
-:
-item.key==="fb-pwa"
-? (
-    pwaChild.rechargeCount
-    ? (pwaChild.rechargeAmount / pwaChild.rechargeCount).toFixed(2)
-    : 0
-)
-:
-item.key==="fb-ios"
-? (
-    pwa.firstRechargeCount
-    ? (pwa.firstRechargeAmount / pwa.firstRechargeCount).toFixed(2)
-    : 0
-)
-:
-""
-}
-</td>
-<td>
-${
-item.key==="ALL_TOTAL"
-? iosAvg
-:
-item.key==="fb-h5"
-? (
-    iosParent.rechargeCount
-    ? (iosParent.rechargeAmount / iosParent.rechargeCount).toFixed(2)
-    : 0
-)
-:
-item.key==="fb-pwa"
-? (
-    iosChild.rechargeCount
-    ? (iosChild.rechargeAmount / iosChild.rechargeCount).toFixed(2)
-    : 0
-)
-:
-item.key==="fb-ios"
-? (
-    ios.firstRechargeCount
-    ? (ios.firstRechargeAmount / ios.firstRechargeCount).toFixed(2)
-    : 0
-)
-:
-""
-}
-</td>
-<td>
-${
-item.key==="ALL_TOTAL"
-? ttAvg
-:
-item.key==="fb-h5"
-? (
-    ttParent.rechargeCount
-    ? (ttParent.rechargeAmount / ttParent.rechargeCount).toFixed(2)
-    : 0
-)
-:
-item.key==="fb-pwa"
-? (
-    ttChild.rechargeCount
-    ? (ttChild.rechargeAmount / ttChild.rechargeCount).toFixed(2)
-    : 0
-)
-:
-item.key==="fb-ios"
-? (
-    tt.firstRechargeCount
-    ? (tt.firstRechargeAmount / tt.firstRechargeCount).toFixed(2)
-    : 0
-)
-:
-""
-}
-</td>
-<td>
-${
-item.key==="ALL_TOTAL"
-? kwAvg
-:
-item.key==="fb-h5"
-? (
-    kwParent.rechargeCount
-    ? (kwParent.rechargeAmount / kwParent.rechargeCount).toFixed(2)
-    : 0
-)
-:
-item.key==="fb-pwa"
-? (
-    kwChild.rechargeCount
-    ? (kwChild.rechargeAmount / kwChild.rechargeCount).toFixed(2)
-    : 0
-)
-:
-item.key==="fb-ios"
-? (
-    kw.firstRechargeCount
-    ? (kw.firstRechargeAmount / kw.firstRechargeCount).toFixed(2)
-    : 0
-)
-:
-""
-}
-</td>
-
-<td>
-${
-item.key==="ALL_TOTAL"
-? wsAvg
-:
-item.key==="fb-h5"
-? (
-    wsParent.rechargeCount
-    ? (wsParent.rechargeAmount / wsParent.rechargeCount).toFixed(2)
-    : 0
-)
-:
-item.key==="fb-pwa"
-? (
-    wsChild.rechargeCount
-    ? (wsChild.rechargeAmount / wsChild.rechargeCount).toFixed(2)
-    : 0
-)
-:
-item.key==="fb-ios"
-? (
-    ws.firstRechargeCount
-    ? (ws.firstRechargeAmount / ws.firstRechargeCount).toFixed(2)
-    : 0
-)
-:
-""
-}
-</td>
-<td class="label-col">${item.show}</td>
-
-<td class="${rateClass(
-n.rechargeCount > c.firstRechargeCount
-?
-(
-    c.firstRechargeCount /
-    (
-        n.rechargeCount -
-        c.firstRechargeCount
-    )
-    * 100
-)
-: 0
-)}">
-
-${
-n.rechargeCount > c.firstRechargeCount
-?
-(
-    c.firstRechargeCount /
-    (
-        n.rechargeCount -
-        c.firstRechargeCount
-    )
-    * 100
-).toFixed(2) + "%"
-:
-"0%"
-}
-</td>
-
-<td class="label-col">
-${item.show==="大盘" ? "大盘" :
-item.show==="FB-H5" ? "直推" :
-item.show==="FB-PWA" ? "裂变" : ""}
-</td>
-
-
-
-<td class="green">
-${
-item.show==="大盘"
-? (globalData.repeat_rate?.first ?? 0).toFixed(2) + "%"
-
-: item.show==="FB-H5"
-? (globalData.repeat_rate?.parent ?? 0).toFixed(2) + "%"
-
-: item.show==="FB-PWA"
-? (globalData.repeat_rate?.child ?? 0).toFixed(2) + "%"
-
-: ""
-}
-</td>
-
-<td class="label-col">
-${
-    item.show?.trim() === "大盘" ? "2日留存" :
-    item.show?.trim() === "FB-H5" ? "3日留存" :
-    item.show?.trim() === "FB-PWA" ? "4日留存" :
-    item.show?.trim() === "FB-IOS" ? "5日留存" :
-    item.show?.trim() === "TT-PWA" ? "6日留存" :
-    item.show?.trim() === "KW-PWA" ? "7日留存" :
-    item.show?.trim() === "回访" ? "10日留存" :
-    item.show === "ws-h5" ? "14日留存" :
-    "-"
-}
-</td>
-
-<td>
-${
-item.show==="大盘" ? retentionRate("ALL",1) :
-item.show==="FB-H5" ? retentionRate("ALL",2) :
-item.show==="FB-PWA" ? retentionRate("ALL",3) :
-item.show==="FB-IOS" ? retentionRate("ALL",4) :
-item.show==="TT-PWA" ? retentionRate("ALL",5) :
-item.show==="KW-PWA" ? retentionRate("ALL",6) :
-item.show==="回访" ? retentionRate("ALL",9) :
-item.show==="ws-h5" ? retentionRate("ALL",13) :
-""
-}
-</td>
-
-<td>
-${
-item.show==="大盘" ? retentionRateFB(1) :
-item.show==="FB-H5" ? retentionRateFB(2) :
-item.show==="FB-PWA" ? retentionRateFB(3) :
-item.show==="FB-IOS" ? retentionRateFB(4) :
-item.show==="TT-PWA" ? retentionRateFB(5) :
-item.show==="KW-PWA" ? retentionRateFB(6) :
-item.show==="回访" ? retentionRateFB(9) :
-item.show==="ws-h5" ? retentionRateFB(13) :
-""
-}
-</td>
-
-<td>
-${
-item.show==="大盘" ? retentionRate("tt-pwa",1) :
-item.show==="FB-H5" ? retentionRate("tt-pwa",2) :
-item.show==="FB-PWA" ? retentionRate("tt-pwa",3) :
-item.show==="FB-IOS" ? retentionRate("tt-pwa",4) :
-item.show==="TT-PWA" ? retentionRate("tt-pwa",5) :
-item.show==="KW-PWA" ? retentionRate("tt-pwa",6) :
-item.show==="回访" ? retentionRate("tt-pwa",9) :
-item.show==="ws-h5" ? retentionRate("tt-pwa",13) :
-""
-}
-</td>
-
-<td>
-${
-item.show==="大盘" ? retentionRate("kwai-pwa",1) :
-item.show==="FB-H5" ? retentionRate("kwai-pwa",2) :
-item.show==="FB-PWA" ? retentionRate("kwai-pwa",3) :
-item.show==="FB-IOS" ? retentionRate("kwai-pwa",4) :
-item.show==="TT-PWA" ? retentionRate("kwai-pwa",5) :
-item.show==="KW-PWA" ? retentionRate("kwai-pwa",6) :
-item.show==="回访" ? retentionRate("kwai-pwa",9) :
-item.show==="ws-h5" ? retentionRate("kwai-pwa",13) :
-""
-}
-</td>
-
-<td>
-${
-item.show==="大盘" ? retentionRate("ws-h5",1) :
-item.show==="FB-H5" ? retentionRate("ws-h5",2) :
-item.show==="FB-PWA" ? retentionRate("ws-h5",3) :
-item.show==="FB-IOS" ? retentionRate("ws-h5",4) :
-item.show==="TT-PWA" ? retentionRate("ws-h5",5) :
-item.show==="KW-PWA" ? retentionRate("ws-h5",6) :
-item.show==="回访" ? retentionRate("ws-h5",9) :
-item.show==="ws-h5" ? retentionRate("ws-h5",13) :
-""
-}
-</td>
-
-
-        `;
-    });
-
-/* 2 hàng trống dự phòng */
+let html="";
+list.forEach(item=>{
+let d=globalData[item.key]||{};
+let n=d.normalList||{};
+let hour=globalData.hour_report?.[item.key]||{};
+let recharge=n.rechargeAmount||0;
+let withdraw=n.withdrawAmount||0;
+let diff=recharge-withdraw;
+let diffRate=recharge?(diff/recharge*100).toFixed(2)+"%":"0%";
+let p=d.parentList||{};
+let c=d.childList||{};
+let all=globalData["ALL_TOTAL"]||{};
+let normal=all.normalList||{};
+let parent=all.parentList||{};
+let child=all.childList||{};
+let avg="";
+let nextAvg=item.show==="大盘"?(globalData.next_avg?.first??0):item.show==="FB-H5"?(globalData.next_avg?.parent??0):item.show==="FB-PWA"?(globalData.next_avg?.child??0):"";
+if(item.key==="ALL_TOTAL"){avg=normal.rechargeCount?(normal.rechargeAmount/normal.rechargeCount).toFixed(2):0;}
+else if(item.key==="fb-h5"){avg=parent.rechargeCount?(parent.rechargeAmount/parent.rechargeCount).toFixed(2):0;}
+else if(item.key==="fb-pwa"){avg=child.rechargeCount?(child.rechargeAmount/child.rechargeCount).toFixed(2):0;}
+else if(item.key==="fb-ios"){avg=Number(normal.firstRechargeCount)>0?(Number(normal.firstRechargeAmount)/Number(normal.firstRechargeCount)).toFixed(2):"0.00";nextAvg="";}
+let h5=globalData["fb-h5"]?.normalList||{};
+let pwa=globalData["fb-pwa"]?.normalList||{};
+let ios=globalData["fb-ios"]?.normalList||{};
+let tt=globalData["tt-pwa"]?.normalList||{};
+let ttParent=globalData["tt-pwa"]?.parentList||{};
+let ttChild=globalData["tt-pwa"]?.childList||{};
+let kw=globalData["kwai-pwa"]?.normalList||{};
+let kwParent=globalData["kwai-pwa"]?.parentList||{};
+let kwChild=globalData["kwai-pwa"]?.childList||{};
+let ws=globalData["ws-h5"]?.normalList||{};
+let wsParent=globalData["ws-h5"]?.parentList||{};
+let wsChild=globalData["ws-h5"]?.childList||{};
+let h5Avg=h5.rechargeCount?(h5.rechargeAmount/h5.rechargeCount).toFixed(2):0;
+let pwaAvg=pwa.rechargeCount?(pwa.rechargeAmount/pwa.rechargeCount).toFixed(2):0;
+let iosAvg=ios.rechargeCount?(ios.rechargeAmount/ios.rechargeCount).toFixed(2):0;
+let ttAvg=tt.rechargeCount?(tt.rechargeAmount/tt.rechargeCount).toFixed(2):0;
+let kwAvg=kw.rechargeCount?(kw.rechargeAmount/kw.rechargeCount).toFixed(2):0;
+let wsAvg=ws.rechargeCount?(ws.rechargeAmount/ws.rechargeCount).toFixed(2):0;
+let fbNormalAvg=(Number(h5.rechargeAmount||0)+Number(pwa.rechargeAmount||0)+Number(ios.rechargeAmount||0))/(Number(h5.rechargeCount||0)+Number(pwa.rechargeCount||0)+Number(ios.rechargeCount||0));
+fbNormalAvg=isFinite(fbNormalAvg)?fbNormalAvg.toFixed(2):0;
+let h5Parent=globalData["fb-h5"]?.parentList||{};
+let pwaParent=globalData["fb-pwa"]?.parentList||{};
+let iosParent=globalData["fb-ios"]?.parentList||{};
+let h5Child=globalData["fb-h5"]?.childList||{};
+let pwaChild=globalData["fb-pwa"]?.childList||{};
+let iosChild=globalData["fb-ios"]?.childList||{};
+let fbParentAvg=(Number(h5Parent.rechargeAmount||0)+Number(pwaParent.rechargeAmount||0)+Number(iosParent.rechargeAmount||0))/(Number(h5Parent.rechargeCount||0)+Number(pwaParent.rechargeCount||0)+Number(iosParent.rechargeCount||0));
+fbParentAvg=isFinite(fbParentAvg)?fbParentAvg.toFixed(2):0;
+let fbChildAvg=(Number(h5Child.rechargeAmount||0)+Number(pwaChild.rechargeAmount||0)+Number(iosChild.rechargeAmount||0))/(Number(h5Child.rechargeCount||0)+Number(pwaChild.rechargeCount||0)+Number(iosChild.rechargeCount||0));
+fbChildAvg=isFinite(fbChildAvg)?fbChildAvg.toFixed(2):0;
+let fbFirstAvg=(Number(h5.firstRechargeAmount||0)+Number(pwa.firstRechargeAmount||0)+Number(ios.firstRechargeAmount||0))/(Number(h5.firstRechargeCount||0)+Number(pwa.firstRechargeCount||0)+Number(ios.firstRechargeCount||0));
+fbFirstAvg=isFinite(fbFirstAvg)?fbFirstAvg.toFixed(2):0;
+let parentRegister=p.registerCount||0;
+let parentFirstRecharge=p.firstRechargeCount||0;
+let regRechargeRate=parentRegister>0?(parentFirstRecharge/parentRegister*100).toFixed(2)+"%":"0%";
+html+=`<tr><td class="gray">${item.show}</td><td class="${rateClass(parseFloat(regRechargeRate))}">${regRechargeRate}</td><td>${hour.promotionList?.firstRechargeCount||0}</td><td>${hour.promotionList?.firstRechargeAmount||0}</td><td>${n.firstRechargeCount||0}</td><td>${n.firstRechargeAmount||0}</td><td>${p.firstRechargeCount||0}</td><td>${c.firstRechargeCount||0}</td><td class="${(Number(n.firstRechargeCount||0)-Number(hour.promotionList?.firstRechargeCount||0))>0?'green':(Number(n.firstRechargeCount||0)-Number(hour.promotionList?.firstRechargeCount||0))<0?'red':''}">${Number(hour.promotionList?.firstRechargeCount||0)>0?((Number(n.firstRechargeCount||0)-Number(hour.promotionList?.firstRechargeCount||0))/Number(hour.promotionList?.firstRechargeCount||0)*100).toFixed(2)+"%":"0.00%"}</td><td>${hour.promotionList?.rechargeCount||0}</td><td>${hour.promotionList?.rechargeAmount||0}</td><td>${n.rechargeCount||0}</td><td>${n.rechargeAmount||0}</td><td>${withdraw}</td><td class="${diff<0?'red':''}">${diff}</td><td class="${rateClass(parseFloat(diffRate))}">${diffRate}</td><td class="label-col">${item.key==="ALL_TOTAL"?"大盘":item.key==="fb-h5"?"直推":item.key==="fb-pwa"?"裂变":item.key==="fb-ios"?"首充":"&nbsp;"}</td><td>${item.key==="ALL_TOTAL"||item.key==="fb-h5"||item.key==="fb-pwa"||item.key==="fb-ios"?avg:""}</td><td>${item.key==="ALL_TOTAL"||item.key==="fb-h5"||item.key==="fb-pwa"?nextAvg:""}</td><td>${item.key==="ALL_TOTAL"?fbNormalAvg:item.key==="fb-h5"?fbParentAvg:item.key==="fb-pwa"?fbChildAvg:item.key==="fb-ios"?fbFirstAvg:""}</td><td>${item.key==="ALL_TOTAL"?h5Avg:item.key==="fb-h5"?(h5Parent.rechargeCount?(h5Parent.rechargeAmount/h5Parent.rechargeCount).toFixed(2):0):item.key==="fb-pwa"?(h5Child.rechargeCount?(h5Child.rechargeAmount/h5Child.rechargeCount).toFixed(2):0):item.key==="fb-ios"?(h5.firstRechargeCount?(h5.firstRechargeAmount/h5.firstRechargeCount).toFixed(2):0):""}</td><td>${item.key==="ALL_TOTAL"?pwaAvg:item.key==="fb-h5"?(pwaParent.rechargeCount?(pwaParent.rechargeAmount/pwaParent.rechargeCount).toFixed(2):0):item.key==="fb-pwa"?(pwaChild.rechargeCount?(pwaChild.rechargeAmount/pwaChild.rechargeCount).toFixed(2):0):item.key==="fb-ios"?(pwa.firstRechargeCount?(pwa.firstRechargeAmount/pwa.firstRechargeCount).toFixed(2):0):""}</td><td>${item.key==="ALL_TOTAL"?iosAvg:item.key==="fb-h5"?(iosParent.rechargeCount?(iosParent.rechargeAmount/iosParent.rechargeCount).toFixed(2):0):item.key==="fb-pwa"?(iosChild.rechargeCount?(iosChild.rechargeAmount/iosChild.rechargeCount).toFixed(2):0):item.key==="fb-ios"?(ios.firstRechargeCount?(ios.firstRechargeAmount/ios.firstRechargeCount).toFixed(2):0):""}</td><td>${item.key==="ALL_TOTAL"?ttAvg:item.key==="fb-h5"?(ttParent.rechargeCount?(ttParent.rechargeAmount/ttParent.rechargeCount).toFixed(2):0):item.key==="fb-pwa"?(ttChild.rechargeCount?(ttChild.rechargeAmount/ttChild.rechargeCount).toFixed(2):0):item.key==="fb-ios"?(tt.firstRechargeCount?(tt.firstRechargeAmount/tt.firstRechargeCount).toFixed(2):0):""}</td><td>${item.key==="ALL_TOTAL"?kwAvg:item.key==="fb-h5"?(kwParent.rechargeCount?(kwParent.rechargeAmount/kwParent.rechargeCount).toFixed(2):0):item.key==="fb-pwa"?(kwChild.rechargeCount?(kwChild.rechargeAmount/kwChild.rechargeCount).toFixed(2):0):item.key==="fb-ios"?(kw.firstRechargeCount?(kw.firstRechargeAmount/kw.firstRechargeCount).toFixed(2):0):""}</td><td>${item.key==="ALL_TOTAL"?wsAvg:item.key==="fb-h5"?(wsParent.rechargeCount?(wsParent.rechargeAmount/wsParent.rechargeCount).toFixed(2):0):item.key==="fb-pwa"?(wsChild.rechargeCount?(wsChild.rechargeAmount/wsChild.rechargeCount).toFixed(2):0):item.key==="fb-ios"?(ws.firstRechargeCount?(ws.firstRechargeAmount/ws.firstRechargeCount).toFixed(2):0):""}</td><td class="label-col">${item.show}</td><td class="${rateClass(n.rechargeCount>c.firstRechargeCount?(c.firstRechargeCount/(n.rechargeCount-c.firstRechargeCount)*100):0)}">${n.rechargeCount>c.firstRechargeCount?(c.firstRechargeCount/(n.rechargeCount-c.firstRechargeCount)*100).toFixed(2)+"%":"0%"}</td><td class="label-col">${item.show==="大盘"?"大盘":item.show==="FB-H5"?"直推":item.show==="FB-PWA"?"裂变":""}</td><td class="green">${item.show==="大盘"?(globalData.repeat_rate?.first??0).toFixed(2)+"%":item.show==="FB-H5"?(globalData.repeat_rate?.parent??0).toFixed(2)+"%":item.show==="FB-PWA"?(globalData.repeat_rate?.child??0).toFixed(2)+"%":""}</td><td class="label-col">${item.show?.trim()==="大盘"?"2日留存":item.show?.trim()==="FB-H5"?"3日留存":item.show?.trim()==="FB-PWA"?"4日留存":item.show?.trim()==="FB-IOS"?"5日留存":item.show?.trim()==="TT-PWA"?"6日留存":item.show?.trim()==="KW-PWA"?"7日留存":item.show?.trim()==="回访"?"10日留存":item.show==="ws-h5"?"14日留存":"-"}</td><td>${item.show==="大盘"?retentionRate("ALL",1):item.show==="FB-H5"?retentionRate("ALL",2):item.show==="FB-PWA"?retentionRate("ALL",3):item.show==="FB-IOS"?retentionRate("ALL",4):item.show==="TT-PWA"?retentionRate("ALL",5):item.show==="KW-PWA"?retentionRate("ALL",6):item.show==="回访"?retentionRate("ALL",9):item.show==="ws-h5"?retentionRate("ALL",13):""}</td><td>${item.show==="大盘"?retentionRateFB(1):item.show==="FB-H5"?retentionRateFB(2):item.show==="FB-PWA"?retentionRateFB(3):item.show==="FB-IOS"?retentionRateFB(4):item.show==="TT-PWA"?retentionRateFB(5):item.show==="KW-PWA"?retentionRateFB(6):item.show==="回访"?retentionRateFB(9):item.show==="ws-h5"?retentionRateFB(13):""}</td><td>${item.show==="大盘"?retentionRate("tt-pwa",1):item.show==="FB-H5"?retentionRate("tt-pwa",2):item.show==="FB-PWA"?retentionRate("tt-pwa",3):item.show==="FB-IOS"?retentionRate("tt-pwa",4):item.show==="TT-PWA"?retentionRate("tt-pwa",5):item.show==="KW-PWA"?retentionRate("tt-pwa",6):item.show==="回访"?retentionRate("tt-pwa",9):item.show==="ws-h5"?retentionRate("tt-pwa",13):""}</td><td>${item.show==="大盘"?retentionRate("kwai-pwa",1):item.show==="FB-H5"?retentionRate("kwai-pwa",2):item.show==="FB-PWA"?retentionRate("kwai-pwa",3):item.show==="FB-IOS"?retentionRate("kwai-pwa",4):item.show==="TT-PWA"?retentionRate("kwai-pwa",5):item.show==="KW-PWA"?retentionRate("kwai-pwa",6):item.show==="回访"?retentionRate("kwai-pwa",9):item.show==="ws-h5"?retentionRate("kwai-pwa",13):""}</td><td>${item.show==="大盘"?retentionRate("ws-h5",1):item.show==="FB-H5"?retentionRate("ws-h5",2):item.show==="FB-PWA"?retentionRate("ws-h5",3):item.show==="FB-IOS"?retentionRate("ws-h5",4):item.show==="TT-PWA"?retentionRate("ws-h5",5):item.show==="KW-PWA"?retentionRate("ws-h5",6):item.show==="回访"?retentionRate("ws-h5",9):item.show==="ws-h5"?retentionRate("ws-h5",13):""}</td></tr>`;
+});
 for(let i=0;i<2;i++){
-
-    html += "<tr>";
-
-    for(let j=0;j<36;j++){
-
-        if(
-            j===0 ||   // 字段
-            j===16 ||   // 人均表现-类型
-            j===26 ||   // 裂变率
-            j===28 ||   // 复充率-类型
-            j===30      // 留存率-字段
-        ){
-            html += '<td class="label-col">&nbsp;</td>';
-        }else{
-            html += '<td>&nbsp;</td>';
-        }
-
-    }
-
-    html += "</tr>";
+html+="<tr>";
+for(let j=0;j<36;j++){
+if(j===0||j===16||j===26||j===28||j===30){html+='<td class="label-col">&nbsp;</td>';}else{html+='<td>&nbsp;</td>';}
+}
+html+="</tr>";
+}
+document.getElementById("body").innerHTML=html;
 }
 
-document.getElementById("body").innerHTML = html;
-}
-
-/* PYTHON BUTTON */
+/* ============ QUERY DATA FROM BACKEND ============ */
 async function queryData(){
-
-    // Chỉ Flask mới chạy Python
-    if(location.port !== "5000"){
-
-    const btn = document.querySelector(".run-btn");
-
-    btn.disabled = true;
-
-    btn.classList.add("loading");
-
-    const texts = [
-
-        "🌐 正在连接服务器...",
-        "📡 正在同步数据...",
-        "🔄 正在获取最新数据...",
-        "🚀 即将完成...",
-        "✨ 数据准备完成"
-
-    ];
-
-    let i = 0;
-
-    const interval = setInterval(()=>{
-
-        btn.innerHTML = texts[i];
-
-        i++;
-
-        if(i >= texts.length){
-            i = texts.length - 1;
-        }
-
-    },1200);
-
-    setTimeout(()=>{
-
-    clearInterval(interval);
-
-    loadData();
-
-    btn.innerHTML = "✅ 数据已更新";
-
-    btn.classList.remove("loading");
-
-    setTimeout(()=>{
-
-        btn.disabled = false;
-
-        btn.innerHTML = "🔍 查询数据";
-
-    },2000);
-
-},6000);
-
-    return;
-
+if(location.port!=="5000"){
+const overlay=document.createElement("div");
+overlay.className="refresh-overlay";
+overlay.innerHTML=`<div class="spinner"></div><div class="loading-text">🚀 正在获取最新数据...</div>`;
+document.body.appendChild(overlay);
+setTimeout(()=>{loadData();overlay.remove();},3000);
+return;
+}
+const btn=document.querySelector(".run-btn");
+const startTime=Date.now();
+btn.disabled=true;
+btn.classList.add("loading");
+btn.innerHTML="⏳ 正在获取数据...";
+try{
+btn.innerHTML="📡 正在更新数据...";
+const res=await fetch("/run");
+btn.innerHTML="🚀 正在推送GitHub...";
+const data=await res.json();
+if(data.success){
+await loadData();
+const seconds=((Date.now()-startTime)/1000).toFixed(1);
+btn.innerHTML=`✅ 完成 (${seconds}s)`;
+alert(`✅ 数据更新成功\n\n⏱ 耗时 ${seconds} 秒`);
+}else{
+btn.innerHTML="❌ 更新失败";
+alert("❌ "+data.error);
+}
+}catch(err){
+btn.innerHTML="❌ 更新失败";
+alert("❌ "+err);
+}
+setTimeout(()=>{btn.classList.remove("loading");btn.disabled=false;btn.innerHTML="🔍 查询数据";},3000);
 }
 
-    const btn = document.querySelector(".run-btn");
-
-    const startTime = Date.now();
-
-    btn.disabled = true;
-    btn.classList.add("loading");
-    btn.innerHTML = "⏳ 正在获取数据...";
-
-    try{
-
-        btn.innerHTML = "📡 正在更新数据...";
-
-        const res = await fetch("/run");
-
-        btn.innerHTML = "🚀 正在推送GitHub...";
-
-        const data = await res.json();
-
-        if(data.success){
-
-            await loadData();
-
-            const seconds =
-                ((Date.now() - startTime) / 1000).toFixed(1);
-
-            btn.innerHTML =
-                `✅ 完成 (${seconds}s)`;
-
-            alert(
-                `✅ 数据更新成功\n\n⏱ 耗时 ${seconds} 秒`
-            );
-
-        }else{
-
-            btn.innerHTML = "❌ 更新失败";
-
-            alert("❌ " + data.error);
-
-        }
-
-    }catch(err){
-
-        btn.innerHTML = "❌ 更新失败";
-
-        alert("❌ " + err);
-
-    }
-
-    setTimeout(()=>{
-        btn.classList.remove("loading");
-        btn.disabled = false;
-        btn.innerHTML = "🔍 查询数据";
-
-    },3000);
-
-}
-
-</script>
-
-<script>
-
+/* ============ LOGIN / LOGOUT ============ */
 function login(){
-
-    let user = document.getElementById("user").value;
-    let pass = document.getElementById("pass").value;
-
-    if(user==="xiaoruan" && pass==="1"){
-
-        localStorage.setItem("isLoggedIn","true");
-
-        document.getElementById("loginPage").style.display="none";
-
-    }else{
-
-        document.getElementById("msg").innerHTML="账号或密码错误";
-
-    }
+let user=document.getElementById("user").value;
+let pass=document.getElementById("pass").value;
+if(user==="xiaoruan"&&pass==="1"){
+localStorage.setItem("isLoggedIn","true");
+document.getElementById("loginPage").style.display="none";
+}else{
+document.getElementById("msg").innerHTML="账号或密码错误";
+}
 }
 
 function logout(){
-
-    localStorage.removeItem("isLoggedIn");
-
-    location.reload();
-
+localStorage.removeItem("isLoggedIn");
+location.reload();
 }
 
-window.addEventListener("load", function(){
-
-    if(localStorage.getItem("isLoggedIn")==="true"){
-
-        document.getElementById("loginPage").style.display="none";
-
-    }
-
+window.addEventListener("load",function(){
+if(localStorage.getItem("isLoggedIn")==="true"){
+document.getElementById("loginPage").style.display="none";
+}
 });
-
 </script>
-</body>
 </html>
