@@ -431,14 +431,44 @@ async function queryData(){
 		overlay.setAttribute('role','status');
 		overlay.innerHTML = `<div class="spinner" aria-hidden="true"></div><div class="loading-text">🚀 正在获取最新数据...</div>`;
 		document.body.appendChild(overlay);
-		try{
-			// loadData now returns the fetch promise so we can await it
+
+		const btn = document.querySelector(".run-btn");
+		btn.disabled = true;
+		btn.classList.add("loading");
+		btn.innerHTML = "⏳ 正在获取数据...";
+
+		const minDelay = new Promise(r=>setTimeout(r,3000));
+		const work = (async ()=>{
 			await loadData();
-			// small delay so the user sees the success momentarily
-			await new Promise(r=>setTimeout(r,3000));
+		})();
+
+		try{
+			await Promise.all([work, minDelay]);
+			overlay.classList.add('fade-out');
+
+overlay.addEventListener('animationend', ()=>{
+
+    overlay.remove();
+
+    btn.innerHTML = "✅ 数据已更新";
+
+    setTimeout(()=>{
+
+        btn.classList.remove("loading");
+        btn.disabled = false;
+        btn.innerHTML = "🔍 查询数据";
+
+    },1500);
+
+},{once:true});
 		}catch(e){
 			console.error(e);
-		}finally{
+			btn.innerHTML = "❌ 更新失败";
+			setTimeout(()=>{
+				btn.classList.remove("loading");
+				btn.disabled = false;
+				btn.innerHTML = "🔍 查询数据";
+			},2000);
 			overlay.classList.add('fade-out');
 			overlay.addEventListener('animationend', ()=>overlay.remove(), {once:true});
 		}
@@ -449,32 +479,48 @@ async function queryData(){
 	const startTime = Date.now();
 	btn.disabled = true;
 	btn.classList.add("loading");
-	btn.innerHTML = "⏳ 正在获取数据...";
+	btn.innerHTML = "🔍 查询数据";
+
+	// show dim overlay + spinner while backend run is happening
+	const overlay = document.createElement('div');
+	overlay.className = 'refresh-overlay';
+	overlay.innerHTML = `<div class="spinner" aria-hidden="true"></div><div class="loading-text">🚀 正在获取最新数据...</div>`;
+	document.body.appendChild(overlay);
 
 	try{
-		btn.innerHTML = "📡 正在更新数据...";
-		const res = await fetch("/run");
-		btn.innerHTML = "🚀 正在推送GitHub...";
-		const data = await res.json();
-
-		if(data.success){
+		btn.innerHTML = "🔍 查询数据";
+		const runPromise = (async ()=>{
+			const res = await fetch("/run");
+			const data = await res.json();
+			if(!data.success) throw new Error(data.error || 'run failed');
 			await loadData();
-			const seconds = ((Date.now() - startTime) / 1000).toFixed(1);
-			btn.innerHTML = `✅ 完成 (${seconds}s)`;
-			alert(`✅ 数据更新成功\n\n⏱ 耗时 ${seconds} 秒`);
-		}else{
-			btn.innerHTML = "❌ 更新失败";
-			alert("❌ " + data.error);
-		}
-	}catch(err){
-		btn.innerHTML = "❌ 更新失败";
-		alert("❌ " + err);
-	}finally{
+		})();
+
+		// ensure spinner shows for at least 3s
+		await Promise.all([runPromise, new Promise(r=>setTimeout(r,3000))]);
+
+		btn.innerHTML = "数据已更新";
+		// keep success text for 2s then revert
 		setTimeout(()=>{
 			btn.classList.remove("loading");
 			btn.disabled = false;
 			btn.innerHTML = "🔍 查询数据";
-		},3000);
+		},2000);
+		// fade overlay after 2s
+		setTimeout(()=>{
+			overlay.classList.add('fade-out');
+			overlay.addEventListener('animationend', ()=>overlay.remove(), {once:true});
+		},2000);
+	}catch(err){
+		btn.innerHTML = "❌ 更新失败";
+		console.error(err);
+		setTimeout(()=>{
+			btn.classList.remove("loading");
+			btn.disabled = false;
+			btn.innerHTML = "🔍 查询数据";
+		},2000);
+		overlay.classList.add('fade-out');
+		overlay.addEventListener('animationend', ()=>overlay.remove(), {once:true});
 	}
 }
 
