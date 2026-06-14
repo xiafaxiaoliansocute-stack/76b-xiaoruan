@@ -424,104 +424,132 @@ document.getElementById("body").innerHTML=html;
 
 /* ============ QUERY DATA FROM BACKEND ============ */
 async function queryData(){
-	// If not running the backend on port 5000, show a temporary overlay and reload local data
-	if(location.port !== "5000"){
-		const overlay = document.createElement("div");
-		overlay.className = "refresh-overlay";
-		overlay.setAttribute('role','status');
-		overlay.innerHTML = `<div class="spinner" aria-hidden="true"></div><div class="loading-text">🚀 正在获取最新数据...</div>`;
-		document.body.appendChild(overlay);
 
-		const btn = document.querySelector(".run-btn");
-		btn.disabled = true;
-		btn.classList.add("loading");
-		btn.innerHTML = "⏳ 正在获取数据...";
+    const btn = document.querySelector(".run-btn");
 
-		const minDelay = new Promise(r=>setTimeout(r,3000));
-		const work = (async ()=>{
-			await loadData();
-		})();
+    btn.disabled = true;
+    btn.classList.add("loading");
 
-		try{
-			await Promise.all([work, minDelay]);
-			overlay.classList.add('fade-out');
+    const overlay = document.createElement("div");
+    overlay.className = "refresh-overlay";
+    overlay.innerHTML = `
+        <div class="spinner"></div>
+        <div class="loading-text">🚀 正在获取最新数据...</div>
+    `;
+    document.body.appendChild(overlay);
 
-overlay.addEventListener('animationend', ()=>{
+    let newData = null;
 
-    overlay.remove();
+    try{
 
-    btn.innerHTML = "✅ 数据已更新";
+        if(location.port === "5000"){
 
-    setTimeout(()=>{
+            await Promise.all([
+                (async ()=>{
+                    const res = await fetch("/run");
+                    const result = await res.json();
 
-        btn.classList.remove("loading");
-        btn.disabled = false;
-        btn.innerHTML = "🔍 查询数据";
+                    if(!result.success){
+                        throw new Error(result.error || "run failed");
+                    }
 
-    },1500);
+                    newData = await fetch(
+                        "data.json?t="+Date.now()
+                    ).then(r=>r.json());
 
-},{once:true});
-		}catch(e){
-			console.error(e);
-			btn.innerHTML = "❌ 更新失败";
-			setTimeout(()=>{
-				btn.classList.remove("loading");
-				btn.disabled = false;
-				btn.innerHTML = "🔍 查询数据";
-			},2000);
-			overlay.classList.add('fade-out');
-			overlay.addEventListener('animationend', ()=>overlay.remove(), {once:true});
-		}
-		return;
-	}
+                })(),
 
-	const btn = document.querySelector(".run-btn");
-	const startTime = Date.now();
-	btn.disabled = true;
-	btn.classList.add("loading");
-	btn.innerHTML = "🔍 查询数据";
+                new Promise(r=>setTimeout(r,1500))
+            ]);
 
-	// show dim overlay + spinner while backend run is happening
-	const overlay = document.createElement('div');
-	overlay.className = 'refresh-overlay';
-	overlay.innerHTML = `<div class="spinner" aria-hidden="true"></div><div class="loading-text">🚀 正在获取最新数据...</div>`;
-	document.body.appendChild(overlay);
+        }else{
 
-	try{
-		btn.innerHTML = "🔍 查询数据";
-		const runPromise = (async ()=>{
-			const res = await fetch("/run");
-			const data = await res.json();
-			if(!data.success) throw new Error(data.error || 'run failed');
-			await loadData();
-		})();
+            await Promise.all([
+                fetch("data.json?t="+Date.now())
+                    .then(r=>r.json())
+                    .then(d=>newData=d),
 
-		// ensure spinner shows for at least 3s
-		await Promise.all([runPromise, new Promise(r=>setTimeout(r,3000))]);
+                new Promise(r=>setTimeout(r,1500))
+            ]);
 
-		btn.innerHTML = "数据已更新";
-		// keep success text for 2s then revert
-		setTimeout(()=>{
-			btn.classList.remove("loading");
-			btn.disabled = false;
-			btn.innerHTML = "🔍 查询数据";
-		},2000);
-		// fade overlay after 2s
-		setTimeout(()=>{
-			overlay.classList.add('fade-out');
-			overlay.addEventListener('animationend', ()=>overlay.remove(), {once:true});
-		},2000);
-	}catch(err){
-		btn.innerHTML = "❌ 更新失败";
-		console.error(err);
-		setTimeout(()=>{
-			btn.classList.remove("loading");
-			btn.disabled = false;
-			btn.innerHTML = "🔍 查询数据";
-		},2000);
-		overlay.classList.add('fade-out');
-		overlay.addEventListener('animationend', ()=>overlay.remove(), {once:true});
-	}
+        }
+
+        overlay.classList.add("fade-out");
+
+        overlay.addEventListener("animationend",()=>{
+
+            overlay.remove();
+
+            btn.innerHTML = "✅ 数据已更新";
+
+            setTimeout(()=>{
+
+                // ===== BÂY GIỜ MỚI CẬP NHẬT DỮ LIỆU =====
+
+                if(newData){
+
+                    globalData = newData;
+
+                    document.getElementById(
+                        "updateTimeHero"
+                    ).innerHTML =
+                        "📅 数据更新时间：" +
+                        (newData.update_time || "--");
+
+                    let brazilTime = "--";
+
+                    if(newData.update_time){
+
+                        const updateDate =
+                            new Date(newData.update_time);
+
+                        brazilTime =
+                            updateDate.toLocaleString(
+                                "sv-SE",
+                                {
+                                    timeZone:
+                                    "America/Sao_Paulo"
+                                }
+                            );
+                    }
+
+                    document.getElementById(
+                        "tableMainTitle"
+                    ).innerHTML =
+                        `2306-76B-实时数据汇总 数据更新时间(巴西)：${brazilTime}`;
+
+                    renderTab1(newData);
+                    renderTab2();
+                }
+
+                btn.classList.remove("loading");
+                btn.disabled = false;
+                btn.innerHTML = "🔍 查询数据";
+
+            },1000);
+
+        },{once:true});
+
+    }catch(err){
+
+        console.error(err);
+
+        overlay.classList.add("fade-out");
+
+        overlay.addEventListener(
+            "animationend",
+            ()=>overlay.remove(),
+            {once:true}
+        );
+
+        btn.innerHTML = "❌ 更新失败";
+
+        setTimeout(()=>{
+            btn.classList.remove("loading");
+            btn.disabled = false;
+            btn.innerHTML = "🔍 查询数据";
+        },1000);
+    }
 }
 
 /* ============ LOGIN / LOGOUT ============ */
