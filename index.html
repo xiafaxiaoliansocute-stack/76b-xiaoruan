@@ -260,7 +260,7 @@ if(data.update_time){
 const updateDate=new Date(data.update_time);
 brazilTime=updateDate.toLocaleString("sv-SE",{timeZone:"America/Sao_Paulo"});
 }
-document.getElementById("tableMainTitle").innerHTML=`2306-76B-实时数据汇总 数据更新时间(巴西)：${brazilTime}`;
+document.getElementById("tableMainTitle").innerHTML=`2306-76B-实时数据汇总-更新时间(巴西)：${brazilTime}`;
 		renderTab1(data);
 		renderTab2();
 });
