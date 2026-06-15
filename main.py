@@ -42,8 +42,20 @@ headers = {
     "origin": "https://admin-2306-66b1c5.m-b-d-1.com",
     "referer": "https://admin-2306-66b1c5.m-b-d-1.com/",
 }
+from requests.adapters import HTTPAdapter
+
 session = requests.Session()
 session.headers.update(headers)
+
+from requests.adapters import HTTPAdapter
+
+adapter = HTTPAdapter(
+    pool_connections=50,
+    pool_maxsize=50
+)
+
+session.mount("https://", adapter)
+session.mount("http://", adapter)
 
 # ======================
 # TIME (BRAZIL)
@@ -198,44 +210,44 @@ except Exception as e:
     result_data["ALL_TOTAL"] = {}
 
 # ======================
-# STEP 2: GET EACH CHANNEL
+# STEP 2: GET EACH CHANNEL (FAST)
 # ======================
 
-for name, cid in CHANNELS.items():
-
-    params = {
-        "input": json.dumps({
-            "json": {
-                "startTime": today,
-                "endTime": today,
-                "tenantId": TENANT_ID,
-                "regionId": REGION_ID,
-                "page": 1,
-                "pageSize": 50,
-                "channelId": [],
-                "channelPromoterId": cid
-            }
-        }, separators=(',', ':'))
-    }
+def load_channel(name, cid):
 
     try:
+
+        params = {
+            "input": json.dumps({
+                "json": {
+                    "startTime": today,
+                    "endTime": today,
+                    "tenantId": TENANT_ID,
+                    "regionId": REGION_ID,
+                    "page": 1,
+                    "pageSize": 50,
+                    "channelId": [],
+                    "channelPromoterId": cid
+                }
+            }, separators=(',', ':'))
+        }
+
         res = session.get(
-    BASE_URL,
-    params=params,
-    timeout=30
-)
+            BASE_URL,
+            params=params,
+            timeout=(3, 10)
+        )
 
         data = safe_get(res.json())
 
-        result_data[name] = {
+        result = {
             "normalList": fix_amounts(data.get("normalList", {})),
             "parentList": fix_amounts(data.get("parentList", {})),
             "childList": fix_amounts(data.get("childList", {}))
         }
 
-        # 推广 = 直推 + 裂变
-        parent = result_data[name]["parentList"]
-        child = result_data[name]["childList"]
+        parent = result["parentList"]
+        child = result["childList"]
 
         promotion = {}
 
@@ -246,12 +258,30 @@ for name, cid in CHANNELS.items():
             if isinstance(p, (int, float)) and isinstance(c, (int, float)):
                 promotion[key] = p + c
 
-        result_data[name]["promotionList"] = promotion
+        result["promotionList"] = promotion
 
-        print(f"✅ {name} success")
+        return name, result
 
     except Exception as e:
         print(f"❌ {name} error:", e)
+        return None
+
+
+with ThreadPoolExecutor(max_workers=10) as executor:
+
+    futures = [
+        executor.submit(load_channel, name, cid)
+        for name, cid in CHANNELS.items()
+    ]
+
+    for future in as_completed(futures):
+
+        data = future.result()
+
+        if data:
+            name, result = data
+            result_data[name] = result
+            print(f"✅ {name} success")
         
 def fix_hour_amounts(obj):
     if not isinstance(obj, dict):
@@ -357,7 +387,7 @@ try:
     res = session.get(
     HOUR_URL,
     params=params,
-    timeout=30
+    timeout=(3, 10)
 )
 
     hour_json = (
@@ -391,9 +421,14 @@ try:
 except Exception as e:
     print("❌ hour ALL_TOTAL", e)
 
-# EACH CHANNEL
-for name, cid in CHANNELS.items():
+# ======================
+# HOUR REPORT EACH CHANNEL (FAST)
+# ======================
+
+def load_hour_channel(name, cid):
+
     try:
+
         params = {
             "input": json.dumps({
                 "json": {
@@ -416,10 +451,10 @@ for name, cid in CHANNELS.items():
         }
 
         res = session.get(
-    HOUR_URL,
-    params=params,
-    timeout=30
-)
+            HOUR_URL,
+            params=params,
+            timeout=(3, 10)
+        )
 
         hour_json = (
             res.json()
@@ -428,29 +463,48 @@ for name, cid in CHANNELS.items():
             .get("json", {})
         )
 
-        result_data["hour_report"][name] = fix_hour_amounts(hour_json)
-        result_data["hour_report"][name]["promotionList"] = {
-    "firstRechargeCount":
-        result_data["hour_report"][name].get("firstRechargeCount", 0)
-        + result_data["hour_report"][name].get("splitFirstRechargeCount", 0),
+        data = fix_hour_amounts(hour_json)
 
-    "firstRechargeAmount":
-        result_data["hour_report"][name].get("firstRechargeAmount", 0)
-        + result_data["hour_report"][name].get("splitFirstRechargeAmount", 0),
+        data["promotionList"] = {
+            "firstRechargeCount":
+                data.get("firstRechargeCount", 0)
+                + data.get("splitFirstRechargeCount", 0),
 
-    "rechargeCount":
-        result_data["hour_report"][name].get("rechargeCount", 0)
-        + result_data["hour_report"][name].get("splitRechargeCount", 0),
+            "firstRechargeAmount":
+                data.get("firstRechargeAmount", 0)
+                + data.get("splitFirstRechargeAmount", 0),
 
-    "rechargeAmount":
-        result_data["hour_report"][name].get("rechargeAmount", 0)
-        + result_data["hour_report"][name].get("splitRechargeAmount", 0)
-}
+            "rechargeCount":
+                data.get("rechargeCount", 0)
+                + data.get("splitRechargeCount", 0),
 
-        print(f"✅ hour {name}")
+            "rechargeAmount":
+                data.get("rechargeAmount", 0)
+                + data.get("splitRechargeAmount", 0)
+        }
+
+        return name, data
 
     except Exception as e:
         print(f"❌ hour {name}", e)
+        return None
+
+
+with ThreadPoolExecutor(max_workers=10) as executor:
+
+    futures = [
+        executor.submit(load_hour_channel, name, cid)
+        for name, cid in CHANNELS.items()
+    ]
+
+    for future in as_completed(futures):
+
+        result = future.result()
+
+        if result:
+            name, data = result
+            result_data["hour_report"][name] = data
+            print(f"✅ hour {name}")
 
     
 # ======================
@@ -499,7 +553,7 @@ try:
     retention_res = session.get(
     RETENTION_URL,
     params=retention_params,
-    timeout=30
+    timeout=(3, 10)
 )
 
     retention_json = retention_res.json()
@@ -525,8 +579,14 @@ try:
 
 except Exception as e:
     print("❌ retention ALL error:", e)
-for name, cid in CHANNELS.items():
+# ======================
+# RETENTION EACH CHANNEL (FAST)
+# ======================
+
+def load_retention_channel(name, cid):
+
     try:
+
         retention_params = {
             "input": json.dumps({
                 "json": {
@@ -553,10 +613,10 @@ for name, cid in CHANNELS.items():
         }
 
         retention_res = session.get(
-    RETENTION_URL,
-    params=retention_params,
-    timeout=30
-)
+            RETENTION_URL,
+            params=retention_params,
+            timeout=(3, 10)
+        )
 
         retention_json = retention_res.json()
 
@@ -568,7 +628,31 @@ for name, cid in CHANNELS.items():
             .get("retentionList", [])
         )
 
+        return name, retention_data
+
+    except Exception as e:
+        print(f"❌ retention {name} error:", e)
+        return None
+
+
+with ThreadPoolExecutor(max_workers=10) as executor:
+
+    futures = [
+        executor.submit(load_retention_channel, name, cid)
+        for name, cid in CHANNELS.items()
+    ]
+
+    for future in as_completed(futures):
+
+        result = future.result()
+
+        if not result:
+            continue
+
+        name, retention_data = result
+
         for row in retention_data:
+
             row = fix_retention_amounts(row)
             day = row.get("time")
 
@@ -578,9 +662,6 @@ for name, cid in CHANNELS.items():
             result_data["retention"][day][name] = row
 
         print(f"✅ retention {name}")
-
-    except Exception as e:
-        print(f"❌ retention {name} error:", e)
 
         # ======================
 # REPEAT RATE
@@ -735,11 +816,11 @@ output_file = "/Users/xiaoruan/Desktop/76b-getdata/data.json"
 
 with open(output_file, "w", encoding="utf-8") as f:
     json.dump(
-        result_data,
-        f,
-        ensure_ascii=False,
-        indent=2
-    )
+    result_data,
+    f,
+    ensure_ascii=False,
+    separators=(",", ":")
+)
 
 print(f"✅ Saved: {output_file}")
 import subprocess
