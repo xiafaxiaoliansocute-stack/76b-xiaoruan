@@ -1,6 +1,7 @@
 import requests
 import json
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
@@ -76,6 +77,24 @@ def safe_get(data):
         return data.get("result", {}).get("data", {}).get("json", {})
     except:
         return {}
+
+def make_session():
+    s = requests.Session()
+    s.headers.update(headers)
+    return s
+
+def json_input(payload):
+    return {"input": json.dumps({"json": payload}, separators=(',', ':'))}
+
+def build_promotion(parent, child):
+    promotion = {}
+    for key in set(parent.keys()) | set(child.keys()):
+        p = parent.get(key, 0)
+        c = child.get(key, 0)
+        if isinstance(p, (int, float)) and isinstance(c, (int, float)):
+            promotion[key] = p + c
+    return promotion
+
 def fix_amounts(obj):
     if not isinstance(obj, dict):
         return obj
@@ -172,58 +191,42 @@ except Exception as e:
 # STEP 2: GET EACH CHANNEL
 # ======================
 
-for name, cid in CHANNELS.items():
+channel_payload_base = {
+    "startTime": today,
+    "endTime": today,
+    "tenantId": TENANT_ID,
+    "regionId": REGION_ID,
+    "page": 1,
+    "pageSize": 50,
+    "channelId": []
+}
 
-    params = {
-        "input": json.dumps({
-            "json": {
-                "startTime": today,
-                "endTime": today,
-                "tenantId": TENANT_ID,
-                "regionId": REGION_ID,
-                "page": 1,
-                "pageSize": 50,
-                "channelId": [],
-                "channelPromoterId": cid
+with ThreadPoolExecutor(max_workers=min(8, len(CHANNELS))) as executor:
+    futures = {}
+    for name, cid in CHANNELS.items():
+        payload = dict(channel_payload_base, channelPromoterId=cid)
+        params = json_input(payload)
+        futures[executor.submit(make_session().get, BASE_URL, params=params, timeout=30)] = (name, params)
+
+    for future in as_completed(futures):
+        name, params = futures[future]
+        try:
+            res = future.result()
+            data = safe_get(res.json())
+            normal = fix_amounts(data.get("normalList", {}))
+            parent = fix_amounts(data.get("parentList", {}))
+            child = fix_amounts(data.get("childList", {}))
+            result_data[name] = {
+                "normalList": normal,
+                "parentList": parent,
+                "childList": child,
+                "promotionList": build_promotion(parent, child)
             }
-        }, separators=(',', ':'))
-    }
+            print(f"✅ {name} success")
+        except Exception as e:
+            print(f"❌ {name} error:", e)
 
-    try:
-        res = session.get(
-    BASE_URL,
-    params=params,
-    timeout=30
-)
 
-        data = safe_get(res.json())
-
-        result_data[name] = {
-            "normalList": fix_amounts(data.get("normalList", {})),
-            "parentList": fix_amounts(data.get("parentList", {})),
-            "childList": fix_amounts(data.get("childList", {}))
-        }
-
-        # 推广 = 直推 + 裂变
-        parent = result_data[name]["parentList"]
-        child = result_data[name]["childList"]
-
-        promotion = {}
-
-        for key in set(parent.keys()) | set(child.keys()):
-            p = parent.get(key, 0)
-            c = child.get(key, 0)
-
-            if isinstance(p, (int, float)) and isinstance(c, (int, float)):
-                promotion[key] = p + c
-
-        result_data[name]["promotionList"] = promotion
-
-        print(f"✅ {name} success")
-
-    except Exception as e:
-        print(f"❌ {name} error:", e)
-        
 def fix_hour_amounts(obj):
     if not isinstance(obj, dict):
         return obj
@@ -267,9 +270,9 @@ hour_start = yesterday.replace(
 )
 
 hour_end = yesterday.replace(
-    hour=23,
-    minute=59,
-    second=59,
+    hour=report_br.hour,
+    minute=report_br.minute,
+    second=report_br.second,
     microsecond=999000
 )
 
@@ -341,65 +344,47 @@ except Exception as e:
     print("❌ hour ALL_TOTAL", e)
 
 # EACH CHANNEL
-for name, cid in CHANNELS.items():
-    try:
-        params = {
-            "input": json.dumps({
-                "json": {
-                    "tenantId": TENANT_ID,
-                    "regionId": REGION_ID,
-                    "channelId": [],
-                    "channelPromoterId": cid,
-                    "page": 1,
-                    "pageSize": 50,
-                    "order": [
-                        {
-                            "key": "firstRechargeCount",
-                            "type": "asc"
-                        }
-                    ],
-                    "startTime": hour_start.isoformat().replace("+00:00", "Z"),
-                    "endTime": hour_end.isoformat().replace("+00:00", "Z")
-                }
-            }, separators=(',', ':'))
-        }
-
-        res = session.get(
-    HOUR_URL,
-    params=params,
-    timeout=30
-)
-
-        hour_json = (
-            res.json()
-            .get("result", {})
-            .get("data", {})
-            .get("json", {})
-        )
-
-        result_data["hour_report"][name] = fix_hour_amounts(hour_json)
-        result_data["hour_report"][name]["promotionList"] = {
-    "firstRechargeCount":
-        result_data["hour_report"][name].get("firstRechargeCount", 0)
-        + result_data["hour_report"][name].get("splitFirstRechargeCount", 0),
-
-    "firstRechargeAmount":
-        result_data["hour_report"][name].get("firstRechargeAmount", 0)
-        + result_data["hour_report"][name].get("splitFirstRechargeAmount", 0),
-
-    "rechargeCount":
-        result_data["hour_report"][name].get("rechargeCount", 0)
-        + result_data["hour_report"][name].get("splitRechargeCount", 0),
-
-    "rechargeAmount":
-        result_data["hour_report"][name].get("rechargeAmount", 0)
-        + result_data["hour_report"][name].get("splitRechargeAmount", 0)
+hour_payload_base = {
+    "tenantId": TENANT_ID,
+    "regionId": REGION_ID,
+    "channelId": [],
+    "page": 1,
+    "pageSize": 50,
+    "order": [
+        {"key": "firstRechargeCount", "type": "asc"}
+    ],
+    "startTime": hour_start.isoformat().replace("+00:00", "Z"),
+    "endTime": hour_end.isoformat().replace("+00:00", "Z")
 }
 
-        print(f"✅ hour {name}")
+with ThreadPoolExecutor(max_workers=min(8, len(CHANNELS))) as executor:
+    futures = {}
+    for name, cid in CHANNELS.items():
+        payload = dict(hour_payload_base, channelPromoterId=cid)
+        params = json_input(payload)
+        futures[executor.submit(make_session().get, HOUR_URL, params=params, timeout=30)] = name
 
-    except Exception as e:
-        print(f"❌ hour {name}", e)
+    for future in as_completed(futures):
+        name = futures[future]
+        try:
+            res = future.result()
+            hour_json = (
+                res.json()
+                .get("result", {})
+                .get("data", {})
+                .get("json", {})
+            )
+            fixed = fix_hour_amounts(hour_json)
+            result_data["hour_report"][name] = fixed
+            result_data["hour_report"][name]["promotionList"] = {
+                "firstRechargeCount": fixed.get("firstRechargeCount", 0) + fixed.get("splitFirstRechargeCount", 0),
+                "firstRechargeAmount": fixed.get("firstRechargeAmount", 0) + fixed.get("splitFirstRechargeAmount", 0),
+                "rechargeCount": fixed.get("rechargeCount", 0) + fixed.get("splitRechargeCount", 0),
+                "rechargeAmount": fixed.get("rechargeAmount", 0) + fixed.get("splitRechargeAmount", 0)
+            }
+            print(f"✅ hour {name}")
+        except Exception as e:
+            print(f"❌ hour {name}", e)
 
     
 # ======================
