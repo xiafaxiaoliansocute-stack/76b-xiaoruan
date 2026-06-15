@@ -387,7 +387,7 @@ try:
     res = session.get(
     HOUR_URL,
     params=params,
-    timeout=(3, 10)
+    timeout=(3, 20)
 )
 
     hour_json = (
@@ -816,11 +816,11 @@ output_file = "/Users/xiaoruan/Desktop/76b-getdata/data.json"
 
 with open(output_file, "w", encoding="utf-8") as f:
     json.dump(
-    result_data,
-    f,
-    ensure_ascii=False,
-    separators=(",", ":")
-)
+        result_data,
+        f,
+        ensure_ascii=False,
+        indent=4
+    )
 
 print(f"✅ Saved: {output_file}")
 import subprocess
