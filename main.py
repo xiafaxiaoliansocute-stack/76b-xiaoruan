@@ -41,6 +41,8 @@ headers = {
     "origin": "https://admin-2306-66b1c5.m-b-d-1.com",
     "referer": "https://admin-2306-66b1c5.m-b-d-1.com/",
 }
+session = requests.Session()
+session.headers.update(headers)
 
 # ======================
 # TIME (BRAZIL)
@@ -132,7 +134,11 @@ params_all = {
 }
 
 try:
-    res_all = requests.get(BASE_URL, headers=headers, params=params_all, timeout=30)
+    res_all = session.get(
+    BASE_URL,
+    params=params_all,
+    timeout=30
+)
     all_json = safe_get(res_all.json())
 
     result_data["ALL_TOTAL"] = {
@@ -184,12 +190,11 @@ for name, cid in CHANNELS.items():
     }
 
     try:
-        res = requests.get(
-            BASE_URL,
-            headers=headers,
-            params=params,
-            timeout=30
-        )
+        res = session.get(
+    BASE_URL,
+    params=params,
+    timeout=30
+)
 
         data = safe_get(res.json())
 
@@ -250,7 +255,7 @@ def fix_hour_amounts(obj):
 # HOUR REPORT (昨日)
 # ======================
 
-# 昨日 luôn là ngày trước report_br
+# 昨日 always 是 report_br 的前一天
 
 yesterday = report_br - timedelta(days=1)
 
@@ -298,12 +303,11 @@ try:
         }, separators=(',', ':'))
     }
 
-    res = requests.get(
-        HOUR_URL,
-        headers=headers,
-        params=params,
-        timeout=30
-    )
+    res = session.get(
+    HOUR_URL,
+    params=params,
+    timeout=30
+)
 
     hour_json = (
         res.json()
@@ -360,12 +364,11 @@ for name, cid in CHANNELS.items():
             }, separators=(',', ':'))
         }
 
-        res = requests.get(
-            HOUR_URL,
-            headers=headers,
-            params=params,
-            timeout=30
-        )
+        res = session.get(
+    HOUR_URL,
+    params=params,
+    timeout=30
+)
 
         hour_json = (
             res.json()
@@ -442,12 +445,11 @@ try:
         }, separators=(',', ':'))
     }
 
-    retention_res = requests.get(
-        RETENTION_URL,
-        headers=headers,
-        params=retention_params,
-        timeout=30
-    )
+    retention_res = session.get(
+    RETENTION_URL,
+    params=retention_params,
+    timeout=30
+)
 
     retention_json = retention_res.json()
 
@@ -499,12 +501,11 @@ for name, cid in CHANNELS.items():
             }, separators=(',', ':'))
         }
 
-        retention_res = requests.get(
-            RETENTION_URL,
-            headers=headers,
-            params=retention_params,
-            timeout=30
-        )
+        retention_res = session.get(
+    RETENTION_URL,
+    params=retention_params,
+    timeout=30
+)
 
         retention_json = retention_res.json()
 
@@ -569,12 +570,11 @@ for key, parent_type in NEXT_TYPES.items():
             }, separators=(',', ':'))
         }
 
-        res = requests.get(
-            RETENTION_URL,
-            headers=headers,
-            params=params,
-            timeout=30
-        )
+        res = session.get(
+    RETENTION_URL,
+    params=params,
+    timeout=30
+)
 
         data = (
             res.json()
@@ -644,12 +644,11 @@ for key, parent_type in REPEAT_TYPES.items():
             }, separators=(',', ':'))
         }
 
-        res = requests.get(
-            RETENTION_URL,
-            headers=headers,
-            params=params,
-            timeout=30
-        )
+        res = session.get(
+    RETENTION_URL,
+    params=params,
+    timeout=30
+)
 
         data = (
             res.json()
