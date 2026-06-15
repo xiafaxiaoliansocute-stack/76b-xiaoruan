@@ -46,18 +46,18 @@ headers = {
 # TIME (BRAZIL)
 # ======================
 
-brazil_time = datetime.now(ZoneInfo("America/Sao_Paulo"))
+now_br = datetime.now(ZoneInfo("America/Sao_Paulo"))
 
-# Nếu chạy lúc 00h thì lấy ngày hôm trước
-if brazil_time.hour == 0:
-    report_time = brazil_time - timedelta(days=1)
+# 00:00 ~ 00:59 vẫn tính là ngày hôm trước
+if now_br.hour == 0:
+    report_br = now_br - timedelta(days=1)
 else:
-    report_time = brazil_time
+    report_br = now_br
 
-today = report_time.strftime("%Y-%m-%d")
+today = report_br.strftime("%Y-%m-%d")
 
 retention_start = (
-    report_time - timedelta(days=29)
+    report_br - timedelta(days=29)
 ).strftime("%Y-%m-%d")
 
 result_data = {
@@ -247,16 +247,13 @@ def fix_hour_amounts(obj):
 
 
 # ======================
-# HOUR REPORT
+# HOUR REPORT (昨日)
 # ======================
 
-# giờ Brazil hiện tại
-now_br = datetime.now(ZoneInfo("America/Sao_Paulo"))
+# 昨日 luôn là ngày trước report_br
 
-# ngày hôm qua
-yesterday = now_br - timedelta(days=1)
+yesterday = report_br - timedelta(days=1)
 
-# 00:00 hôm qua
 hour_start = yesterday.replace(
     hour=0,
     minute=0,
@@ -264,19 +261,10 @@ hour_start = yesterday.replace(
     microsecond=0
 )
 
-# giờ kết thúc = cuối phút của giờ đã hoàn tất gần nhất hôm qua
-end_hour = now_br.hour - 1
-end_day = yesterday
-
-# nếu chạy trước 01:00 thì lùi sang hôm trước nữa
-if end_hour < 0:
-    end_hour = 23
-    end_day = yesterday - timedelta(days=1)
-
-hour_end = end_day.replace(
-    hour=end_hour,
+hour_end = yesterday.replace(
+    hour=23,
     minute=59,
-    second=0,
+    second=59,
     microsecond=999000
 )
 
@@ -600,7 +588,7 @@ for key, parent_type in NEXT_TYPES.items():
         if len(data) >= 2:
 
             yesterday = (
-                brazil_time - timedelta(days=1)
+                report_br - timedelta(days=1)
             ).strftime("%Y-%m-%d")
 
             row = next(
