@@ -2,6 +2,7 @@ from flask import Flask, jsonify, send_from_directory
 import subprocess
 import os
 import traceback
+from concurrent.futures import ThreadPoolExecutor
 
 app = Flask(__name__)
 
@@ -11,45 +12,45 @@ print("SERVER =", __file__)
 print("BASE_DIR =", BASE_DIR)
 
 
+def run_script_file(script):
+
+    print(f"========== RUN {script} ==========")
+
+    result = subprocess.run(
+        ["python3", os.path.join(BASE_DIR, script)],
+        cwd=BASE_DIR,
+        capture_output=True,
+        text=True
+    )
+
+    print(result.stdout)
+    print(result.stderr)
+
+    if result.returncode != 0:
+        raise Exception(f"{script}\n{result.stderr}")
+
+
 @app.route("/")
 def home():
     return send_from_directory(BASE_DIR, "index.html")
 
 
 @app.route("/run")
-def run_script():
+def run():
 
     try:
 
-        print("========== RUN MAIN.PY ==========")
+        # ==========================
+        # main.py + nn22.py chạy song song
+        # ==========================
 
-        result = subprocess.run(
-            ["python3", os.path.join(BASE_DIR, "main.py")],
-            cwd=BASE_DIR,
-            capture_output=True,
-            text=True
-        )
+        with ThreadPoolExecutor(max_workers=2) as executor:
 
-        print(result.stdout)
-        print(result.stderr)
+            future1 = executor.submit(run_script_file, "main.py")
+            future2 = executor.submit(run_script_file, "nn22.py")
 
-        if result.returncode != 0:
-            raise Exception(result.stderr)
-
-        print("========== RUN NN22.PY ==========")
-
-        result = subprocess.run(
-            ["python3", os.path.join(BASE_DIR, "nn22.py")],
-            cwd=BASE_DIR,
-            capture_output=True,
-            text=True
-        )
-
-        print(result.stdout)
-        print(result.stderr)
-
-        if result.returncode != 0:
-            raise Exception(result.stderr)
+            future1.result()
+            future2.result()
 
         print("========== GIT ==========")
 
