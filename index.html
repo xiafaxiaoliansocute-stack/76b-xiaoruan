@@ -254,11 +254,16 @@ function loadData(){
 	.then(r=>r.json())
 	.then(data=>{
 globalData=data;
-document.getElementById("updateTimeHero").innerHTML="📅 数据更新时间："+(data.update_time||"--");
-let brazilTime=data.update_time||"--";
+let brazilTime =
+    data.update_time_brazil ||
+    data.update_time ||
+    "--";
 
-document.getElementById("tableMainTitle").innerHTML=
-`2306-76B-实时数据汇总-更新时间(巴西)：${brazilTime}`;
+document.getElementById("updateTimeHero").innerHTML =
+    "📅 数据更新时间：" + brazilTime;
+
+document.getElementById("tableMainTitle").innerHTML =
+    `2306-76B-实时数据汇总-更新时间(巴西)：${brazilTime}`;
 		renderTab1(data);
 		renderTab2();
 });
@@ -495,7 +500,9 @@ async function queryData(){
                         (newData.update_time || "--");
 
                     let brazilTime =
-    newData.update_time || "--";
+    newData.update_time_brazil ||
+    newData.update_time ||
+    "--";
 
                     document.getElementById(
                         "tableMainTitle"

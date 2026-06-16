@@ -86,7 +86,8 @@ yesterday = yesterday_day.strftime("%Y-%m-%d")
 retention_start = (report_day - timedelta(days=29)).strftime("%Y-%m-%d")
 
 result_data = {
-    "update_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    "update_time_brazil":
+        now_br.strftime("%Y-%m-%d %H:%M:%S")
 }
 result_data["hour_report"] = {}
 
