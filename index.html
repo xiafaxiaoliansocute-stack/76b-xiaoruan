@@ -324,7 +324,7 @@ document.querySelectorAll(".tab-btn").forEach((b,i)=>{b.classList.toggle("active
 
 /* ============ GLOBAL DATA VARIABLE ============ */
 let globalData={};
-
+let masterUpdateTime = "--";
 /* ============ LOAD DATA FROM JSON ============ */
 function loadData(){
 
@@ -335,10 +335,14 @@ function loadData(){
 	.then(r=>r.json())
 	.then(data=>{
 globalData=data;
-let brazilTime =
-    data.update_time_brazil ||
-    data.update_time ||
-    "--";
+if(currentSite==="76B"){
+    masterUpdateTime =
+        data.update_time_brazil ||
+        data.update_time ||
+        "--";
+}
+
+let brazilTime = masterUpdateTime;
 
 document.getElementById("updateTimeHero").innerHTML =
     "📅 数据更新时间：" + brazilTime;
@@ -590,10 +594,14 @@ async function queryData(){
 
     globalData = newData;
 
-    let brazilTime =
+    if(currentSite==="76B"){
+    masterUpdateTime =
         newData.update_time_brazil ||
         newData.update_time ||
         "--";
+}
+
+let brazilTime = masterUpdateTime;
 
     // Hero
     document.getElementById("updateTimeHero").innerHTML =
