@@ -30,9 +30,6 @@ def run_script():
             text=True
         )
 
-        print(result.stdout)
-        print(result.stderr)
-
         if result.returncode != 0:
             raise Exception(result.stderr)
 
@@ -45,8 +42,6 @@ def run_script():
             text=True
         )
 
-        print(result.stdout)
-        print(result.stderr)
 
         if result.returncode != 0:
             raise Exception(result.stderr)
@@ -56,20 +51,28 @@ def run_script():
         subprocess.run(
             ["git", "add", "."],
             cwd=BASE_DIR,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
             check=True
         )
 
         subprocess.run(
             ["git", "commit", "-m", "auto update"],
             cwd=BASE_DIR,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
             check=False
         )
 
         subprocess.run(
             ["git", "push"],
             cwd=BASE_DIR,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
             check=True
         )
+
+        print("✅ 成功")
 
         return jsonify({
             "success": True,
