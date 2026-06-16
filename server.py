@@ -61,6 +61,10 @@ def run_script():
 def data_file():
     return send_from_directory(".", "data.json")
 
+@app.route("/nn22.json")
+def nn22_file():
+    return send_from_directory(".", "nn22.json")
+
 
 if __name__ == "__main__":
     app.run(
