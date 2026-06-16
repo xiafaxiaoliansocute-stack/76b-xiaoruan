@@ -3,6 +3,11 @@ import subprocess
 import os
 
 app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+print("SERVER =", __file__)
+print("BASE_DIR =", BASE_DIR)
+print("NN22 EXISTS =", os.path.exists(os.path.join(BASE_DIR, "nn22.json")))
 
 
 @app.route("/")
@@ -76,14 +81,16 @@ def run_script():
         })
 
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 @app.route("/data.json")
 def data_json():
-    return send_from_directory(".", "data.json")
+    return send_from_directory(BASE_DIR, "data.json")
 
 
 @app.route("/nn22.json")
 def nn22_json():
-    return send_from_directory(".", "nn22.json")
+    return send_from_directory(BASE_DIR, "nn22.json")
 
 
 if __name__ == "__main__":
