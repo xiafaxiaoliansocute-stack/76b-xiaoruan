@@ -255,12 +255,10 @@ function loadData(){
 	.then(data=>{
 globalData=data;
 document.getElementById("updateTimeHero").innerHTML="📅 数据更新时间："+(data.update_time||"--");
-let brazilTime="--";
-if(data.update_time){
-const updateDate=new Date(data.update_time);
-brazilTime=updateDate.toLocaleString("sv-SE",{timeZone:"America/Sao_Paulo"});
-}
-document.getElementById("tableMainTitle").innerHTML=`2306-76B-实时数据汇总-更新时间(巴西)：${brazilTime}`;
+let brazilTime=data.update_time||"--";
+
+document.getElementById("tableMainTitle").innerHTML=
+`2306-76B-实时数据汇总-更新时间(巴西)：${brazilTime}`;
 		renderTab1(data);
 		renderTab2();
 });
@@ -496,22 +494,8 @@ async function queryData(){
                         "📅 数据更新时间：" +
                         (newData.update_time || "--");
 
-                    let brazilTime = "--";
-
-                    if(newData.update_time){
-
-                        const updateDate =
-                            new Date(newData.update_time);
-
-                        brazilTime =
-                            updateDate.toLocaleString(
-                                "sv-SE",
-                                {
-                                    timeZone:
-                                    "America/Sao_Paulo"
-                                }
-                            );
-                    }
+                    let brazilTime =
+    newData.update_time || "--";
 
                     document.getElementById(
                         "tableMainTitle"
