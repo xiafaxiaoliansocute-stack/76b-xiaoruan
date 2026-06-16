@@ -588,26 +588,24 @@ async function queryData(){
 
                 if(newData){
 
-                    globalData = newData;
+    globalData = newData;
 
-                    let brazilTime =
-    newData.update_time_brazil ||
-    newData.update_time ||
-    "--";
+    let brazilTime =
+        newData.update_time_brazil ||
+        newData.update_time ||
+        "--";
 
-document.getElementById(
-    "tableMainTitle"
-).innerHTML =
-    `${siteTitles[currentSite]}-实时数据汇总-更新时间(巴西)：${brazilTime}`;
+    // Hero
+    document.getElementById("updateTimeHero").innerHTML =
+        "📅 数据更新时间：" + brazilTime;
 
-                    document.getElementById(
-                        "tableMainTitle"
-                    ).innerHTML =
-                        `2306-76B-实时数据汇总-更新时间(巴西)：${brazilTime}`;
+    // Tiêu đề bảng
+    document.getElementById("tableMainTitle").innerHTML =
+        `${siteTitles[currentSite]}-实时数据汇总-更新时间(巴西)：${brazilTime}`;
 
-                    renderTab1(newData);
-                    renderTab2();
-                }
+    renderTab1(newData);
+    renderTab2();
+}
 
                 btn.classList.remove("loading");
                 btn.disabled = false;
