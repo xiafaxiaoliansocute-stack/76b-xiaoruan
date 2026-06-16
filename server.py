@@ -15,30 +15,46 @@ def run_script():
 
     try:
 
-        # Chạy lấy dữ liệu 76b
-        subprocess.run(
+        print("========== RUN MAIN.PY ==========")
+
+        result = subprocess.run(
             ["python3", "main.py"],
-            check=True
-        )
-        # Chạy lấy dữ liệu nn22
-        subprocess.run(
-            ["python3", "nn22.py"],
-            check=True
+            capture_output=True,
+            text=True
         )
 
-        # Git add
+        print(result.stdout)
+        print(result.stderr)
+
+        if result.returncode != 0:
+            raise Exception("main.py\n" + result.stderr)
+
+        print("========== RUN NN22.PY ==========")
+
+        result = subprocess.run(
+            ["python3", "nn22.py"],
+            capture_output=True,
+            text=True
+        )
+
+        print(result.stdout)
+        print(result.stderr)
+
+        if result.returncode != 0:
+            raise Exception("nn22.py\n" + result.stderr)
+
+        print("========== GIT ==========")
+
         subprocess.run(
             ["git", "add", "."],
             check=True
         )
 
-        # Git commit
         subprocess.run(
             ["git", "commit", "-m", "auto update"],
             check=False
         )
 
-        # Git push
         subprocess.run(
             ["git", "push"],
             check=True
@@ -46,10 +62,13 @@ def run_script():
 
         return jsonify({
             "success": True,
-            "message": "Data updated and pushed to GitHub"
+            "message": "Data updated and pushed"
         })
 
     except Exception as e:
+
+        import traceback
+        traceback.print_exc()
 
         return jsonify({
             "success": False,
@@ -58,16 +77,18 @@ def run_script():
 
 
 @app.route("/data.json")
-def data_file():
+def data_json():
     return send_from_directory(".", "data.json")
 
+
 @app.route("/nn22.json")
-def nn22_file():
+def nn22_json():
     return send_from_directory(".", "nn22.json")
 
 
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
-        port=int(os.environ.get("PORT", 5000))
+        port=5000,
+        debug=True
     )
