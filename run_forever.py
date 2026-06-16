@@ -11,6 +11,11 @@ while True:
             ["python3", "/Users/xiaoruan/Desktop/76b-getdata/main.py"],
             check=True
         )
+        subprocess.run(
+           ["python3", "/Users/xiaoruan/Desktop/76b-getdata/nn22.py"],
+            check=True
+        )
+
 
         print("✅ Done")
 

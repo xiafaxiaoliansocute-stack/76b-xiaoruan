@@ -15,9 +15,14 @@ def run_script():
 
     try:
 
-        # Chạy lấy dữ liệu
+        # Chạy lấy dữ liệu 76b
         subprocess.run(
             ["python3", "main.py"],
+            check=True
+        )
+        # Chạy lấy dữ liệu nn22
+        subprocess.run(
+            ["python3", "nn22.py"],
             check=True
         )
 

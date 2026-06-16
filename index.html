@@ -22,6 +22,31 @@ body{font-family:Arial;background:#f5f5f5;margin:0;padding:1vw;}
 
 /* ============ TAB NAVIGATION ============ */
 .tab-bar{display:flex;gap:10px;margin-bottom:20px;}
+.site-bar{
+display:flex;
+gap:10px;
+margin-bottom:12px;
+flex-wrap:wrap;
+}
+
+.site-btn{
+padding:12px 24px;
+background:white;
+cursor:pointer;
+border-radius:12px;
+font-weight:bold;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+transition:.25s;
+}
+
+.site-btn:hover{
+transform:translateY(-2px);
+}
+
+.site-btn.active{
+background:linear-gradient(135deg,#009739,#FFD700);
+color:white;
+}
 .tab-btn{padding:12px 20px;background:white;cursor:pointer;border-radius:12px;font-weight:bold;box-shadow:0 4px 12px rgba(0,0,0,.08);transition:.25s;}
 .tab-btn:hover{transform:translateY(-2px);}
 .tab-btn.active{background:linear-gradient(135deg,#009739,#FFD700);color:#fff;}
@@ -170,12 +195,31 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 </div>
 
 <!-- ============ TAB NAVIGATION ============ -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
-<div class="tab-bar">
-<div class="tab-btn active" onclick="switchTab(1)">📊 推广效果</div>
-<div class="tab-btn" onclick="switchTab(2)">🧮 实时数据分析</div>
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:15px;">
+
+<div>
+
+    <!-- Website -->
+    <div class="site-bar">
+        <div class="site-btn active" onclick="switchSite('76B',this)">2306-76B</div>
+        <div class="site-btn" onclick="switchSite('NN22',this)">16011-NN22</div>
+        <div class="site-btn" onclick="switchSite('TEST1',this)">TEST1</div>
+        <div class="site-btn" onclick="switchSite('TEST2',this)">TEST2</div>
+        <div class="site-btn" onclick="switchSite('TEST3',this)">TEST3</div>
+    </div>
+
+    <!-- Tab -->
+    <div class="tab-bar">
+        <div class="tab-btn active" onclick="switchTab(1)">📊 推广效果</div>
+        <div class="tab-btn" onclick="switchTab(2)">🧮 实时数据分析</div>
+    </div>
+
 </div>
-<button onclick="logout()" style="background:#dc3545;color:white;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:bold;">🚪退出登录</button>
+
+<button onclick="logout()" style="background:#dc3545;color:white;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:bold;">
+🚪退出登录
+</button>
+
 </div>
 
 <!-- ============ TAB 1 - PROMOTION PERFORMANCE ============ -->
@@ -238,6 +282,39 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 </div>
 
 <script>
+    let currentSite = "76B";
+
+// File json tương ứng từng site
+const siteFiles = {
+    "76B": "data.json",
+    "NN22": "nn22.json",
+    "TEST1": "nn222.json",
+    "TEST2": "test.json",
+    "TEST3": "brazil.json"
+};
+
+// ===== THÊM NGAY DƯỚI ĐÂY =====
+const siteTitles = {
+    "76B": "2306-76B",
+    "NN22": "16011-NN22",
+    "TEST1": "TEST",
+    "TEST2": "TEST",
+    "TEST3": "TEST"
+};
+
+function switchSite(site,obj){
+
+currentSite=site;
+
+document.querySelectorAll(".site-btn").forEach(btn=>{
+btn.classList.remove("active");
+});
+
+obj.classList.add("active");
+
+loadData();
+
+}
 /* ============ TAB SWITCHING ============ */
 function switchTab(n){
 document.getElementById("tab1").style.display=n===1?"block":"none";
@@ -250,7 +327,11 @@ let globalData={};
 
 /* ============ LOAD DATA FROM JSON ============ */
 function loadData(){
-	return fetch("data.json?t="+Date.now())
+
+    const jsonFile=siteFiles[currentSite];
+
+    return fetch(jsonFile+"?t="+Date.now())
+
 	.then(r=>r.json())
 	.then(data=>{
 globalData=data;
@@ -263,9 +344,25 @@ document.getElementById("updateTimeHero").innerHTML =
     "📅 数据更新时间：" + brazilTime;
 
 document.getElementById("tableMainTitle").innerHTML =
-    `2306-76B-实时数据汇总-更新时间(巴西)：${brazilTime}`;
+    `${siteTitles[currentSite]}-实时数据汇总-更新时间(巴西)：${brazilTime}`;
 		renderTab1(data);
 		renderTab2();
+})
+.catch(err=>{
+
+    console.log(err);
+
+    globalData={};
+
+    renderTab1({});
+    renderTab2();
+
+    document.getElementById("updateTimeHero").innerHTML =
+        "📅 数据更新时间：--";
+
+    document.getElementById("tableMainTitle").innerHTML =
+        "暂无数据";
+
 });
 }
 loadData();
@@ -457,8 +554,8 @@ async function queryData(){
                     }
 
                     newData = await fetch(
-                        "data.json?t="+Date.now()
-                    ).then(r=>r.json());
+    siteFiles[currentSite]+"?t="+Date.now()
+).then(r=>r.json());
 
                 })(),
 
@@ -468,7 +565,7 @@ async function queryData(){
         }else{
 
             await Promise.all([
-                fetch("data.json?t="+Date.now())
+                fetch(siteFiles[currentSite]+"?t="+Date.now())
                     .then(r=>r.json())
                     .then(d=>newData=d),
 
@@ -499,9 +596,9 @@ async function queryData(){
     "--";
 
 document.getElementById(
-    "updateTimeHero"
+    "tableMainTitle"
 ).innerHTML =
-    "📅 数据更新时间：" + brazilTime;
+    `${siteTitles[currentSite]}-实时数据汇总-更新时间(巴西)：${brazilTime}`;
 
                     document.getElementById(
                         "tableMainTitle"
