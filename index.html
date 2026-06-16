@@ -493,16 +493,15 @@ async function queryData(){
 
                     globalData = newData;
 
-                    document.getElementById(
-                        "updateTimeHero"
-                    ).innerHTML =
-                        "📅 数据更新时间：" +
-                        (newData.update_time || "--");
-
                     let brazilTime =
     newData.update_time_brazil ||
     newData.update_time ||
     "--";
+
+document.getElementById(
+    "updateTimeHero"
+).innerHTML =
+    "📅 数据更新时间：" + brazilTime;
 
                     document.getElementById(
                         "tableMainTitle"
