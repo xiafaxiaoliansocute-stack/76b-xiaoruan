@@ -109,6 +109,94 @@ th{background:#bfc5cc;color:#222;}
 .login-right button{padding:15px;border:none;border-radius:12px;cursor:pointer;font-weight:bold;background:linear-gradient(135deg,#009739,#FFD700);}
 #msg{margin-top:10px;color:red;text-align:center;}
 
+#telegramText{
+
+display:inline-flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+
+margin-top:20px;
+
+padding:14px 30px;
+
+background:linear-gradient(135deg,#0088cc,#00bfff);
+
+color:white;
+
+font-size:18px;
+
+font-weight:bold;
+
+border-radius:50px;
+
+cursor:pointer;
+
+user-select:none;
+
+box-shadow:0 10px 30px rgba(0,136,204,.45);
+
+transition:.3s;
+
+animation:telegramBounce 1.5s infinite;
+
+}
+
+#telegramText:hover{
+
+animation:none;
+
+transform:scale(1.08);
+
+box-shadow:0 18px 40px rgba(0,136,204,.7);
+
+}
+
+.tg-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.65);
+    justify-content:center;
+    align-items:center;
+    z-index:999999;
+}
+
+.tg-popup{
+    width:360px;
+    background:#fff;
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+    position:relative;
+}
+
+.tg-close{
+    position:absolute;
+    right:15px;
+    top:10px;
+    cursor:pointer;
+    font-size:22px;
+}
+
+.tg-user{
+    background:#eef6fb;
+    padding:12px;
+    border-radius:10px;
+    margin:20px 0;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.tg-btn{
+    display:inline-block;
+    background:#0088cc;
+    color:white;
+    padding:12px 28px;
+    border-radius:30px;
+    text-decoration:none;
+}
+
 /* ============ HERO BANNER ============ */
 .hero-banner{position:relative;min-height:280px;height:18vw;border-radius:20px;overflow:hidden;margin-bottom:20px;border:2px solid rgba(255,255,255,.15);box-shadow:0 15px 40px rgba(0,0,0,.25),0 0 25px rgba(0,255,100,.35);background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),url("https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=2000&q=80");background-size:cover;background-position:center;display:flex;justify-content:center;align-items:center;color:white;text-align:center;}
 .hero-banner::after{content:"";position:absolute;inset:3px;border-radius:18px;background:transparent;z-index:1;}
@@ -139,6 +227,26 @@ th{background:#bfc5cc;color:#222;}
 .minute{width:3px;height:35%;background:#444;border-radius:10px;}
 .second{width:2px;height:42%;background:red;border-radius:10px;}
 #brazilTimeText{margin-top:10px;color:white;font-weight:bold;text-shadow:0 0 8px #000;font-size:15px;}
+
+@keyframes telegramBounce{
+
+0%,100%{
+transform:translateY(0);
+}
+
+25%{
+transform:translateY(-10px);
+}
+
+50%{
+transform:translateY(0);
+}
+
+75%{
+transform:translateY(-5px);
+}
+
+}
 </style>
 </head>
 <script>
@@ -163,10 +271,11 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 <div class="login-overlay"></div>
 <div class="login-box">
 <div class="login-left">
-<h1>76B实时数据</h1>
-<h2>🫶HI HI HÁ HÁ HỐ HỐ🫶</h2>
-<p>CHÀO MỪNG BẠN ĐẾN VỚI BÌNH NGUYÊN VÔ TẬN</p>
-<p>NƠI MÀ CHÚNG TÔI CÀY HƠN CẢ TRÂU BÒ</p>
+<h1>JS团队实时数据</h1>
+<h2>🫶欢迎光临🫶</h2>
+<p id="telegramText" onclick="openTelegramPopup()">
+    💬 如有任何问题，请联系管理员。
+</p>
 </div>
 <div class="login-right">
 <h2>登录系统</h2>
@@ -177,7 +286,32 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 </div>
 </div>
 </div>
+<!-- Telegram Popup -->
+<div id="telegramOverlay" class="tg-overlay">
 
+    <div class="tg-popup">
+
+        <span class="tg-close" onclick="closeTelegramPopup()">✕</span>
+
+        <div class="tg-icon">💬</div>
+
+        <h2>Telegram</h2>
+
+        <p>需要帮助请联系我</p>
+
+        <div class="tg-user">
+            MR.XiaoRuan
+        </div>
+
+        <a href="https://t.me/xiaoruan8386"
+           target="_blank"
+           class="tg-btn">
+            🚀 立即联系
+        </a>
+
+    </div>
+
+</div>
 <!-- ============ HERO BANNER WITH BRAZIL CLOCK ============ -->
 <div class="hero-banner">
 <div id="brazilClockBox">
@@ -287,7 +421,7 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 <script>
     let currentSite = "76B";
 
-// File json tương ứng từng site
+// JSON TƯƠNG ỨNG VỚI ĐÀI
 const siteFiles = {
     "76B": "data.json",
     "NN22": "nn22.json",
@@ -296,7 +430,7 @@ const siteFiles = {
     "TEST3": "brazil.json"
 };
 
-// ===== THÊM NGAY DƯỚI ĐÂY =====
+// ===== THÊM TÊN ĐÀI =====
 const siteTitles = {
     "76B": "2306-76B",
     "NN22": "16011-NN22",
@@ -338,12 +472,10 @@ function loadData(){
 	.then(r=>r.json())
 	.then(data=>{
 globalData=data;
-if(currentSite==="76B"){
-    masterUpdateTime =
-        data.update_time_brazil ||
-        data.update_time ||
-        "--";
-}
+masterUpdateTime =
+    data.update_time_brazil ||
+    data.update_time ||
+    "--";
 
 let brazilTime = masterUpdateTime;
 
@@ -428,7 +560,10 @@ function retentionRate(channel,countField){
 const retention=globalData.retention||{};
 const brazilNow=new Date(new Date().toLocaleString("en-US",{timeZone:"America/Sao_Paulo"}));
 brazilNow.setDate(brazilNow.getDate()-countField);
-const dateKey=brazilNow.toISOString().split("T")[0];
+const y=brazilNow.getFullYear();
+const m=String(brazilNow.getMonth()+1).padStart(2,"0");
+const d=String(brazilNow.getDate()).padStart(2,"0");
+const dateKey=`${y}-${m}-${d}`;
 const row=retention[dateKey]?.[channel];
 if(!row)return"0.00%";
 const total=Number(row.count||0);
@@ -440,7 +575,10 @@ function retentionRateFB(countField){
 const retention=globalData.retention||{};
 const brazilNow=new Date(new Date().toLocaleString("en-US",{timeZone:"America/Sao_Paulo"}));
 brazilNow.setDate(brazilNow.getDate()-countField);
-const dateKey=brazilNow.toISOString().split("T")[0];
+const y=brazilNow.getFullYear();
+const m=String(brazilNow.getMonth()+1).padStart(2,"0");
+const d=String(brazilNow.getDate()).padStart(2,"0");
+const dateKey=`${y}-${m}-${d}`;
 const h5=retention[dateKey]?.["fb-h5"]||{};
 const pwa=retention[dateKey]?.["fb-pwa"]||{};
 const ios=retention[dateKey]?.["fb-ios"]||{};
@@ -459,76 +597,402 @@ const list=[
 {show:"TT-PWA",key:"tt-pwa"},
 {show:"KW-PWA",key:"kwai-pwa"},
 {show:"回访",key:"回访"},
-{show:"ws-h5",key:"ws-h5"}
+{show:"ws-h5",key:"ws-h5"},
+{show:"-",key:"ws"},
+{show:"--",key:"ws"},
 ];
 let html="";
 list.forEach(item=>{
-let d=globalData[item.key]||{};
-let n=d.normalList||{};
-let hour=globalData.hour_report?.[item.key]||{};
-let recharge=n.rechargeAmount||0;
-let withdraw=n.withdrawAmount||0;
-let diff=recharge-withdraw;
-let diffRate=recharge?(diff/recharge*100).toFixed(2)+"%":"0%";
-let p=d.parentList||{};
-let c=d.childList||{};
-let all=globalData["ALL_TOTAL"]||{};
-let normal=all.normalList||{};
-let parent=all.parentList||{};
-let child=all.childList||{};
-let avg="";
-let nextAvg=item.show==="大盘"?(globalData.next_avg?.first??0):item.show==="FB-H5"?(globalData.next_avg?.parent??0):item.show==="FB-PWA"?(globalData.next_avg?.child??0):"";
-if(item.key==="ALL_TOTAL"){avg=normal.rechargeCount?(normal.rechargeAmount/normal.rechargeCount).toFixed(2):0;}
-else if(item.key==="fb-h5"){avg=parent.rechargeCount?(parent.rechargeAmount/parent.rechargeCount).toFixed(2):0;}
-else if(item.key==="fb-pwa"){avg=child.rechargeCount?(child.rechargeAmount/child.rechargeCount).toFixed(2):0;}
-else if(item.key==="fb-ios"){avg=Number(normal.firstRechargeCount)>0?(Number(normal.firstRechargeAmount)/Number(normal.firstRechargeCount)).toFixed(2):"0.00";nextAvg="";}
-let h5=globalData["fb-h5"]?.normalList||{};
-let pwa=globalData["fb-pwa"]?.normalList||{};
-let ios=globalData["fb-ios"]?.normalList||{};
-let tt=globalData["tt-pwa"]?.normalList||{};
-let ttParent=globalData["tt-pwa"]?.parentList||{};
-let ttChild=globalData["tt-pwa"]?.childList||{};
-let kw=globalData["kwai-pwa"]?.normalList||{};
-let kwParent=globalData["kwai-pwa"]?.parentList||{};
-let kwChild=globalData["kwai-pwa"]?.childList||{};
-let ws=globalData["ws-h5"]?.normalList||{};
-let wsParent=globalData["ws-h5"]?.parentList||{};
-let wsChild=globalData["ws-h5"]?.childList||{};
-let h5Avg=h5.rechargeCount?(h5.rechargeAmount/h5.rechargeCount).toFixed(2):0;
-let pwaAvg=pwa.rechargeCount?(pwa.rechargeAmount/pwa.rechargeCount).toFixed(2):0;
-let iosAvg=ios.rechargeCount?(ios.rechargeAmount/ios.rechargeCount).toFixed(2):0;
-let ttAvg=tt.rechargeCount?(tt.rechargeAmount/tt.rechargeCount).toFixed(2):0;
-let kwAvg=kw.rechargeCount?(kw.rechargeAmount/kw.rechargeCount).toFixed(2):0;
-let wsAvg=ws.rechargeCount?(ws.rechargeAmount/ws.rechargeCount).toFixed(2):0;
-let fbNormalAvg=(Number(h5.rechargeAmount||0)+Number(pwa.rechargeAmount||0)+Number(ios.rechargeAmount||0))/(Number(h5.rechargeCount||0)+Number(pwa.rechargeCount||0)+Number(ios.rechargeCount||0));
-fbNormalAvg=isFinite(fbNormalAvg)?fbNormalAvg.toFixed(2):0;
-let h5Parent=globalData["fb-h5"]?.parentList||{};
-let pwaParent=globalData["fb-pwa"]?.parentList||{};
-let iosParent=globalData["fb-ios"]?.parentList||{};
-let h5Child=globalData["fb-h5"]?.childList||{};
-let pwaChild=globalData["fb-pwa"]?.childList||{};
-let iosChild=globalData["fb-ios"]?.childList||{};
-let fbParentAvg=(Number(h5Parent.rechargeAmount||0)+Number(pwaParent.rechargeAmount||0)+Number(iosParent.rechargeAmount||0))/(Number(h5Parent.rechargeCount||0)+Number(pwaParent.rechargeCount||0)+Number(iosParent.rechargeCount||0));
-fbParentAvg=isFinite(fbParentAvg)?fbParentAvg.toFixed(2):0;
-let fbChildAvg=(Number(h5Child.rechargeAmount||0)+Number(pwaChild.rechargeAmount||0)+Number(iosChild.rechargeAmount||0))/(Number(h5Child.rechargeCount||0)+Number(pwaChild.rechargeCount||0)+Number(iosChild.rechargeCount||0));
-fbChildAvg=isFinite(fbChildAvg)?fbChildAvg.toFixed(2):0;
-let fbFirstAvg=(Number(h5.firstRechargeAmount||0)+Number(pwa.firstRechargeAmount||0)+Number(ios.firstRechargeAmount||0))/(Number(h5.firstRechargeCount||0)+Number(pwa.firstRechargeCount||0)+Number(ios.firstRechargeCount||0));
-fbFirstAvg=isFinite(fbFirstAvg)?fbFirstAvg.toFixed(2):0;
-let parentRegister=p.registerCount||0;
-let parentFirstRecharge=p.firstRechargeCount||0;
-let regRechargeRate=parentRegister>0?(parentFirstRecharge/parentRegister*100).toFixed(2)+"%":"0%";
-html+=`<tr><td class="gray">${item.show}</td><td class="${rateClass(parseFloat(regRechargeRate))}">${regRechargeRate}</td><td>${hour.promotionList?.firstRechargeCount||0}</td><td>${hour.promotionList?.firstRechargeAmount||0}</td><td>${n.firstRechargeCount||0}</td><td>${n.firstRechargeAmount||0}</td><td>${p.firstRechargeCount||0}</td><td>${c.firstRechargeCount||0}</td><td class="${(Number(n.firstRechargeCount||0)-Number(hour.promotionList?.firstRechargeCount||0))>0?'green':(Number(n.firstRechargeCount||0)-Number(hour.promotionList?.firstRechargeCount||0))<0?'red':''}">${Number(hour.promotionList?.firstRechargeCount||0)>0?((Number(n.firstRechargeCount||0)-Number(hour.promotionList?.firstRechargeCount||0))/Number(hour.promotionList?.firstRechargeCount||0)*100).toFixed(2)+"%":"0.00%"}</td><td>${hour.promotionList?.rechargeCount||0}</td><td>${hour.promotionList?.rechargeAmount||0}</td><td>${n.rechargeCount||0}</td><td>${n.rechargeAmount||0}</td><td>${withdraw}</td><td class="${diff>0?'green':diff<0?'red':''}">${diff}</td><td class="${rateClass(parseFloat(diffRate))}">${diffRate}</td><td class="label-col">${item.key==="ALL_TOTAL"?"大盘":item.key==="fb-h5"?"直推":item.key==="fb-pwa"?"裂变":item.key==="fb-ios"?"首充":"&nbsp;"}</td><td>${item.key==="ALL_TOTAL"||item.key==="fb-h5"||item.key==="fb-pwa"||item.key==="fb-ios"?avg:""}</td><td>${item.key==="ALL_TOTAL"||item.key==="fb-h5"||item.key==="fb-pwa"?nextAvg:""}</td><td>${item.key==="ALL_TOTAL"?fbNormalAvg:item.key==="fb-h5"?fbParentAvg:item.key==="fb-pwa"?fbChildAvg:item.key==="fb-ios"?fbFirstAvg:""}</td><td>${item.key==="ALL_TOTAL"?h5Avg:item.key==="fb-h5"?(h5Parent.rechargeCount?(h5Parent.rechargeAmount/h5Parent.rechargeCount).toFixed(2):0):item.key==="fb-pwa"?(h5Child.rechargeCount?(h5Child.rechargeAmount/h5Child.rechargeCount).toFixed(2):0):item.key==="fb-ios"?(h5.firstRechargeCount?(h5.firstRechargeAmount/h5.firstRechargeCount).toFixed(2):0):""}</td><td>${item.key==="ALL_TOTAL"?pwaAvg:item.key==="fb-h5"?(pwaParent.rechargeCount?(pwaParent.rechargeAmount/pwaParent.rechargeCount).toFixed(2):0):item.key==="fb-pwa"?(pwaChild.rechargeCount?(pwaChild.rechargeAmount/pwaChild.rechargeCount).toFixed(2):0):item.key==="fb-ios"?(pwa.firstRechargeCount?(pwa.firstRechargeAmount/pwa.firstRechargeCount).toFixed(2):0):""}</td><td>${item.key==="ALL_TOTAL"?iosAvg:item.key==="fb-h5"?(iosParent.rechargeCount?(iosParent.rechargeAmount/iosParent.rechargeCount).toFixed(2):0):item.key==="fb-pwa"?(iosChild.rechargeCount?(iosChild.rechargeAmount/iosChild.rechargeCount).toFixed(2):0):item.key==="fb-ios"?(ios.firstRechargeCount?(ios.firstRechargeAmount/ios.firstRechargeCount).toFixed(2):0):""}</td><td>${item.key==="ALL_TOTAL"?ttAvg:item.key==="fb-h5"?(ttParent.rechargeCount?(ttParent.rechargeAmount/ttParent.rechargeCount).toFixed(2):0):item.key==="fb-pwa"?(ttChild.rechargeCount?(ttChild.rechargeAmount/ttChild.rechargeCount).toFixed(2):0):item.key==="fb-ios"?(tt.firstRechargeCount?(tt.firstRechargeAmount/tt.firstRechargeCount).toFixed(2):0):""}</td><td>${item.key==="ALL_TOTAL"?kwAvg:item.key==="fb-h5"?(kwParent.rechargeCount?(kwParent.rechargeAmount/kwParent.rechargeCount).toFixed(2):0):item.key==="fb-pwa"?(kwChild.rechargeCount?(kwChild.rechargeAmount/kwChild.rechargeCount).toFixed(2):0):item.key==="fb-ios"?(kw.firstRechargeCount?(kw.firstRechargeAmount/kw.firstRechargeCount).toFixed(2):0):""}</td><td>${item.key==="ALL_TOTAL"?wsAvg:item.key==="fb-h5"?(wsParent.rechargeCount?(wsParent.rechargeAmount/wsParent.rechargeCount).toFixed(2):0):item.key==="fb-pwa"?(wsChild.rechargeCount?(wsChild.rechargeAmount/wsChild.rechargeCount).toFixed(2):0):item.key==="fb-ios"?(ws.firstRechargeCount?(ws.firstRechargeAmount/ws.firstRechargeCount).toFixed(2):0):""}</td><td class="label-col">${item.show}</td><td class="${rateClass(n.rechargeCount>c.firstRechargeCount?(c.firstRechargeCount/(n.rechargeCount-c.firstRechargeCount)*100):0)}">${n.rechargeCount>c.firstRechargeCount?(c.firstRechargeCount/(n.rechargeCount-c.firstRechargeCount)*100).toFixed(2)+"%":"0%"}</td><td class="label-col">${item.show==="大盘"?"大盘":item.show==="FB-H5"?"直推":item.show==="FB-PWA"?"裂变":""}</td><td class="green">${item.show==="大盘"?(globalData.repeat_rate?.first??0).toFixed(2)+"%":item.show==="FB-H5"?(globalData.repeat_rate?.parent??0).toFixed(2)+"%":item.show==="FB-PWA"?(globalData.repeat_rate?.child??0).toFixed(2)+"%":""}</td><td class="label-col">${item.show?.trim()==="大盘"?"2日留存":item.show?.trim()==="FB-H5"?"3日留存":item.show?.trim()==="FB-PWA"?"4日留存":item.show?.trim()==="FB-IOS"?"5日留存":item.show?.trim()==="TT-PWA"?"6日留存":item.show?.trim()==="KW-PWA"?"7日留存":item.show?.trim()==="回访"?"10日留存":item.show==="ws-h5"?"14日留存":"-"}</td><td>${item.show==="大盘"?retentionRate("ALL",1):item.show==="FB-H5"?retentionRate("ALL",2):item.show==="FB-PWA"?retentionRate("ALL",3):item.show==="FB-IOS"?retentionRate("ALL",4):item.show==="TT-PWA"?retentionRate("ALL",5):item.show==="KW-PWA"?retentionRate("ALL",6):item.show==="回访"?retentionRate("ALL",9):item.show==="ws-h5"?retentionRate("ALL",13):""}</td><td>${item.show==="大盘"?retentionRateFB(1):item.show==="FB-H5"?retentionRateFB(2):item.show==="FB-PWA"?retentionRateFB(3):item.show==="FB-IOS"?retentionRateFB(4):item.show==="TT-PWA"?retentionRateFB(5):item.show==="KW-PWA"?retentionRateFB(6):item.show==="回访"?retentionRateFB(9):item.show==="ws-h5"?retentionRateFB(13):""}</td><td>${item.show==="大盘"?retentionRate("tt-pwa",1):item.show==="FB-H5"?retentionRate("tt-pwa",2):item.show==="FB-PWA"?retentionRate("tt-pwa",3):item.show==="FB-IOS"?retentionRate("tt-pwa",4):item.show==="TT-PWA"?retentionRate("tt-pwa",5):item.show==="KW-PWA"?retentionRate("tt-pwa",6):item.show==="回访"?retentionRate("tt-pwa",9):item.show==="ws-h5"?retentionRate("tt-pwa",13):""}</td><td>${item.show==="大盘"?retentionRate("kwai-pwa",1):item.show==="FB-H5"?retentionRate("kwai-pwa",2):item.show==="FB-PWA"?retentionRate("kwai-pwa",3):item.show==="FB-IOS"?retentionRate("kwai-pwa",4):item.show==="TT-PWA"?retentionRate("kwai-pwa",5):item.show==="KW-PWA"?retentionRate("kwai-pwa",6):item.show==="回访"?retentionRate("kwai-pwa",9):item.show==="ws-h5"?retentionRate("kwai-pwa",13):""}</td><td>${item.show==="大盘"?retentionRate("ws-h5",1):item.show==="FB-H5"?retentionRate("ws-h5",2):item.show==="FB-PWA"?retentionRate("ws-h5",3):item.show==="FB-IOS"?retentionRate("ws-h5",4):item.show==="TT-PWA"?retentionRate("ws-h5",5):item.show==="KW-PWA"?retentionRate("ws-h5",6):item.show==="回访"?retentionRate("ws-h5",9):item.show==="ws-h5"?retentionRate("ws-h5",13):""}</td></tr>`;
-});
-for(let i=0;i<2;i++){
-html+="<tr>";
-for(let j=0;j<36;j++){
-if(j===0||j===16||j===26||j===28||j===30){html+='<td class="label-col">&nbsp;</td>';}else{html+='<td>&nbsp;</td>';}
-}
-html+="</tr>";
-}
-document.getElementById("body").innerHTML=html;
-}
+    let d=globalData[item.key]||{};
+    let n=d.normalList||{};
+    let hour=globalData.hour_report?.[item.key]||{};
+    let recharge=n.rechargeAmount||0;
+    let withdraw=n.withdrawAmount||0;
+    let diff=recharge-withdraw;
+    let diffRate=recharge?(diff/recharge*100).toFixed(2)+"%":"0%";
+    let p=d.parentList||{};
+    let c=d.childList||{};
+    let all=globalData["ALL_TOTAL"]||{};
+    let normal=all.normalList||{};
+    let parent=all.parentList||{};
+    let child=all.childList||{};
+    let avg="";
+    let nextAvg = item.show === "大盘"
+        ? (globalData.next_avg?.first ?? 0)
+        : item.show === "FB-H5"
+            ? (globalData.next_avg?.parent ?? 0)
+            : item.show === "FB-PWA"
+                ? (globalData.next_avg?.child ?? 0)
+                : "";
+    if(item.key==="ALL_TOTAL"){avg=normal.rechargeCount?(normal.rechargeAmount/normal.rechargeCount).toFixed(2):0;}
+    else if(item.key==="fb-h5"){avg=parent.rechargeCount?(parent.rechargeAmount/parent.rechargeCount).toFixed(2):0;}
+    else if(item.key==="fb-pwa"){avg=child.rechargeCount?(child.rechargeAmount/child.rechargeCount).toFixed(2):0;}
+    else if(item.key==="fb-ios"){avg=Number(normal.firstRechargeCount)>0?(Number(normal.firstRechargeAmount)/Number(normal.firstRechargeCount)).toFixed(2):"0.00";nextAvg="";}
+    let h5=globalData["fb-h5"]?.normalList||{};
+    let pwa=globalData["fb-pwa"]?.normalList||{};
+    let ios=globalData["fb-ios"]?.normalList||{};
+    let tt=globalData["tt-pwa"]?.normalList||{};
+    let ttParent=globalData["tt-pwa"]?.parentList||{};
+    let ttChild=globalData["tt-pwa"]?.childList||{};
+    let kw=globalData["kwai-pwa"]?.normalList||{};
+    let kwParent=globalData["kwai-pwa"]?.parentList||{};
+    let kwChild=globalData["kwai-pwa"]?.childList||{};
+    let ws=globalData["ws-h5"]?.normalList||{};
+    let wsParent=globalData["ws-h5"]?.parentList||{};
+    let wsChild=globalData["ws-h5"]?.childList||{};
+    let h5Avg=h5.rechargeCount?(h5.rechargeAmount/h5.rechargeCount).toFixed(2):0;
+    let pwaAvg=pwa.rechargeCount?(pwa.rechargeAmount/pwa.rechargeCount).toFixed(2):0;
+    let iosAvg=ios.rechargeCount?(ios.rechargeAmount/ios.rechargeCount).toFixed(2):0;
+    let ttAvg=tt.rechargeCount?(tt.rechargeAmount/tt.rechargeCount).toFixed(2):0;
+    let kwAvg=kw.rechargeCount?(kw.rechargeAmount/kw.rechargeCount).toFixed(2):0;
+    let wsAvg=ws.rechargeCount?(ws.rechargeAmount/ws.rechargeCount).toFixed(2):0;
+    let fbNormalAvg = (
+        Number(h5.rechargeAmount || 0) +
+        Number(pwa.rechargeAmount || 0) +
+        Number(ios.rechargeAmount || 0)
+    ) / (
+        Number(h5.rechargeCount || 0) +
+        Number(pwa.rechargeCount || 0) +
+        Number(ios.rechargeCount || 0)
+    );
+    fbNormalAvg=isFinite(fbNormalAvg)?fbNormalAvg.toFixed(2):0;
+    let h5Parent=globalData["fb-h5"]?.parentList||{};
+    let pwaParent=globalData["fb-pwa"]?.parentList||{};
+    let iosParent=globalData["fb-ios"]?.parentList||{};
+    let h5Child=globalData["fb-h5"]?.childList||{};
+    let pwaChild=globalData["fb-pwa"]?.childList||{};
+    let iosChild=globalData["fb-ios"]?.childList||{};
+    let fbParentAvg = (
+        Number(h5Parent.rechargeAmount || 0) +
+        Number(pwaParent.rechargeAmount || 0) +
+        Number(iosParent.rechargeAmount || 0)
+    ) / (
+        Number(h5Parent.rechargeCount || 0) +
+        Number(pwaParent.rechargeCount || 0) +
+        Number(iosParent.rechargeCount || 0)
+    );
+    fbParentAvg=isFinite(fbParentAvg)?fbParentAvg.toFixed(2):0;
+    let fbChildAvg = (
+        Number(h5Child.rechargeAmount || 0) +
+        Number(pwaChild.rechargeAmount || 0) +
+        Number(iosChild.rechargeAmount || 0)
+    ) / (
+        Number(h5Child.rechargeCount || 0) +
+        Number(pwaChild.rechargeCount || 0) +
+        Number(iosChild.rechargeCount || 0)
+    );
+    fbChildAvg=isFinite(fbChildAvg)?fbChildAvg.toFixed(2):0;
+    let fbFirstAvg = (
+        Number(h5.firstRechargeAmount || 0) +
+        Number(pwa.firstRechargeAmount || 0) +
+        Number(ios.firstRechargeAmount || 0)
+    ) / (
+        Number(h5.firstRechargeCount || 0) +
+        Number(pwa.firstRechargeCount || 0) +
+        Number(ios.firstRechargeCount || 0)
+    );
+    fbFirstAvg=isFinite(fbFirstAvg)?fbFirstAvg.toFixed(2):0;
+    let parentRegister = p.registerCount || 0;
+    let parentFirstRecharge = p.firstRechargeCount || 0;
+    let regRechargeRate = parentRegister > 0
+        ? (parentFirstRecharge / parentRegister * 100).toFixed(2) + "%"
+        : "0%";
+    let todayDiffClass = (Number(n.firstRechargeCount || 0) - Number(hour.promotionList?.firstRechargeCount || 0)) > 0
+        ? "green"
+        : (Number(n.firstRechargeCount || 0) - Number(hour.promotionList?.firstRechargeCount || 0)) < 0
+            ? "red"
+            : "";
+    let todayDiffText = Number(hour.promotionList?.firstRechargeCount || 0) > 0
+        ? ((Number(n.firstRechargeCount || 0) - Number(hour.promotionList?.firstRechargeCount || 0)) / Number(hour.promotionList?.firstRechargeCount || 0) * 100).toFixed(2) + "%"
+        : "0.00%";
 
+    let labelType = item.key === "ALL_TOTAL"
+        ? "大盘"
+        : item.key === "fb-h5"
+            ? "直推"
+            : item.key === "fb-pwa"
+                ? "裂变"
+                : item.key === "fb-ios"
+                    ? "首充"
+                    : "&nbsp;";
+
+
+    let showLabel = item.show === "大盘"
+        ? "大盘"
+        : item.show === "FB-H5"
+            ? "直推"
+            : item.show === "FB-PWA"
+                ? "裂变"
+                : "";
+
+
+    let repeatLabel = item.show?.trim() === "大盘"
+        ? "2日留存"
+        : item.show?.trim() === "FB-H5"
+            ? "3日留存"
+            : item.show?.trim() === "FB-PWA"
+                ? "4日留存"
+                : item.show?.trim() === "FB-IOS"
+                    ? "5日留存"
+                    : item.show?.trim() === "TT-PWA"
+                        ? "6日留存"
+                        : item.show?.trim() === "KW-PWA"
+                            ? "7日留存"
+                            : item.show?.trim() === "回访"
+                                ? "10日留存"
+                                : item.show === "ws-h5"
+                                    ? "14日留存"
+                                    : item.show === "-"
+                                        ? "30日留存"
+                                        : item.show === "--"
+                                            ? "60日留存"
+                                                         : "-";
+
+
+    let repeatRateValue = item.show === "大盘"
+        ? (globalData.repeat_rate?.first ?? 0).toFixed(2) + "%"
+        : item.show === "FB-H5"
+            ? (globalData.repeat_rate?.parent ?? 0).toFixed(2) + "%"
+            : item.show === "FB-PWA"
+                ? (globalData.repeat_rate?.child ?? 0).toFixed(2) + "%"
+                : "";
+
+    let allRate = item.show === "大盘"
+        ? retentionRate("ALL", 1)
+        : item.show === "FB-H5"
+            ? retentionRate("ALL", 2)
+            : item.show === "FB-PWA"
+                ? retentionRate("ALL", 3)
+                : item.show === "FB-IOS"
+                    ? retentionRate("ALL", 4)
+                    : item.show === "TT-PWA"
+                        ? retentionRate("ALL", 5)
+                        : item.show === "KW-PWA"
+                            ? retentionRate("ALL", 6)
+                            : item.show === "回访"
+                                ? retentionRate("ALL", 9)
+                                : item.show === "ws-h5"
+                                    ? retentionRate("ALL", 13)
+                                    : item.show === "-"
+                                        ? retentionRate("ALL", 29)
+                                        : item.show === "--"
+                                            ? retentionRate("ALL", 59)
+                                                                        : "";
+
+    let fbRate = item.show === "大盘"
+        ? retentionRateFB(1)
+        : item.show === "FB-H5"
+            ? retentionRateFB(2)
+            : item.show === "FB-PWA"
+                ? retentionRateFB(3)
+                : item.show === "FB-IOS"
+                    ? retentionRateFB(4)
+                    : item.show === "TT-PWA"
+                        ? retentionRateFB(5)
+                        : item.show === "KW-PWA"
+                            ? retentionRateFB(6)
+                            : item.show === "回访"
+                                ? retentionRateFB(9)
+                                : item.show === "ws-h5"
+                                    ? retentionRateFB(13)
+                                    : item.show === "-"
+                                        ? retentionRateFB(29)
+                                        : item.show === "--"
+                                            ? retentionRateFB(59)
+                                                                    : "";
+
+    let ttRate = item.show === "大盘"
+        ? retentionRate("tt-pwa", 1)
+        : item.show === "FB-H5"
+            ? retentionRate("tt-pwa", 2)
+            : item.show === "FB-PWA"
+                ? retentionRate("tt-pwa", 3)
+                : item.show === "FB-IOS"
+                    ? retentionRate("tt-pwa", 4)
+                    : item.show === "TT-PWA"
+                        ? retentionRate("tt-pwa", 5)
+                        : item.show === "KW-PWA"
+                            ? retentionRate("tt-pwa", 6)
+                            : item.show === "回访"
+                                ? retentionRate("tt-pwa", 9)
+                                : item.show === "ws-h5"
+                                    ? retentionRate("tt-pwa", 13)
+                                    : item.show === "-"
+                                        ? retentionRate("tt-pwa", 29)
+                                     : item.show === "--"
+                                            ? retentionRate("tt-pwa", 59)
+                                                                          : "";
+
+    let kwRate = item.show === "大盘"
+        ? retentionRate("kwai-pwa", 1)
+        : item.show === "FB-H5"
+            ? retentionRate("kwai-pwa", 2)
+            : item.show === "FB-PWA"
+                ? retentionRate("kwai-pwa", 3)
+                : item.show === "FB-IOS"
+                    ? retentionRate("kwai-pwa", 4)
+                    : item.show === "TT-PWA"
+                        ? retentionRate("kwai-pwa", 5)
+                        : item.show === "KW-PWA"
+                            ? retentionRate("kwai-pwa", 6)
+                            : item.show === "回访"
+                                ? retentionRate("kwai-pwa", 9)
+                                : item.show === "ws-h5"
+                                    ? retentionRate("kwai-pwa", 13)
+                                    : item.show === "-"
+                                        ? retentionRate("kwai-pwa", 29)
+                                        : item.show === "--"
+                                            ? retentionRate("kwai-pwa", 59)
+                                                                          : "";
+
+    let wsRate = item.show === "大盘"
+        ? retentionRate("ws-h5", 1)
+        : item.show === "FB-H5"
+            ? retentionRate("ws-h5", 2)
+            : item.show === "FB-PWA"
+                ? retentionRate("ws-h5", 3)
+                : item.show === "FB-IOS"
+                    ? retentionRate("ws-h5", 4)
+                    : item.show === "TT-PWA"
+                        ? retentionRate("ws-h5", 5)
+                        : item.show === "KW-PWA"
+                            ? retentionRate("ws-h5", 6)
+                            : item.show === "回访"
+                                ? retentionRate("ws-h5", 9)
+                                : item.show === "ws-h5"
+                                    ? retentionRate("ws-h5", 13)
+                                    : item.show === "-"
+                                        ? retentionRate("ws-h5", 29)
+                                        : item.show === "--"
+                                            ? retentionRate("ws-h5", 59)
+                                                                          : "";
+                                    
+    let avgText =
+        item.key === "ALL_TOTAL" || item.key === "fb-h5" || item.key === "fb-pwa" || item.key === "fb-ios"
+            ? avg
+            : "";
+    let nextAvgText =
+        item.key === "ALL_TOTAL" || item.key === "fb-h5" || item.key === "fb-pwa"
+            ? nextAvg
+            : "";
+    let fbNormalText =
+        item.key === "ALL_TOTAL"
+            ? fbNormalAvg
+            : item.key === "fb-h5"
+                ? fbParentAvg
+                : item.key === "fb-pwa"
+                    ? fbChildAvg
+                    : item.key === "fb-ios"
+                        ? fbFirstAvg
+                        : "";
+    let h5AvgText = item.key === "ALL_TOTAL"
+        ? h5Avg
+        : item.key === "fb-h5"
+            ? (h5Parent.rechargeCount ? (h5Parent.rechargeAmount / h5Parent.rechargeCount).toFixed(2) : 0)
+            : item.key === "fb-pwa"
+                ? (h5Child.rechargeCount ? (h5Child.rechargeAmount / h5Child.rechargeCount).toFixed(2) : 0)
+                : item.key === "fb-ios"
+                    ? (h5.firstRechargeCount ? (h5.firstRechargeAmount / h5.firstRechargeCount).toFixed(2) : 0)
+                    : "";
+    let pwaAvgText = item.key === "ALL_TOTAL"
+        ? pwaAvg
+        : item.key === "fb-h5"
+            ? (pwaParent.rechargeCount ? (pwaParent.rechargeAmount / pwaParent.rechargeCount).toFixed(2) : 0)
+            : item.key === "fb-pwa"
+                ? (pwaChild.rechargeCount ? (pwaChild.rechargeAmount / pwaChild.rechargeCount).toFixed(2) : 0)
+                : item.key === "fb-ios"
+                    ? (pwa.firstRechargeCount ? (pwa.firstRechargeAmount / pwa.firstRechargeCount).toFixed(2) : 0)
+                    : "";
+    let iosAvgText = item.key === "ALL_TOTAL"
+        ? iosAvg
+        : item.key === "fb-h5"
+            ? (iosParent.rechargeCount ? (iosParent.rechargeAmount / iosParent.rechargeCount).toFixed(2) : 0)
+            : item.key === "fb-pwa"
+                ? (iosChild.rechargeCount ? (iosChild.rechargeAmount / iosChild.rechargeCount).toFixed(2) : 0)
+                : item.key === "fb-ios"
+                    ? (ios.firstRechargeCount ? (ios.firstRechargeAmount / ios.firstRechargeCount).toFixed(2) : 0)
+                    : "";
+    let ttAvgText = item.key === "ALL_TOTAL"
+        ? ttAvg
+        : item.key === "fb-h5"
+            ? (ttParent.rechargeCount ? (ttParent.rechargeAmount / ttParent.rechargeCount).toFixed(2) : 0)
+            : item.key === "fb-pwa"
+                ? (ttChild.rechargeCount ? (ttChild.rechargeAmount / ttChild.rechargeCount).toFixed(2) : 0)
+                : item.key === "fb-ios"
+                    ? (tt.firstRechargeCount ? (tt.firstRechargeAmount / tt.firstRechargeCount).toFixed(2) : 0)
+                    : "";
+    let kwAvgText = item.key === "ALL_TOTAL"
+        ? kwAvg
+        : item.key === "fb-h5"
+            ? (kwParent.rechargeCount ? (kwParent.rechargeAmount / kwParent.rechargeCount).toFixed(2) : 0)
+            : item.key === "fb-pwa"
+                ? (kwChild.rechargeCount ? (kwChild.rechargeAmount / kwChild.rechargeCount).toFixed(2) : 0)
+                : item.key === "fb-ios"
+                    ? (kw.firstRechargeCount ? (kw.firstRechargeAmount / kw.firstRechargeCount).toFixed(2) : 0)
+                    : "";
+    let wsAvgText = item.key === "ALL_TOTAL"
+        ? wsAvg
+        : item.key === "fb-h5"
+            ? (wsParent.rechargeCount ? (wsParent.rechargeAmount / wsParent.rechargeCount).toFixed(2) : 0)
+            : item.key === "fb-pwa"
+                ? (wsChild.rechargeCount ? (wsChild.rechargeAmount / wsChild.rechargeCount).toFixed(2) : 0)
+                : item.key === "fb-ios"
+                    ? (ws.firstRechargeCount ? (ws.firstRechargeAmount / ws.firstRechargeCount).toFixed(2) : 0)
+                    : "";
+    let firstRechargeRatioText = n.rechargeCount > c.firstRechargeCount
+        ? (c.firstRechargeCount / (n.rechargeCount - c.firstRechargeCount) * 100).toFixed(2) + "%"
+        : "0%";
+    let firstRechargeRatioClass =
+        rateClass(
+            n.rechargeCount > c.firstRechargeCount
+                ? (c.firstRechargeCount / (n.rechargeCount - c.firstRechargeCount) * 100)
+                : 0
+        );
+    let rateClassReg = rateClass(parseFloat(regRechargeRate));
+    let rateClassDiff = rateClass(parseFloat(diffRate));
+    let diffClass = diff > 0 ? "green" : diff < 0 ? "red" : "";
+    html+=`<tr>
+      <td class="gray">${item.show}</td>
+      <td class="${rateClassReg}">${regRechargeRate}</td>
+      <td>${hour.promotionList?.firstRechargeCount||0}</td>
+      <td>${hour.promotionList?.firstRechargeAmount||0}</td>
+      <td>${n.firstRechargeCount||0}</td>
+      <td>${n.firstRechargeAmount||0}</td>
+      <td>${p.firstRechargeCount||0}</td>
+      <td>${c.firstRechargeCount||0}</td>
+      <td class="${todayDiffClass}">${todayDiffText}</td>
+      <td>${hour.promotionList?.rechargeCount||0}</td>
+      <td>${hour.promotionList?.rechargeAmount||0}</td>
+      <td>${n.rechargeCount||0}</td>
+      <td>${n.rechargeAmount||0}</td>
+      <td>${withdraw}</td>
+      <td class="${diffClass}">${diff}</td>
+      <td class="${rateClassDiff}">${diffRate}</td>
+      <td class="label-col">${labelType}</td>
+      <td>${avgText}</td>
+      <td>${nextAvgText}</td>
+      <td>${fbNormalText}</td>
+      <td>${h5AvgText}</td>
+      <td>${pwaAvgText}</td>
+      <td>${iosAvgText}</td>
+      <td>${ttAvgText}</td>
+      <td>${kwAvgText}</td>
+      <td>${wsAvgText}</td>
+      <td class="label-col">${item.show}</td>
+      <td class="${firstRechargeRatioClass}">${firstRechargeRatioText}</td>
+      <td class="label-col">${showLabel}</td>
+      <td class="green">${repeatRateValue}</td>
+      <td class="label-col">${repeatLabel}</td>
+      <td>${allRate}</td>
+      <td>${fbRate}</td>
+      <td>${ttRate}</td>
+      <td>${kwRate}</td>
+      <td>${wsRate}</td>
+      </tr>`;
+    
+    document.getElementById("body").innerHTML = html;
+}); 
+}
 /* ============ QUERY DATA FROM BACKEND ============ */
 async function queryData(){
 
@@ -597,12 +1061,10 @@ async function queryData(){
 
     globalData = newData;
 
-    if(currentSite==="76B"){
     masterUpdateTime =
         newData.update_time_brazil ||
         newData.update_time ||
         "--";
-}
 
 let brazilTime = masterUpdateTime;
 
@@ -650,25 +1112,77 @@ let brazilTime = masterUpdateTime;
 
 /* ============ LOGIN / LOGOUT ============ */
 function login(){
+
 let user=document.getElementById("user").value;
 let pass=document.getElementById("pass").value;
-if(user==="xiaoruan"&&pass==="1"){
-localStorage.setItem("isLoggedIn","true");
-document.getElementById("loginPage").style.display="none";
-}else{
-document.getElementById("msg").innerHTML="账号或密码错误";
+
+if(user==="xiaoruan" && pass==="1"){
+
+    localStorage.setItem("isLoggedIn","true");
+
+    // Hỏi có lưu không
+    // Chỉ hỏi đúng 1 lần
+if(localStorage.getItem("rememberAsked")!=="true"){
+
+    if(confirm("你是否要保存账号和密码？")){
+
+        localStorage.setItem("savedUser",user);
+        localStorage.setItem("savedPass",pass);
+
+    }
+
+    // Đánh dấu đã hỏi
+    localStorage.setItem("rememberAsked","true");
+
 }
+
+    document.getElementById("loginPage").style.display="none";
+
+}else{
+
+    document.getElementById("msg").innerHTML="账号或密码错误";
+
+}
+
 }
 
 function logout(){
 localStorage.removeItem("isLoggedIn");
 location.reload();
 }
+function openTelegramPopup(){
+    document.getElementById("telegramOverlay").style.display="flex";
+}
+
+function closeTelegramPopup(){
+    document.getElementById("telegramOverlay").style.display="none";
+}
+
+window.onclick=function(e){
+    if(e.target===document.getElementById("telegramOverlay")){
+        closeTelegramPopup();
+    }
+}
 
 window.addEventListener("load",function(){
+
+// Tự điền tài khoản mật khẩu
+const savedUser=localStorage.getItem("savedUser");
+const savedPass=localStorage.getItem("savedPass");
+
+if(savedUser){
+document.getElementById("user").value=savedUser;
+}
+
+if(savedPass){
+document.getElementById("pass").value=savedPass;
+}
+
+// Nếu đã đăng nhập thì vào luôn
 if(localStorage.getItem("isLoggedIn")==="true"){
 document.getElementById("loginPage").style.display="none";
 }
+
 });
 </script>
 </html>

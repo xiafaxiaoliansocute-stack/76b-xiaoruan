@@ -3,6 +3,7 @@ import subprocess
 import os
 
 app = Flask(__name__)
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 print("SERVER =", __file__)
@@ -10,68 +11,36 @@ print("BASE_DIR =", BASE_DIR)
 print("NN22 EXISTS =", os.path.exists(os.path.join(BASE_DIR, "nn22.json")))
 
 
+# ================= HOME =================
 @app.route("/")
 def home():
-    return send_from_directory(".", "index.html")
+    return send_from_directory(BASE_DIR, "index.html")
 
 
+# ================= RUN 2 FILE SONG SONG =================
 @app.route("/run")
 def run_script():
 
     try:
+        print("========== RUN PARALLEL ==========")
 
-        print("========== RUN MAIN.PY ==========")
-
-        result = subprocess.run(
-            ["python3", "main.py"],
-            capture_output=True,
-            text=True
+        # CHẠY SONG SONG 2 FILE
+        subprocess.Popen(
+            ["python3", os.path.join(BASE_DIR, "main.py")]
         )
 
-        print(result.stdout)
-        print(result.stderr)
-
-        if result.returncode != 0:
-            raise Exception("main.py\n" + result.stderr)
-
-        print("========== RUN NN22.PY ==========")
-
-        result = subprocess.run(
-            ["python3", "nn22.py"],
-            capture_output=True,
-            text=True
+        subprocess.Popen(
+            ["python3", os.path.join(BASE_DIR, "nn22.py")]
         )
 
-        print(result.stdout)
-        print(result.stderr)
-
-        if result.returncode != 0:
-            raise Exception("nn22.py\n" + result.stderr)
-
-        print("========== GIT ==========")
-
-        subprocess.run(
-            ["git", "add", "."],
-            check=True
-        )
-
-        subprocess.run(
-            ["git", "commit", "-m", "auto update"],
-            check=False
-        )
-
-        subprocess.run(
-            ["git", "push"],
-            check=True
-        )
+        print("🚀 main.py + nn22.py started")
 
         return jsonify({
             "success": True,
-            "message": "Data updated and pushed"
+            "message": "Both scripts started in parallel"
         })
 
     except Exception as e:
-
         import traceback
         traceback.print_exc()
 
@@ -81,8 +50,7 @@ def run_script():
         })
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
+# ================= DATA FILE =================
 @app.route("/data.json")
 def data_json():
     return send_from_directory(BASE_DIR, "data.json")
@@ -93,6 +61,7 @@ def nn22_json():
     return send_from_directory(BASE_DIR, "nn22.json")
 
 
+# ================= START SERVER =================
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
