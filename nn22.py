@@ -9,23 +9,23 @@ from zoneinfo import ZoneInfo
 # CONFIG
 # ======================
 
-ACCOUNT = "xiaoruan2300"
-TOKEN = "88vpmcnhdvuq8otfmqypjvyzvxt352cmhnhog2xm"
+ACCOUNT = "nn22"
+TOKEN = "ilv8fn0hxnth6ejkksppgkjpxij3exgt5eoapvfb"
 
-BASE_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.effect"
-HOUR_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.hourReportSum"
+BASE_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.effect"
+HOUR_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportSum"
 
-TENANT_ID = 5317688
+TENANT_ID = 2175621
 REGION_ID = 1
 
 CHANNELS = {
-    "fb-h5": 5554,
-    "fb-pwa": 5552,
-    "fb-ios": 5553,
-    "tt-pwa": 5551,
-    "kwai-pwa": 5555,
-    "回访": 5585,
-        "ws-h5": 5586
+    "fb-h5": 35,
+    "fb-pwa": 37,
+    "fb-ios": 36,
+    "tt-pwa": 39,
+    "kwai-pwa": 38,
+    "回访": 34,
+        "ws-h5": 40
 
 }
 
@@ -39,8 +39,8 @@ headers = {
     "authorization": f"Bearer {TOKEN}",
     "client-language": "zh-CN",
     "content-type": "application/json",
-    "origin": "https://admin-2306-66b1c5.m-b-d-1.com",
-    "referer": "https://admin-2306-66b1c5.m-b-d-1.com/",
+    "origin": "https://admin-16011-34bc8f.c-9-m-1.com",
+    "referer": "https://admin-16011-34bc8f.c-9-m-1.com/",
 }
 from requests.adapters import HTTPAdapter
 
@@ -514,7 +514,7 @@ with ThreadPoolExecutor(max_workers=10) as executor:
 
 
 
-RETENTION_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.dayRetention"
+RETENTION_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.dayRetention"
 
 result_data["retention"] = {}
 # ======================

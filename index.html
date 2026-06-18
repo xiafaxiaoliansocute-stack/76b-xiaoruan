@@ -472,6 +472,7 @@ function loadData(){
 	.then(r=>r.json())
 	.then(data=>{
 globalData=data;
+
 fetch("data.json?t=" + Date.now())
     .then(r => r.json())
     .then(mainData => {
