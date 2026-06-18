@@ -326,7 +326,7 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 </div>
 <div class="hero-content">
 <div id="updateTimeHero">📅 数据更新时间：--</div>
-<h1>2306-76b-实时数据汇总</h1>
+<h1>JS团队实时数据汇总</h1>
 <button class="run-btn" onclick="queryData()">🔍 查询数据</button>
 </div>
 </div>
@@ -564,12 +564,15 @@ function rateClass(value){return value>0?"green":value<0?"red":"";}
 
 /* ============ RETENTION RATE CALCULATION ============ */
 function retentionRate(channel,countField){
-const retention=globalData.retention||{};
-const brazilNow=new Date(new Date().toLocaleString("en-US",{timeZone:"America/Sao_Paulo"}));
-brazilNow.setDate(brazilNow.getDate()-countField);
-const y=brazilNow.getFullYear();
-const m=String(brazilNow.getMonth()+1).padStart(2,"0");
-const d=String(brazilNow.getDate()).padStart(2,"0");
+const retention = globalData.retention || {};
+
+const reportDate = new Date(globalData.report_day + "T00:00:00");
+
+reportDate.setDate(reportDate.getDate() - countField);
+
+const y = reportDate.getFullYear();
+const m = String(reportDate.getMonth() + 1).padStart(2,"0");
+const d = String(reportDate.getDate()).padStart(2,"0");
 const dateKey=`${y}-${m}-${d}`;
 const row=retention[dateKey]?.[channel];
 if(!row)return"0.00%";
@@ -579,12 +582,15 @@ return total>0?((retain/total)*100).toFixed(2)+"%":"0.00%";
 }
 
 function retentionRateFB(countField){
-const retention=globalData.retention||{};
-const brazilNow=new Date(new Date().toLocaleString("en-US",{timeZone:"America/Sao_Paulo"}));
-brazilNow.setDate(brazilNow.getDate()-countField);
-const y=brazilNow.getFullYear();
-const m=String(brazilNow.getMonth()+1).padStart(2,"0");
-const d=String(brazilNow.getDate()).padStart(2,"0");
+const retention = globalData.retention || {};
+
+const reportDate = new Date(globalData.report_day + "T00:00:00");
+
+reportDate.setDate(reportDate.getDate() - countField);
+
+const y = reportDate.getFullYear();
+const m = String(reportDate.getMonth() + 1).padStart(2,"0");
+const d = String(reportDate.getDate()).padStart(2,"0");
 const dateKey=`${y}-${m}-${d}`;
 const h5=retention[dateKey]?.["fb-h5"]||{};
 const pwa=retention[dateKey]?.["fb-pwa"]||{};
@@ -605,25 +611,97 @@ const list=[
 {show:"KW-PWA",key:"kwai-pwa"},
 {show:"回访",key:"回访"},
 {show:"ws-h5",key:"ws-h5"},
+{show:"官方渠道",key:"官方渠道"},
 {show:"-",key:"ws"},
-{show:"--",key:"ws"},
 ];
+
 let html="";
 list.forEach(item=>{
-    let d=globalData[item.key]||{};
-    let n=d.normalList||{};
-    let hour=globalData.hour_report?.[item.key]||{};
-    let recharge=n.rechargeAmount||0;
-    let withdraw=n.withdrawAmount||0;
-    let diff=recharge-withdraw;
-    let diffRate=recharge?(diff/recharge*100).toFixed(2)+"%":"0%";
-    let p=d.parentList||{};
-    let c=d.childList||{};
-    let all=globalData["ALL_TOTAL"]||{};
-    let normal=all.normalList||{};
-    let parent=all.parentList||{};
-    let child=all.childList||{};
-    let avg="";
+
+    let d = globalData[item.key] || {};
+    let n = d.normalList || {};
+    let p = d.parentList || {};
+    let c = d.childList || {};
+    let hour = globalData.hour_report?.[item.key] || {};
+
+    // ===== 官方渠道 = ALL_TOTAL - tất cả các kênh =====
+    if(item.key==="官方渠道"){
+
+        const all = globalData["ALL_TOTAL"] || {};
+
+        const channels = [
+            "fb-h5",
+            "fb-pwa",
+            "fb-ios",
+            "tt-pwa",
+            "kwai-pwa",
+            "ws-h5",
+            "回访"
+        ];
+
+        d = {
+            normalList:{},
+            parentList:{},
+            childList:{}
+        };
+
+        ["normalList","parentList","childList"].forEach(type=>{
+
+            const total = all[type] || {};
+
+            Object.keys(total).forEach(key=>{
+
+                let value = Number(total[key] || 0);
+
+                channels.forEach(ch=>{
+                    value -= Number(globalData[ch]?.[type]?.[key] || 0);
+                });
+
+                d[type][key] = value;
+
+            });
+
+        });
+
+        n = d.normalList;
+        p = d.parentList;
+        c = d.childList;
+
+        // ===== 昨日 官方渠道 =====
+const allHour = globalData.hour_report?.["ALL_TOTAL"]?.promotionList || {};
+
+hour = {
+    promotionList:{}
+};
+
+Object.keys(allHour).forEach(key=>{
+
+    let value = Number(allHour[key] || 0);
+
+    channels.forEach(ch=>{
+        value -= Number(
+            globalData.hour_report?.[ch]?.promotionList?.[key] || 0
+        );
+    });
+
+    hour.promotionList[key] = value;
+
+});
+
+    }
+
+    let recharge = n.rechargeAmount || 0;
+    let withdraw = n.withdrawAmount || 0;
+    let diff = recharge - withdraw;
+    let diffRate = recharge ? (diff / recharge * 100).toFixed(2) + "%" : "0%";
+
+    let all = globalData["ALL_TOTAL"] || {};
+    let normal = all.normalList || {};
+    let parent = all.parentList || {};
+    let child = all.childList || {};
+
+    let avg = "";
+
     let nextAvg = item.show === "大盘"
         ? (globalData.next_avg?.first ?? 0)
         : item.show === "FB-H5"
@@ -631,6 +709,7 @@ list.forEach(item=>{
             : item.show === "FB-PWA"
                 ? (globalData.next_avg?.child ?? 0)
                 : "";
+
     if(item.key==="ALL_TOTAL"){avg=normal.rechargeCount?(normal.rechargeAmount/normal.rechargeCount).toFixed(2):0;}
     else if(item.key==="fb-h5"){avg=parent.rechargeCount?(parent.rechargeAmount/parent.rechargeCount).toFixed(2):0;}
     else if(item.key==="fb-pwa"){avg=child.rechargeCount?(child.rechargeAmount/child.rechargeCount).toFixed(2):0;}
@@ -699,11 +778,13 @@ list.forEach(item=>{
         Number(ios.firstRechargeCount || 0)
     );
     fbFirstAvg=isFinite(fbFirstAvg)?fbFirstAvg.toFixed(2):0;
-    let parentRegister = p.registerCount || 0;
-    let parentFirstRecharge = p.firstRechargeCount || 0;
-    let regRechargeRate = parentRegister > 0
-        ? (parentFirstRecharge / parentRegister * 100).toFixed(2) + "%"
-        : "0%";
+    // 注册充值比 = 今日首充人数 / 今日注册人数
+let regRechargeRate = Number(n.registerCount || 0) > 0
+    ? (
+        Number(n.firstRechargeCount || 0) /
+        Number(n.registerCount || 0) * 100
+      ).toFixed(2) + "%"
+    : "0%";
     let todayDiffClass = (Number(n.firstRechargeCount || 0) - Number(hour.promotionList?.firstRechargeCount || 0)) > 0
         ? "green"
         : (Number(n.firstRechargeCount || 0) - Number(hour.promotionList?.firstRechargeCount || 0)) < 0
@@ -749,9 +830,9 @@ list.forEach(item=>{
                                 ? "10日留存"
                                 : item.show === "ws-h5"
                                     ? "14日留存"
-                                    : item.show === "-"
+                                    : item.show === "官方渠道"
                                         ? "30日留存"
-                                        : item.show === "--"
+                                        : item.show === "-"
                                             ? "60日留存"
                                                          : "-";
 
@@ -780,9 +861,9 @@ list.forEach(item=>{
                                 ? retentionRate("ALL", 9)
                                 : item.show === "ws-h5"
                                     ? retentionRate("ALL", 13)
-                                    : item.show === "-"
+                                    : item.show === "官方渠道"
                                         ? retentionRate("ALL", 29)
-                                        : item.show === "--"
+                                        : item.show === "-"
                                             ? retentionRate("ALL", 59)
                                                                         : "";
 
@@ -802,9 +883,9 @@ list.forEach(item=>{
                                 ? retentionRateFB(9)
                                 : item.show === "ws-h5"
                                     ? retentionRateFB(13)
-                                    : item.show === "-"
+                                    : item.show === "官方渠道"
                                         ? retentionRateFB(29)
-                                        : item.show === "--"
+                                        : item.show === "-"
                                             ? retentionRateFB(59)
                                                                     : "";
 
@@ -824,9 +905,9 @@ list.forEach(item=>{
                                 ? retentionRate("tt-pwa", 9)
                                 : item.show === "ws-h5"
                                     ? retentionRate("tt-pwa", 13)
-                                    : item.show === "-"
+                                    : item.show === "官方渠道"
                                         ? retentionRate("tt-pwa", 29)
-                                     : item.show === "--"
+                                     : item.show === "-"
                                             ? retentionRate("tt-pwa", 59)
                                                                           : "";
 
@@ -846,9 +927,9 @@ list.forEach(item=>{
                                 ? retentionRate("kwai-pwa", 9)
                                 : item.show === "ws-h5"
                                     ? retentionRate("kwai-pwa", 13)
-                                    : item.show === "-"
+                                    : item.show === "官方渠道"
                                         ? retentionRate("kwai-pwa", 29)
-                                        : item.show === "--"
+                                        : item.show === "-"
                                             ? retentionRate("kwai-pwa", 59)
                                                                           : "";
 
@@ -868,9 +949,9 @@ list.forEach(item=>{
                                 ? retentionRate("ws-h5", 9)
                                 : item.show === "ws-h5"
                                     ? retentionRate("ws-h5", 13)
-                                    : item.show === "-"
+                                    : item.show === "官方渠道"
                                         ? retentionRate("ws-h5", 29)
-                                        : item.show === "--"
+                                        : item.show === "-"
                                             ? retentionRate("ws-h5", 59)
                                                                           : "";
                                     

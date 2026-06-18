@@ -67,7 +67,6 @@ session.mount("http://", adapter)
 
 BRAZIL_TZ = ZoneInfo("America/Sao_Paulo")
 now_br = datetime.now(BRAZIL_TZ)
-
 # 00:00 ~ 00:59 => toàn bộ báo cáo lùi về 1 ngày
 if now_br.hour == 0:
     report_day = (now_br - timedelta(days=1)).date()
@@ -87,8 +86,11 @@ retention_start = (report_day - timedelta(days=29)).strftime("%Y-%m-%d")
 
 result_data = {
     "update_time_brazil":
-        now_br.strftime("%Y-%m-%d %H:%M:%S")
+        now_br.strftime("%Y-%m-%d %H:%M:%S"),
+    "report_day":
+        report_day.strftime("%Y-%m-%d")
 }
+
 result_data["hour_report"] = {}
 
 # ======================
@@ -514,6 +516,7 @@ with ThreadPoolExecutor(max_workers=10) as executor:
 
 
 
+
 RETENTION_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.dayRetention"
 
 result_data["retention"] = {}
@@ -828,7 +831,7 @@ import subprocess
 
 try:
     subprocess.run(
-    ["git", "add", "nn22.json"],
+        ["git", "add", "data.json"],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
     )
