@@ -16,6 +16,103 @@ Features:
 <title>xiaoruan.vip</title>
 
 <style>
+    .globalNotice{
+    color:#ff2b2b;
+    font-size:18px;
+    font-weight:bold;
+    margin:10px 0 12px 0;
+    padding-left:6px;
+}
+    .retention-toolbar{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:12px;
+    margin:8px 0 12px;
+    font-size:15px;
+    font-weight:bold;
+}
+
+.switch{
+    position:relative;
+    width:46px;
+    height:24px;
+}
+
+.switch input{
+    display:none;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+    background:#ccc;
+    border-radius:30px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.slider:before{
+    content:"";
+    position:absolute;
+    width:18px;
+    height:18px;
+    left:3px;
+    top:3px;
+    background:#fff;
+    border-radius:50%;
+    transition:.25s;
+}
+
+.switch input:checked + .slider{
+    background:#1677ff;
+}
+
+.switch input:checked + .slider:before{
+    transform:translateX(22px);
+}
+    .retentionFilter{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:15px 0;
+    flex-wrap:wrap;
+}
+
+.retBtn{
+
+    border:1px solid #d9d9d9;
+
+    background:#fff;
+
+    padding:8px 18px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    font-size:14px;
+}
+
+.retBtn:hover{
+
+    background:#1677ff;
+
+    color:#fff;
+
+}
+
+.retBtn.active{
+
+    background:#1677ff;
+
+    color:#fff;
+
+    border-color:#1677ff;
+
+}
 /* ============ GLOBAL STYLES ============ */
 body{font-family:Arial;background:#f5f5f5;margin:0;padding:1vw;}
 *{box-sizing:border-box;}
@@ -311,6 +408,41 @@ transform:translateY(-5px);
     font-weight:bold;
 }
 
+/*=========================
+ TAB4 留存率
+=========================*/
+
+.retention-wrap{
+    width:100%;
+    height:calc(100vh - 220px);
+    overflow:auto;
+    background:#fff;
+    border-radius:15px;
+}
+
+#retentionTable{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:auto;
+    font-size:14px;
+}
+
+#retentionTable th,
+#retentionTable td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+    white-space:nowrap;
+}
+
+#retentionTable thead th{
+    position:sticky;
+    top:0;
+    background:#f3f3f3;
+    z-index:10;
+    font-weight:bold;
+}
+
 </style>
 </head>
 <script>
@@ -392,13 +524,6 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 <div id="updateTimeHero">📅 数据更新时间：--</div>
 <h1>JS团队实时数据汇总</h1>
 <button class="run-btn" onclick="queryData()">🔍 查询数据</button>
-<button
-    class="run-btn"
-    id="zeroBtn"
-    onclick="toggleZero()"
-    style="background:#666;">
-    👁 隐藏0值
-</button>
 </div>
 </div>
 
@@ -417,23 +542,59 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
     </div>
 
     <!-- Tab -->
+<div>
+
     <div class="tab-bar">
-    <div class="tab-btn active" onclick="switchTab(1)">📊 推广效果</div>
 
-    <div class="tab-btn" onclick="switchTab(2)">
-        🧮 实时数据分析
+        <div class="tab-btn active" onclick="switchTab(1)">
+            📊 推广效果
+        </div>
+
+        <div class="tab-btn" onclick="switchTab(2)">
+            🧮 实时数据分析
+        </div>
+
+        <div class="tab-btn" onclick="switchTab(3)">
+            📈 实时数据
+        </div>
+
+        <div class="tab-btn" onclick="switchTab(4)">
+            📊 留存率
+        </div>
+
     </div>
 
-    <div class="tab-btn" onclick="switchTab(3)">
-        📈 实时数据
+    <div class="globalNotice">
+        * 数据统计报表数据统计每个小时更新一次
     </div>
+
 </div>
 
 </div>
 
-<button onclick="logout()" style="background:#dc3545;color:white;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:bold;">
-🚪退出登录
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:35px;">
+
+    <button
+    onclick="logout()"
+    style="background:#dc3545;color:white;border:none;padding:15px 28px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:15px;">
+    🚪退出登录
 </button>
+
+    <div style="display:flex;align-items:center;gap:15px;">
+
+        <span style="font-weight:bold;font-size:16px;">显示零数据字段</span>
+
+        <label class="switch">
+            <input
+                type="checkbox"
+                id="zeroSwitch"
+                onchange="toggleZeroSwitch()">
+            <span class="slider"></span>
+        </label>
+
+    </div>
+
+</div>
 
 </div>
 
@@ -495,12 +656,46 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 <tbody id="body"></tbody>
 </table>
 </div>
-<!-- ============ TAB 3 - REAL-TIME DATA ============ -->
+<!-- ============ TAB 3 - 实时数据 ============ -->
 <div id="tab3" style="display:none">
 
     <div class="realtime-wrap">
 
         <table id="realtimeTable"></table>
+
+    </div>
+
+</div>
+
+<!-- ============ TAB 4 - 留存率 ============ -->
+<div id="tab4" style="display:none">
+    <div class="retentionFilter">
+
+    <span>快捷筛选：</span>
+
+    <button class="retBtn active" onclick="changeRetention('ALL',this)">全部</button>
+
+    <button class="retBtn" onclick="changeRetention('fb-h5',this)">FB-H5</button>
+
+    <button class="retBtn" onclick="changeRetention('fb-ios',this)">FB-IOS</button>
+
+    <button class="retBtn" onclick="changeRetention('fb-pwa',this)">FB-PWA</button>
+
+    <button class="retBtn" onclick="changeRetention('kwai-pwa',this)">kwai-PWA</button>
+
+    <button class="retBtn" onclick="changeRetention('tt-pwa',this)">TT-PWA</button>
+
+    <button class="retBtn" onclick="changeRetention('ws-h5',this)">WS-H5</button>
+
+    <button class="retBtn" onclick="changeRetention('其他',this)">其他</button>
+
+    <button class="retBtn" onclick="changeRetention('回访',this)">回访</button>
+
+</div>
+
+    <div class="retention-wrap">
+
+        <table id="retentionTable"></table>
 
     </div>
 
@@ -552,10 +747,13 @@ function switchTab(n){
     document.getElementById("tab3").style.display =
         n===3 ? "block" : "none";
 
+    document.getElementById("tab4").style.display =
+        n===4 ? "block" : "none";
+
     document.querySelectorAll(".tab-btn").forEach((b,i)=>{
         b.classList.toggle("active", i===n-1);
     });
-
+applyHideZero();
 }
 /* ============ GLOBAL DATA VARIABLE ============ */
 let globalData={};
@@ -563,6 +761,7 @@ let historyData = {};
 let currentHour = "latest";
 let hideZero=false;
 let masterUpdateTime = "--";
+let retentionChannel = "ALL";
 /* ============ LOAD DATA FROM JSON ============ */
 function loadData(){
 
@@ -594,9 +793,15 @@ fetch("data.json?t=" + Date.now())
             `${siteTitles[currentSite]}-实时数据汇总-更新时间(巴西)：${brazilTime}`;
 
     });
-		renderTab1(data);
-        renderTab2();
-        renderTab3();
+renderTab1(data);
+renderTab2();
+renderTab3();
+renderTab4();
+
+const sw = document.getElementById("zeroSwitch");
+if (sw) {
+    sw.checked = !hideZero;
+}
 })
 .catch(err=>{
 
@@ -1307,6 +1512,124 @@ ${row.diff ?? 0}
     table.innerHTML=html;
 
 }
+/* ============ RENDER TAB 4 - 留存率 ============ */
+function renderTab4(){
+
+    const table = document.getElementById("retentionTable");
+    if(!table) return;
+
+    const retention = globalData.retention || {};
+
+    let html = `
+    <thead>
+    <tr>
+        <th>统计时间</th>
+        <th>地区</th>
+        <th>首充金额/人数</th>
+        <th>充值金额</th>
+        <th>提现人数</th>
+        <th>提现金额</th>
+        <th>复充金额/人数</th>
+        <th>复充率</th>
+        <th>2日留存</th>
+        <th>3日留存</th>
+        <th>4日留存</th>
+        <th>5日留存</th>
+        <th>6日留存</th>
+        <th>7日留存</th>
+        <th>10日留存</th>
+        <th>14日留存</th>
+        <th>30日留存</th>
+        <th>60日留存</th>
+    </tr>
+    </thead>
+    <tbody>
+    `;
+
+    const dates = Object.keys(retention).sort().reverse();
+
+    dates.forEach(date=>{
+
+        const row = retention[date]?.[retentionChannel] || {};
+
+        function rate(day){
+
+            const total = Number(row.count || 0);
+            const value = Number(row["count"+day] || 0);
+
+            if(total===0) return "0 (0.00%)";
+
+            return `${value} (${(value/total*100).toFixed(2)}%)`;
+        }
+
+        html += `
+        <tr>
+
+            <td>${date}</td>
+
+            <td>巴西</td>
+
+            <td>${row.amount||0}<span style="padding:0 4px;">/</span>${row.count||0}</td>
+
+            <td>${row.recharge||0}</td>
+
+            <td>${row.withdrawCount||0}</td>
+
+            <td>${row.withdrawals||0}</td>
+
+           <td>${row.repeatRechargeAmount||0}<span style="padding:0 4px;">/</span>${row.repeatRechargeCount||0}</td>
+
+            <td>${
+    row.count
+        ? ((row.repeatRechargeCount||0) / row.count * 100).toFixed(2)
+        : "0.00"
+}%</td>
+
+            <td>${rate(1)}</td>
+
+            <td>${rate(2)}</td>
+
+            <td>${rate(3)}</td>
+
+            <td>${rate(4)}</td>
+
+            <td>${rate(5)}</td>
+
+            <td>${rate(6)}</td>
+
+            <td>${rate(9)}</td>
+
+            <td>${rate(13)}</td>
+
+            <td>${rate(29)}</td>
+
+            <td>${rate(59)}</td>
+
+        </tr>`;
+    });
+
+    html += "</tbody>";
+
+    table.innerHTML = html;
+
+applyHideZero();
+
+}
+
+function changeRetention(channel,btn){
+
+    retentionChannel = channel;
+
+    document.querySelectorAll(".retBtn").forEach(b=>{
+        b.classList.remove("active");
+    });
+
+    btn.classList.add("active");
+
+    renderTab4();
+applyHideZero();
+
+}
 
 /* ============ QUERY DATA FROM BACKEND ============ */
 async function queryData(){
@@ -1391,9 +1714,15 @@ let brazilTime = masterUpdateTime;
     document.getElementById("tableMainTitle").innerHTML =
         `${siteTitles[currentSite]}-实时数据汇总-更新时间(巴西)：${brazilTime}`;
 
-    renderTab1(newData);
-    renderTab2();
-    renderTab3();
+renderTab1(newData);
+renderTab2();
+renderTab3();
+renderTab4();
+
+const sw = document.getElementById("zeroSwitch");
+if (sw) {
+    sw.checked = !hideZero;
+}
 }
 
                 btn.classList.remove("loading");
@@ -1425,12 +1754,9 @@ let brazilTime = masterUpdateTime;
         },1000);
     }
 }
-function toggleZero(){
+function toggleZeroSwitch(){
 
-    hideZero=!hideZero;
-
-    document.getElementById("zeroBtn").innerHTML=
-        hideZero?"👁 显示0值":"👁 隐藏0值";
+    hideZero = !document.getElementById("zeroSwitch").checked;
 
     applyHideZero();
 
@@ -1438,17 +1764,21 @@ function toggleZero(){
 
 function applyHideZero(){
 
-    document.querySelectorAll("#tab2 td").forEach(td=>{
+    document.querySelectorAll("#tab2 td, #tab4 td").forEach(td=>{
 
         const t=td.textContent.trim();
 
-        const isZero=
-            t==="0"||
-            t==="0.00"||
-            t==="0%"||
-            t==="0.00%"||
-            t==="0.000"||
-            t==="0.000%";
+        
+    const isZero =
+    t==="0" ||
+    t==="0.00" ||
+    t==="0%" ||
+    t==="0.00%" ||
+    t==="0.000" ||
+    t==="0.000%" ||
+    t==="0 / 0" ||
+    t==="0/0" ||
+    t==="0 (0.00%)";
 
         td.classList.toggle("hide-zero",hideZero&&isZero);
 

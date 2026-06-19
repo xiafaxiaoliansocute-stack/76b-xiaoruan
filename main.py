@@ -141,18 +141,19 @@ def fix_retention_amounts(row):
     money_fields = [
         "recharge",
         "withdrawals",
-        "repeatRechargeAmount",
-        "amount"
+        "repeatRechargeAmount"
     ]
 
     for key in list(row.keys()):
 
-        if key in money_fields:
-            if isinstance(row[key], (int, float)):
+        if isinstance(row.get(key), (int, float)):
+
+            # amount, amount1, amount2... amount59
+            if key.startswith("amount"):
                 row[key] = round(row[key] / 100)
 
-        if key.startswith("amount"):
-            if isinstance(row[key], (int, float)):
+            # các trường tiền khác
+            elif key in money_fields:
                 row[key] = round(row[key] / 100)
 
     return row
