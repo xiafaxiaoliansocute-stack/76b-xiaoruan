@@ -306,7 +306,10 @@ transform:translateY(-5px);
     color:#169c32;
     font-weight:bold;
 }
-
+.red-text{
+    color:#e53935;
+    font-weight:bold;
+}
 
 </style>
 </head>
@@ -662,6 +665,7 @@ document.getElementById("app").innerHTML=html;
 
 /* ============ UTILITY FUNCTIONS ============ */
 function rateClass(value){return value>0?"green":value<0?"red":"";}
+
 
 /* ============ RETENTION RATE CALCULATION ============ */
 function retentionRate(channel,countField){
@@ -1283,7 +1287,10 @@ html += `<td class="time-col">${showHour}</td>`;
 
 订单提现：${row.orderWithdraw??""}<br>
 
-充提差：${row.diff??0}<br>
+充提差：
+<span class="${Number(row.diff || 0) >= 0 ? 'green-text' : 'red-text'}">
+${row.diff ?? 0}
+</span><br>
 
 赠送金额：${row.discount??0}
 

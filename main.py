@@ -62,10 +62,6 @@ session.mount("http://", adapter)
 # TIME (BRAZIL)
 # ======================
 
-# ======================
-# TIME (BRAZIL)
-# ======================
-
 BRAZIL_TZ = ZoneInfo("America/Sao_Paulo")
 now_br = datetime.now(BRAZIL_TZ)
 # 00:00 ~ 00:59 => toàn bộ báo cáo lùi về 1 ngày

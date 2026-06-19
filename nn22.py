@@ -59,9 +59,6 @@ adapter = HTTPAdapter(
 session.mount("https://", adapter)
 session.mount("http://", adapter)
 
-# ======================
-# TIME (BRAZIL)
-# ======================
 
 # ======================
 # TIME (BRAZIL)
@@ -948,7 +945,7 @@ import subprocess
 
 try:
     subprocess.run(
-        ["git", "add", "data.json"],
+        ["git", "add", "nn22.json"],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
     )
