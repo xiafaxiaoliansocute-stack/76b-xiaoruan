@@ -76,6 +76,10 @@ th{background:#bfc5cc;color:#222;}
 .hide-col{
     display:none !important;
 }
+.hide-zero{
+    color:transparent !important;
+    text-shadow:none !important;
+}
 
 /* ============ QUERY BUTTON ============ */
 .run-btn{background:linear-gradient(135deg,#00c853,#009624);color:#fff;border:none;padding:12px 24px;border-radius:12px;cursor:pointer;margin-bottom:10px;font-weight:bold;font-size:16px;box-shadow:0 8px 20px rgba(0,200,83,.35);transition:.25s;}
@@ -328,6 +332,13 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 <div id="updateTimeHero">📅 数据更新时间：--</div>
 <h1>JS团队实时数据汇总</h1>
 <button class="run-btn" onclick="queryData()">🔍 查询数据</button>
+<button
+    class="run-btn"
+    id="zeroBtn"
+    onclick="toggleZero()"
+    style="background:#666;">
+    👁 隐藏0值
+</button>
 </div>
 </div>
 
@@ -461,6 +472,7 @@ document.querySelectorAll(".tab-btn").forEach((b,i)=>{b.classList.toggle("active
 
 /* ============ GLOBAL DATA VARIABLE ============ */
 let globalData={};
+let hideZero=false;
 let masterUpdateTime = "--";
 /* ============ LOAD DATA FROM JSON ============ */
 function loadData(){
@@ -1079,6 +1091,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
       </tr>`;
     
     document.getElementById("body").innerHTML = html;
+    applyHideZero();
 }); 
 }
 /* ============ QUERY DATA FROM BACKEND ============ */
@@ -1197,7 +1210,36 @@ let brazilTime = masterUpdateTime;
         },1000);
     }
 }
+function toggleZero(){
 
+    hideZero=!hideZero;
+
+    document.getElementById("zeroBtn").innerHTML=
+        hideZero?"👁 显示0值":"👁 隐藏0值";
+
+    applyHideZero();
+
+}
+
+function applyHideZero(){
+
+    document.querySelectorAll("#tab2 td").forEach(td=>{
+
+        const t=td.textContent.trim();
+
+        const isZero=
+            t==="0"||
+            t==="0.00"||
+            t==="0%"||
+            t==="0.00%"||
+            t==="0.000"||
+            t==="0.000%";
+
+        td.classList.toggle("hide-zero",hideZero&&isZero);
+
+    });
+
+}
 /* ============ LOGIN / LOGOUT ============ */
 function login(){
 
