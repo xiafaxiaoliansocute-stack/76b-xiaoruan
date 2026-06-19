@@ -257,47 +257,56 @@ transform:translateY(-5px);
 
 .realtime-wrap{
     width:100%;
-    overflow:auto;
+    height:calc(100vh - 220px);
+    overflow-y:auto;
+    overflow-x:auto;
     background:#fff;
     border-radius:15px;
-    padding:15px;
+    position:relative;
 }
 
 #realtimeTable{
     width:100%;
     border-collapse:collapse;
+    table-layout:fixed;
     font-size:14px;
 }
 
-#realtimeTable th,
-#realtimeTable td{
+#realtimeTable thead th{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:#f3f3f3;
+    height:42px;
     border:1px solid #ddd;
-    vertical-align:top;
-    padding:6px 10px;
 }
 
-#realtimeTable th{
-    background:#f3f3f3;
-    font-weight:bold;
+#realtimeTable td{
+    border:1px solid #ddd;
+    padding:8px;
+    vertical-align:top;
 }
 
 .time-col{
     width:90px;
+    min-width:90px;
+    max-width:90px;
     text-align:center;
-    background:#fafafa;
     font-weight:bold;
+    background:#fafafa;
 }
 
 .realtime-cell{
     line-height:1.25;
     white-space:normal;
-    font-size:20px;
+    font-size:17px;
 }
 
 .green-text{
     color:#169c32;
     font-weight:bold;
 }
+
 
 </style>
 </head>
@@ -493,7 +502,6 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
     </div>
 
 </div>
-
     
 <script>
     let currentSite = "76B";
@@ -548,6 +556,8 @@ function switchTab(n){
 }
 /* ============ GLOBAL DATA VARIABLE ============ */
 let globalData={};
+let historyData = {};
+let currentHour = "latest";
 let hideZero=false;
 let masterUpdateTime = "--";
 /* ============ LOAD DATA FROM JSON ============ */
@@ -559,7 +569,9 @@ function loadData(){
 
 	.then(r=>r.json())
 	.then(data=>{
-globalData=data;
+historyData = data.history || {};
+
+globalData = data;
 
 fetch("data.json?t=" + Date.now())
     .then(r => r.json())
@@ -1214,13 +1226,21 @@ function renderTab3(){
 
     html+="<tbody>";
 
-    const hours=Object.keys(realtime).sort().reverse();
+    let hours = Object.keys(realtime).sort().reverse();
+
+// Đưa 00:00 lên đầu và đổi tên thành 24:00
+if (hours.includes("00:00")) {
+    hours = hours.filter(h => h !== "00:00");
+    hours.unshift("00:00");
+}
 
     hours.forEach(hour=>{
 
         html+="<tr>";
 
-        html+=`<td class="time-col">${hour}</td>`;
+        const showHour = hour === "00:00" ? "24:00" : hour;
+
+html += `<td class="time-col">${showHour}</td>`;
 
         dates.forEach(date=>{
 
