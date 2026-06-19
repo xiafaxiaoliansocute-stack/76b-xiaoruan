@@ -14,7 +14,7 @@ TOKEN = "ilv8fn0hxnth6ejkksppgkjpxij3exgt5eoapvfb"
 
 BASE_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.effect"
 HOUR_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportSum"
-REALTIME_URL = "https://api3.a-b-c-5.com/api/backend/trpc/realTimeData.list"
+REALTIME_URL = "https://api6.o-9-d-4.com/api/backend/trpc/realTimeData.list"
 
 
 TENANT_ID = 2175621
@@ -962,7 +962,7 @@ try:
         print("✅ Commit success")
 
     subprocess.run(
-        ["git", "push", "origin", "main"],
+        ["git", "push", "origin", "nn22"],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
     )
