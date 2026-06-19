@@ -358,9 +358,16 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 
     <!-- Tab -->
     <div class="tab-bar">
-        <div class="tab-btn active" onclick="switchTab(1)">📊 推广效果</div>
-        <div class="tab-btn" onclick="switchTab(2)">🧮 实时数据分析</div>
+    <div class="tab-btn active" onclick="switchTab(1)">📊 推广效果</div>
+
+    <div class="tab-btn" onclick="switchTab(2)">
+        🧮 实时数据分析
     </div>
+
+    <div class="tab-btn" onclick="switchTab(3)">
+        📈 实时数据
+    </div>
+</div>
 
 </div>
 
@@ -428,7 +435,22 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 <tbody id="body"></tbody>
 </table>
 </div>
+<!-- ============ TAB 3 - REAL-TIME DATA ============ -->
+<div id="tab3" style="display:none">
 
+    <div style="
+        background:#fff;
+        border-radius:15px;
+        padding:60px;
+        text-align:center;
+        font-size:32px;
+        font-weight:bold;
+        color:#333;
+    ">
+        📈 实时数据
+    </div>
+
+</div>
 <script>
     let currentSite = "76B";
 
@@ -465,11 +487,21 @@ loadData();
 }
 /* ============ TAB SWITCHING ============ */
 function switchTab(n){
-document.getElementById("tab1").style.display=n===1?"block":"none";
-document.getElementById("tab2").style.display=n===2?"block":"none";
-document.querySelectorAll(".tab-btn").forEach((b,i)=>{b.classList.toggle("active",i===n-1);});
-}
 
+    document.getElementById("tab1").style.display =
+        n===1 ? "block" : "none";
+
+    document.getElementById("tab2").style.display =
+        n===2 ? "block" : "none";
+
+    document.getElementById("tab3").style.display =
+        n===3 ? "block" : "none";
+
+    document.querySelectorAll(".tab-btn").forEach((b,i)=>{
+        b.classList.toggle("active", i===n-1);
+    });
+
+}
 /* ============ GLOBAL DATA VARIABLE ============ */
 let globalData={};
 let hideZero=false;
@@ -1094,6 +1126,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
     applyHideZero();
 }); 
 }
+
 /* ============ QUERY DATA FROM BACKEND ============ */
 async function queryData(){
 
