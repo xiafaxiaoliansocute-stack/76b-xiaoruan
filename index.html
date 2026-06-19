@@ -251,6 +251,54 @@ transform:translateY(-5px);
 }
 
 }
+/* ==========================
+   TAB 3 - 实时数据
+========================== */
+
+.realtime-wrap{
+    width:100%;
+    overflow:auto;
+    background:#fff;
+    border-radius:15px;
+    padding:15px;
+}
+
+#realtimeTable{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+}
+
+#realtimeTable th,
+#realtimeTable td{
+    border:1px solid #ddd;
+    vertical-align:top;
+    padding:6px 10px;
+}
+
+#realtimeTable th{
+    background:#f3f3f3;
+    font-weight:bold;
+}
+
+.time-col{
+    width:90px;
+    text-align:center;
+    background:#fafafa;
+    font-weight:bold;
+}
+
+.realtime-cell{
+    line-height:1.25;
+    white-space:normal;
+    font-size:20px;
+}
+
+.green-text{
+    color:#169c32;
+    font-weight:bold;
+}
+
 </style>
 </head>
 <script>
@@ -438,19 +486,15 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 <!-- ============ TAB 3 - REAL-TIME DATA ============ -->
 <div id="tab3" style="display:none">
 
-    <div style="
-        background:#fff;
-        border-radius:15px;
-        padding:60px;
-        text-align:center;
-        font-size:32px;
-        font-weight:bold;
-        color:#333;
-    ">
-        📈 实时数据
+    <div class="realtime-wrap">
+
+        <table id="realtimeTable"></table>
+
     </div>
 
 </div>
+
+    
 <script>
     let currentSite = "76B";
 
@@ -536,7 +580,8 @@ fetch("data.json?t=" + Date.now())
 
     });
 		renderTab1(data);
-		renderTab2();
+        renderTab2();
+        renderTab3();
 })
 .catch(err=>{
 
@@ -1127,6 +1172,115 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
 }); 
 }
 
+/* ============ RENDER TAB 3 - REALTIME ============ */
+
+function renderTab3(){
+
+    const table=document.getElementById("realtimeTable");
+
+    if(!table) return;
+
+    const realtime=globalData.realtime||{};
+
+    const dates=[];
+
+    Object.values(realtime).forEach(v=>{
+
+        Object.keys(v).forEach(d=>{
+
+            if(!dates.includes(d)) dates.push(d);
+
+        });
+
+    });
+
+    dates.sort().reverse();
+
+    let html="<thead>";
+
+    html+="<tr>";
+
+    html+='<th class="time-col">时间</th>';
+
+    dates.forEach(d=>{
+
+        html+=`<th>${d}</th>`;
+
+    });
+
+    html+="</tr>";
+
+    html+="</thead>";
+
+    html+="<tbody>";
+
+    const hours=Object.keys(realtime).sort().reverse();
+
+    hours.forEach(hour=>{
+
+        html+="<tr>";
+
+        html+=`<td class="time-col">${hour}</td>`;
+
+        dates.forEach(date=>{
+
+            const row=realtime[hour]?.[date];
+
+            if(!row){
+
+                html+="<td></td>";
+
+                return;
+
+            }
+
+            html+=`
+<td class="realtime-cell">
+
+登录用户：${row.loginCount??0}<br>
+
+新增注册：${row.registerCount??0}<br>
+
+投注用户：${row.betCount??0}<br>
+
+同时在线：${row.onlineCount??0}<br>
+
+首充用户：${row.firstRechargeCount??0}<br>
+
+裂变首充：${row.subFirstRechargeCount??0}<br>
+
+充值用户：${row.rechargeCount??0}<br>
+
+<span class="green-text">
+平台盈利：${row.tenantProfit??0}
+</span><br>
+
+人工充值：${row.manualRecharge??""}<br>
+
+订单充值：${row.orderRecharge??""}<br>
+
+人工提现：${row.manualWithdraw??""}<br>
+
+订单提现：${row.orderWithdraw??""}<br>
+
+充提差：${row.diff??0}<br>
+
+赠送金额：${row.discount??0}
+
+</td>`;
+
+        });
+
+        html+="</tr>";
+
+    });
+
+    html+="</tbody>";
+
+    table.innerHTML=html;
+
+}
+
 /* ============ QUERY DATA FROM BACKEND ============ */
 async function queryData(){
 
@@ -1212,6 +1366,7 @@ let brazilTime = masterUpdateTime;
 
     renderTab1(newData);
     renderTab2();
+    renderTab3();
 }
 
                 btn.classList.remove("loading");

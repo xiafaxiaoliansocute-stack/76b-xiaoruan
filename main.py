@@ -14,6 +14,7 @@ TOKEN = "88vpmcnhdvuq8otfmqypjvyzvxt352cmhnhog2xm"
 
 BASE_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.effect"
 HOUR_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.hourReportSum"
+REALTIME_URL = "https://api3.a-b-c-5.com/api/backend/trpc/realTimeData.list"
 
 TENANT_ID = 5317688
 REGION_ID = 1
@@ -90,7 +91,7 @@ result_data = {
     "report_day":
         report_day.strftime("%Y-%m-%d")
 }
-
+result_data["realtime"] = {}
 result_data["hour_report"] = {}
 
 # ======================
@@ -312,7 +313,52 @@ def fix_hour_amounts(obj):
 
     return obj
 
+def fix_realtime_amounts(item):
 
+    recharge = round(item.get("rechargeAmount", 0) / 100)
+    withdraw = round(item.get("withdrawAmount", 0) / 100)
+
+    return {
+
+        "loginCount": item.get("loginCount", 0),
+
+        "registerCount": item.get("registerCount", 0),
+
+        "betCount": item.get("betCount", 0),
+
+        "onlineCount": item.get("onlineCount", 0),
+
+        "firstRechargeCount":
+            item.get("firstRechargeCount", 0),
+
+        "subFirstRechargeCount":
+            item.get("subFirstRechargeCount", 0),
+
+        "rechargeCount":
+            item.get("rechargeCount", 0),
+
+        "tenantProfit":
+            round(item.get("tenantProfitAmount", 0) / 100, 2),
+
+        "manualRecharge":
+            f'{round(item.get("manualRechargeAmount",0)/100)} / {item.get("manualRechargeTimes",0)}',
+
+        "orderRecharge":
+            f'{round(item.get("orderRechargeAmount",0)/100)} / {item.get("orderRechargeTimes",0)}',
+
+        "manualWithdraw":
+            f'{round(item.get("manualWithdrawAmount",0)/100)} / {item.get("manualWithdrawTimes",0)}',
+
+        "orderWithdraw":
+            f'{round(item.get("orderWithdrawAmount",0)/100)} / {item.get("orderWithdrawTimes",0)}',
+
+        "diff":
+            recharge - withdraw,
+
+        "discount":
+            round(item.get("discountAmount",0)/100,2)
+
+    }
 # ======================
 # HOUR REPORT (昨日)
 # ======================
@@ -809,7 +855,77 @@ for key, parent_type in REPEAT_TYPES.items():
         print("repeat rate error:", key, e)
         result_data["repeat_rate"][key] = 0
 
-       
+ # ======================
+# REALTIME (4 DAYS)
+# ======================
+
+print("Loading realtime data...")
+
+from datetime import datetime
+
+dates = [
+    (report_day - timedelta(days=i)).strftime("%Y-%m-%d")
+    for i in range(4)
+]
+
+for date in dates:
+
+    try:
+
+        params = {
+            "input": json.dumps({
+                "json": {
+                    "tenantId": TENANT_ID,
+                    "dateTime": date
+                }
+            }, separators=(',', ':'))
+        }
+
+        res = session.get(
+            REALTIME_URL,
+            params=params,
+            timeout=(3,20)
+        )
+
+        realtime_json = (
+            res.json()
+            .get("result", {})
+            .get("data", {})
+            .get("json", [])
+        )
+
+        for item in realtime_json:
+
+            try:
+
+                utc_time = datetime.fromisoformat(
+                    item["createTime"].replace("Z","")
+                )
+
+                brazil_time = utc_time - timedelta(hours=3)
+
+                if brazil_time.minute != 0:
+                    continue
+
+                time_key = brazil_time.strftime("%H:%M")
+
+                if time_key not in result_data["realtime"]:
+                    result_data["realtime"][time_key] = {}
+
+                result_data["realtime"][time_key][date] = fix_realtime_amounts(item)
+                    
+                result_data["realtime"] = dict(
+    sorted(result_data["realtime"].items())
+)
+
+            except Exception as e:
+                print("Realtime Parse Error:", e)
+
+        print(f"✅ realtime {date}")
+
+    except Exception as e:
+
+        print(f"❌ realtime {date}", e)      
 # ======================
 # SAVE JSON
 # ======================
