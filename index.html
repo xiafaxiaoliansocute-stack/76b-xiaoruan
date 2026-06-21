@@ -596,6 +596,7 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 
 </div>
 
+
 </div>
 
 <!-- ============ TAB 1 - PROMOTION PERFORMANCE ============ -->
@@ -1033,7 +1034,7 @@ const list=[
 {show:"回访",key:"回访"},
 {show:"ws-h5",key:"ws-h5"},
 {show:"官方渠道",key:"官方渠道"},
-{show:"-",key:"ws"},
+{show:"其他",key:"其他"},
 ];
 
 let html="";
@@ -1057,6 +1058,7 @@ list.forEach(item=>{
             "tt-pwa",
             "kwai-pwa",
             "ws-h5",
+            "其他",
             "回访"
         ];
 
@@ -1253,7 +1255,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                                     ? "14日留存"
                                     : item.show === "官方渠道"
                                         ? "30日留存"
-                                        : item.show === "-"
+                                        : item.show === "其他"
                                             ? "60日留存"
                                                          : "-";
 
@@ -1284,7 +1286,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                                     ? retentionRate("ALL", 13)
                                     : item.show === "官方渠道"
                                         ? retentionRate("ALL", 29)
-                                        : item.show === "-"
+                                        : item.show === "其他"
                                             ? retentionRate("ALL", 59)
                                                                         : "";
 
@@ -1306,7 +1308,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                                     ? retentionRateFB(13)
                                     : item.show === "官方渠道"
                                         ? retentionRateFB(29)
-                                        : item.show === "-"
+                                        : item.show === "其他"
                                             ? retentionRateFB(59)
                                                                     : "";
 
@@ -1328,7 +1330,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                                     ? retentionRate("tt-pwa", 13)
                                     : item.show === "官方渠道"
                                         ? retentionRate("tt-pwa", 29)
-                                     : item.show === "-"
+                                     : item.show === "其他"
                                             ? retentionRate("tt-pwa", 59)
                                                                           : "";
 
@@ -1350,7 +1352,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                                     ? retentionRate("kwai-pwa", 13)
                                     : item.show === "官方渠道"
                                         ? retentionRate("kwai-pwa", 29)
-                                        : item.show === "-"
+                                        : item.show === "其他"
                                             ? retentionRate("kwai-pwa", 59)
                                                                           : "";
 
@@ -1372,7 +1374,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                                     ? retentionRate("ws-h5", 13)
                                     : item.show === "官方渠道"
                                         ? retentionRate("ws-h5", 29)
-                                        : item.show === "-"
+                                        : item.show === "其他"
                                             ? retentionRate("ws-h5", 59)
                                                                           : "";
                                     
@@ -1461,7 +1463,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
     let rateClassDiff = rateClass(parseFloat(diffRate));
     let diffClass = diff > 0 ? "green" : diff < 0 ? "red" : "";
     html+=`<tr>
-      <td class="gray">${item.show}</td>
+      <td class="gray" style="font-weight:700;">${item.show}</td>
       <td class="${rateClassReg}">${regRechargeRate}</td>
       <td>${hour.promotionList?.firstRechargeCount||0}</td>
       <td>${hour.promotionList?.firstRechargeAmount||0}</td>
@@ -1523,9 +1525,12 @@ const list=[
 {show:"KW-PWA",key:"kwai-pwa"},
 {show:"DSP-H5",key:"dsp-h5"},
 {show:"ws-h5",key:"ws-h5"},
-{show:"回访",key:"回访"},
 {show:"官方渠道",key:"官方渠道"},
-{show:"-",key:"ws"},
+{show:"回访",key:"回访"},
+{show:"其他",key:"其他"},
+{show:"- ",key:"test"},
+{show:"-",key:"test1"},
+
 ];
 
 let html="";
@@ -1552,6 +1557,7 @@ list.forEach(item=>{
             "kwai-pwa",
             "dsp-h5",
             "ws-h5",
+            "其他",
             "回访"
         ];
 
@@ -1875,11 +1881,11 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                             ? retentionRate("ALL", 6)
                             : item.show === "TT-PWA"
                                 ? retentionRate("ALL", 9)
-                                : item.show === "ws-h5"
+                                : item.show === "KW-PWA"
                                     ? retentionRate("ALL", 13)
-                                    : item.show === "KW-PWA"
+                                    : item.show === "DSP-H5"
                                         ? retentionRate("ALL", 29)
-                                        : item.show === "DSP-H5"
+                                        : item.show === "ws-h5"
                                             ? retentionRate("ALL", 59)
                                             
                                                                         : "";
@@ -2057,7 +2063,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
     let rateClassDiff = rateClass(parseFloat(diffRate));
     let diffClass = diff > 0 ? "green" : diff < 0 ? "red" : "";
     html+=`<tr>
-      <td class="gray">${item.show}</td>
+      <td class="gray" style="font-weight:700;">${item.show}</td>
       <td class="${rateClassReg}">${regRechargeRate}</td>
       <td>${hour.promotionList?.firstRechargeCount||0}</td>
       <td>${hour.promotionList?.firstRechargeAmount||0}</td>

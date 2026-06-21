@@ -26,7 +26,8 @@ CHANNELS = {
     "tt-pwa": 5551,
     "kwai-pwa": 5555,
     "回访": 5585,
-        "ws-h5": 5586
+    "其他": 5540, 
+    "ws-h5": 5586
 
 }
 
@@ -901,7 +902,8 @@ for date in dates:
 
                 brazil_time = utc_time - timedelta(hours=3)
 
-                if brazil_time.minute != 0:
+                   # Chỉ lấy các mốc 00 và 30 phút
+                if brazil_time.minute not in (0, 30):
                     continue
 
                 time_key = brazil_time.strftime("%H:%M")

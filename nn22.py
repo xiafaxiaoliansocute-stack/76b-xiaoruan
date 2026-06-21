@@ -22,12 +22,16 @@ REGION_ID = 1
 
 CHANNELS = {
     "fb-h5": 35,
+    "fb-h5-a": 45,
     "fb-pwa": 37,
+    "fb-pwa-a": 46,
     "fb-ios": 36,
     "tt-pwa": 39,
     "kwai-pwa": 38,
+    "dsp-h5": 47,
     "回访": 34,
-        "ws-h5": 40
+    "其他": 33,
+    "ws-h5": 40
 
 }
 
@@ -903,8 +907,9 @@ for date in dates:
 
                 brazil_time = utc_time - timedelta(hours=3)
 
-                if brazil_time.minute != 0:
-                    continue
+                 # Chỉ lấy các mốc 00 và 30 phút
+                if brazil_time.minute not in (0, 30):
+                 continue
 
                 time_key = brazil_time.strftime("%H:%M")
 
