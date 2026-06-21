@@ -24,20 +24,25 @@ def run_script():
     try:
         print("========== RUN PARALLEL ==========")
 
-        # CHẠY SONG SONG 2 FILE
-        subprocess.Popen(
+        # Chạy song song
+        p1 = subprocess.Popen(
             ["python3", os.path.join(BASE_DIR, "main.py")]
         )
 
-        subprocess.Popen(
+        p2 = subprocess.Popen(
             ["python3", os.path.join(BASE_DIR, "nn22.py")]
         )
 
-        print("🚀 main.py + nn22.py started")
+        # Đợi cả hai chạy xong
+        p1.wait()
+        p2.wait()
+
+        print("✅ main.py finished")
+        print("✅ nn22.py finished")
 
         return jsonify({
             "success": True,
-            "message": "Both scripts started in parallel"
+            "message": "Both scripts finished"
         })
 
     except Exception as e:
@@ -48,7 +53,6 @@ def run_script():
             "success": False,
             "error": str(e)
         })
-
 
 # ================= DATA FILE =================
 @app.route("/data.json")
