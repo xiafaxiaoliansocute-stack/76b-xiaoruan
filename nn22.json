@@ -1,5 +1,5 @@
 {
-    "update_time_brazil": "2026-06-21 02:00:34",
+    "update_time_brazil": "2026-06-21 03:00:37",
     "report_day": "2026-06-21",
     "realtime": {
         "00:00": {
@@ -185,6 +185,22 @@
             }
         },
         "03:00": {
+            "2026-06-21": {
+                "loginCount": 1,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 0,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-06-20": {
                 "loginCount": 0,
                 "registerCount": 0,
@@ -1277,7 +1293,7 @@
                 "rechargeAmount": 0
             }
         },
-        "fb-ios": {
+        "fb-pwa": {
             "tenantId": 2175621,
             "tenantName": "16011",
             "regionId": 1,
@@ -1359,7 +1375,7 @@
                 "rechargeAmount": 0
             }
         },
-        "fb-pwa": {
+        "tt-pwa": {
             "tenantId": 2175621,
             "tenantName": "16011",
             "regionId": 1,
@@ -1441,7 +1457,7 @@
                 "rechargeAmount": 0
             }
         },
-        "tt-pwa": {
+        "fb-ios": {
             "tenantId": 2175621,
             "tenantName": "16011",
             "regionId": 1,
@@ -1528,7 +1544,7 @@
         },
         "promotionList": {}
     },
-    "fb-pwa": {
+    "fb-h5": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -1618,7 +1634,7 @@
         },
         "promotionList": {}
     },
-    "tt-pwa": {
+    "回访": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -1663,52 +1679,7 @@
         },
         "promotionList": {}
     },
-    "fb-h5": {
-        "normalList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "parentList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "childList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "promotionList": {}
-    },
-    "fb-ios": {
+    "fb-pwa": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -1798,7 +1769,52 @@
         },
         "promotionList": {}
     },
-    "回访": {
+    "tt-pwa": {
+        "normalList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "parentList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "childList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "promotionList": {}
+    },
+    "fb-ios": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -2013,7 +2029,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-05-23",
                 "type": "recharge",
                 "recharge": 0,
@@ -2069,7 +2085,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-05-23",
                 "type": "recharge",
                 "recharge": 0,
@@ -2181,7 +2197,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-05-23",
                 "type": "recharge",
                 "recharge": 0,
@@ -2237,7 +2253,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-05-23",
                 "type": "recharge",
                 "recharge": 0,
@@ -2463,7 +2479,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-05-24",
                 "type": "recharge",
                 "recharge": 0,
@@ -2519,7 +2535,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-05-24",
                 "type": "recharge",
                 "recharge": 0,
@@ -2631,7 +2647,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-05-24",
                 "type": "recharge",
                 "recharge": 0,
@@ -2687,7 +2703,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-05-24",
                 "type": "recharge",
                 "recharge": 0,
@@ -2913,7 +2929,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-05-25",
                 "type": "recharge",
                 "recharge": 0,
@@ -2969,7 +2985,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-05-25",
                 "type": "recharge",
                 "recharge": 0,
@@ -3081,7 +3097,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-05-25",
                 "type": "recharge",
                 "recharge": 0,
@@ -3137,7 +3153,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-05-25",
                 "type": "recharge",
                 "recharge": 0,
@@ -3363,7 +3379,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-05-26",
                 "type": "recharge",
                 "recharge": 0,
@@ -3419,7 +3435,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-05-26",
                 "type": "recharge",
                 "recharge": 0,
@@ -3531,7 +3547,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-05-26",
                 "type": "recharge",
                 "recharge": 0,
@@ -3587,7 +3603,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-05-26",
                 "type": "recharge",
                 "recharge": 0,
@@ -3813,7 +3829,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-05-27",
                 "type": "recharge",
                 "recharge": 0,
@@ -3869,7 +3885,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-05-27",
                 "type": "recharge",
                 "recharge": 0,
@@ -3981,7 +3997,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-05-27",
                 "type": "recharge",
                 "recharge": 0,
@@ -4037,7 +4053,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-05-27",
                 "type": "recharge",
                 "recharge": 0,
@@ -4263,7 +4279,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-05-28",
                 "type": "recharge",
                 "recharge": 0,
@@ -4319,7 +4335,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-05-28",
                 "type": "recharge",
                 "recharge": 0,
@@ -4431,7 +4447,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-05-28",
                 "type": "recharge",
                 "recharge": 0,
@@ -4487,7 +4503,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-05-28",
                 "type": "recharge",
                 "recharge": 0,
@@ -4713,7 +4729,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-05-29",
                 "type": "recharge",
                 "recharge": 0,
@@ -4769,7 +4785,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-05-29",
                 "type": "recharge",
                 "recharge": 0,
@@ -4881,7 +4897,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-05-29",
                 "type": "recharge",
                 "recharge": 0,
@@ -4937,7 +4953,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-05-29",
                 "type": "recharge",
                 "recharge": 0,
@@ -5163,7 +5179,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-05-30",
                 "type": "recharge",
                 "recharge": 0,
@@ -5219,7 +5235,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-05-30",
                 "type": "recharge",
                 "recharge": 0,
@@ -5331,7 +5347,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-05-30",
                 "type": "recharge",
                 "recharge": 0,
@@ -5387,7 +5403,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-05-30",
                 "type": "recharge",
                 "recharge": 0,
@@ -5613,7 +5629,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-05-31",
                 "type": "recharge",
                 "recharge": 0,
@@ -5669,7 +5685,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-05-31",
                 "type": "recharge",
                 "recharge": 0,
@@ -5781,7 +5797,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-05-31",
                 "type": "recharge",
                 "recharge": 0,
@@ -5837,7 +5853,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-05-31",
                 "type": "recharge",
                 "recharge": 0,
@@ -6063,7 +6079,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-01",
                 "type": "recharge",
                 "recharge": 0,
@@ -6119,7 +6135,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-01",
                 "type": "recharge",
                 "recharge": 0,
@@ -6231,7 +6247,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-01",
                 "type": "recharge",
                 "recharge": 0,
@@ -6287,7 +6303,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-01",
                 "type": "recharge",
                 "recharge": 0,
@@ -6513,7 +6529,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-02",
                 "type": "recharge",
                 "recharge": 0,
@@ -6569,7 +6585,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-02",
                 "type": "recharge",
                 "recharge": 0,
@@ -6681,7 +6697,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-02",
                 "type": "recharge",
                 "recharge": 0,
@@ -6737,7 +6753,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-02",
                 "type": "recharge",
                 "recharge": 0,
@@ -6963,7 +6979,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-03",
                 "type": "recharge",
                 "recharge": 0,
@@ -7019,7 +7035,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-03",
                 "type": "recharge",
                 "recharge": 0,
@@ -7131,7 +7147,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-03",
                 "type": "recharge",
                 "recharge": 0,
@@ -7187,7 +7203,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-03",
                 "type": "recharge",
                 "recharge": 0,
@@ -7413,7 +7429,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-04",
                 "type": "recharge",
                 "recharge": 0,
@@ -7469,7 +7485,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-04",
                 "type": "recharge",
                 "recharge": 0,
@@ -7581,7 +7597,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-04",
                 "type": "recharge",
                 "recharge": 0,
@@ -7637,7 +7653,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-04",
                 "type": "recharge",
                 "recharge": 0,
@@ -7863,7 +7879,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-05",
                 "type": "recharge",
                 "recharge": 0,
@@ -7919,7 +7935,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-05",
                 "type": "recharge",
                 "recharge": 0,
@@ -8031,7 +8047,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-05",
                 "type": "recharge",
                 "recharge": 0,
@@ -8087,7 +8103,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-05",
                 "type": "recharge",
                 "recharge": 0,
@@ -8313,7 +8329,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-06",
                 "type": "recharge",
                 "recharge": 0,
@@ -8369,7 +8385,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-06",
                 "type": "recharge",
                 "recharge": 0,
@@ -8481,7 +8497,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-06",
                 "type": "recharge",
                 "recharge": 0,
@@ -8537,7 +8553,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-06",
                 "type": "recharge",
                 "recharge": 0,
@@ -8763,7 +8779,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-07",
                 "type": "recharge",
                 "recharge": 0,
@@ -8819,7 +8835,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-07",
                 "type": "recharge",
                 "recharge": 0,
@@ -8931,7 +8947,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-07",
                 "type": "recharge",
                 "recharge": 0,
@@ -8987,7 +9003,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-07",
                 "type": "recharge",
                 "recharge": 0,
@@ -9213,7 +9229,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-08",
                 "type": "recharge",
                 "recharge": 0,
@@ -9269,7 +9285,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-08",
                 "type": "recharge",
                 "recharge": 0,
@@ -9381,7 +9397,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-08",
                 "type": "recharge",
                 "recharge": 0,
@@ -9437,7 +9453,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-08",
                 "type": "recharge",
                 "recharge": 0,
@@ -9663,7 +9679,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-09",
                 "type": "recharge",
                 "recharge": 0,
@@ -9719,7 +9735,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-09",
                 "type": "recharge",
                 "recharge": 0,
@@ -9831,7 +9847,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-09",
                 "type": "recharge",
                 "recharge": 0,
@@ -9887,7 +9903,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-09",
                 "type": "recharge",
                 "recharge": 0,
@@ -10113,7 +10129,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-10",
                 "type": "recharge",
                 "recharge": 0,
@@ -10169,7 +10185,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-10",
                 "type": "recharge",
                 "recharge": 0,
@@ -10281,7 +10297,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-10",
                 "type": "recharge",
                 "recharge": 0,
@@ -10337,7 +10353,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-10",
                 "type": "recharge",
                 "recharge": 0,
@@ -10563,7 +10579,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-11",
                 "type": "recharge",
                 "recharge": 0,
@@ -10619,7 +10635,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-11",
                 "type": "recharge",
                 "recharge": 0,
@@ -10731,7 +10747,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-11",
                 "type": "recharge",
                 "recharge": 0,
@@ -10787,7 +10803,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-11",
                 "type": "recharge",
                 "recharge": 0,
@@ -11013,7 +11029,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-12",
                 "type": "recharge",
                 "recharge": 0,
@@ -11069,7 +11085,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-12",
                 "type": "recharge",
                 "recharge": 0,
@@ -11181,7 +11197,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-12",
                 "type": "recharge",
                 "recharge": 0,
@@ -11237,7 +11253,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-12",
                 "type": "recharge",
                 "recharge": 0,
@@ -11463,7 +11479,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-13",
                 "type": "recharge",
                 "recharge": 0,
@@ -11519,7 +11535,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-13",
                 "type": "recharge",
                 "recharge": 0,
@@ -11631,7 +11647,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-13",
                 "type": "recharge",
                 "recharge": 0,
@@ -11687,7 +11703,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-13",
                 "type": "recharge",
                 "recharge": 0,
@@ -11913,7 +11929,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-14",
                 "type": "recharge",
                 "recharge": 0,
@@ -11969,7 +11985,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-14",
                 "type": "recharge",
                 "recharge": 0,
@@ -12081,7 +12097,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-14",
                 "type": "recharge",
                 "recharge": 0,
@@ -12137,7 +12153,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-14",
                 "type": "recharge",
                 "recharge": 0,
@@ -12363,7 +12379,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-15",
                 "type": "recharge",
                 "recharge": 0,
@@ -12419,7 +12435,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-15",
                 "type": "recharge",
                 "recharge": 0,
@@ -12531,7 +12547,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-15",
                 "type": "recharge",
                 "recharge": 0,
@@ -12587,7 +12603,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-15",
                 "type": "recharge",
                 "recharge": 0,
@@ -12813,7 +12829,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-16",
                 "type": "recharge",
                 "recharge": 0,
@@ -12869,7 +12885,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-16",
                 "type": "recharge",
                 "recharge": 0,
@@ -12981,7 +12997,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-16",
                 "type": "recharge",
                 "recharge": 0,
@@ -13037,7 +13053,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-16",
                 "type": "recharge",
                 "recharge": 0,
@@ -13263,7 +13279,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-17",
                 "type": "recharge",
                 "recharge": 0,
@@ -13319,7 +13335,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-17",
                 "type": "recharge",
                 "recharge": 0,
@@ -13431,7 +13447,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-17",
                 "type": "recharge",
                 "recharge": 0,
@@ -13487,7 +13503,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-17",
                 "type": "recharge",
                 "recharge": 0,
@@ -13713,7 +13729,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-18",
                 "type": "recharge",
                 "recharge": 0,
@@ -13769,7 +13785,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-18",
                 "type": "recharge",
                 "recharge": 0,
@@ -13881,7 +13897,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-18",
                 "type": "recharge",
                 "recharge": 0,
@@ -13937,7 +13953,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-18",
                 "type": "recharge",
                 "recharge": 0,
@@ -14163,7 +14179,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-19",
                 "type": "recharge",
                 "recharge": 0,
@@ -14219,7 +14235,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-19",
                 "type": "recharge",
                 "recharge": 0,
@@ -14331,7 +14347,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-19",
                 "type": "recharge",
                 "recharge": 0,
@@ -14387,7 +14403,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-19",
                 "type": "recharge",
                 "recharge": 0,
@@ -14613,7 +14629,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-20",
                 "type": "recharge",
                 "recharge": 0,
@@ -14669,7 +14685,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-20",
                 "type": "recharge",
                 "recharge": 0,
@@ -14781,7 +14797,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-20",
                 "type": "recharge",
                 "recharge": 0,
@@ -14837,7 +14853,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-20",
                 "type": "recharge",
                 "recharge": 0,
@@ -15063,7 +15079,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "ws-h5": {
+            "tt-pwa": {
                 "time": "2026-06-21",
                 "type": "recharge",
                 "recharge": 0,
@@ -15119,7 +15135,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "kwai-pwa": {
+            "fb-h5": {
                 "time": "2026-06-21",
                 "type": "recharge",
                 "recharge": 0,
@@ -15231,7 +15247,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "tt-pwa": {
+            "kwai-pwa": {
                 "time": "2026-06-21",
                 "type": "recharge",
                 "recharge": 0,
@@ -15287,7 +15303,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "ws-h5": {
                 "time": "2026-06-21",
                 "type": "recharge",
                 "recharge": 0,
