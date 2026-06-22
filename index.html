@@ -175,20 +175,7 @@ color:white;
     box-shadow:0 8px 25px rgba(0,0,0,.08);
 
 }
-th,
-td{
-
-    border:1px solid #333;
-
-    padding:clamp(4px,0.5vw,10px);
-
-    text-align:center;
-
-    font-size:clamp(10px,0.8vw,16px);
-
-    white-space:nowrap;
-
-}
+th,td{border:1px solid #333;padding:0.35vw;text-align:center;font-size:clamp(9px,0.65vw,16px);white-space:nowrap;}
 tbody tr{transition:.2s;}
 tbody tr:hover{background:#f3f8ff;}
 th{background:#bfc5cc;color:#222;}
@@ -445,7 +432,7 @@ transform:translateY(-5px);
     width:100%;
     border-collapse:collapse;
     table-layout:fixed;
-    font-size:clamp(10px,0.9vw,14px);
+    font-size:14px;
 
 }
 
@@ -472,13 +459,9 @@ transform:translateY(-5px);
 }
 
 .realtime-cell{
-
     line-height:1.25;
-
     white-space:normal;
-
-    font-size:clamp(10px,1vw,17px);
-
+    font-size:17px;
 }
 
 .green-text{
@@ -531,48 +514,43 @@ transform:translateY(-5px);
 .retention-container{
     width:100%;
     height:calc(100vh - 390px);
-    overflow:auto;
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
     background:#fff;
     border-radius:0;
-
 }
 
 .retention-wrap{
 
-    overflow:visible;
+    width:100%;
+    overflow-x:hidden;
+    overflow-y:visible;
 
 }
 
 #retentionHeader,
 #retentionBody{
-
-    width:max-content;
-
-    min-width:100%;
-
+    width:100%;
     border-collapse:collapse;
-
-    table-layout:auto;
-
+    table-layout:fixed;
+    font-size:clamp(10px,2.5vw,14px);
 }
 
 #retentionHeader th,
 #retentionBody td{
-
     box-sizing:border-box;
-
     border:1px solid #ddd;
 
-    padding:clamp(4px,0.6vw,10px);
+    padding:clamp(3px,1vw,10px);
 
     text-align:center;
 
-    white-space:nowrap;
+    white-space:normal;
+    word-break:break-word;
 
-    min-width:70px;
-
-    font-size:clamp(9px,0.8vw,14px);
-
+    font-size:clamp(10px,2.5vw,14px);
 }
 
 #retentionHeader th{
@@ -582,6 +560,25 @@ transform:translateY(-5px);
     padding:10px;
     text-align:center;
     white-space:nowrap;
+}
+
+@media (max-width:768px){
+
+    #retentionHeader th,
+    #retentionBody td{
+
+        padding:3px;
+        font-size:10px;
+
+    }
+
+    .retention-container{
+
+        overflow-y:auto;
+        overflow-x:hidden;
+
+    }
+
 }
 
 </style>
