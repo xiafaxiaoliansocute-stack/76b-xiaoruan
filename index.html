@@ -440,13 +440,16 @@ transform:translateY(-5px);
 .retention-wrap{
     width:100%;
     height:calc(100vh - 220px);
-    overflow:auto;
+    overflow-x:auto;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
     background:#fff;
     border-radius:15px;
 }
 
 #retentionTable{
-    width:100%;
+    min-width:1800px;      /* hoặc 2000px */
+    width:max-content;
     border-collapse:collapse;
     table-layout:auto;
     font-size:14px;
