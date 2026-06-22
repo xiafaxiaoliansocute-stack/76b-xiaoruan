@@ -13,6 +13,8 @@ Features:
 <head>
 <link rel="icon" href="favicon.ico">
 <meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=0.35, maximum-scale=5, user-scalable=yes">
 <title>xiaoruan.vip</title>
 
 <style>
@@ -514,10 +516,11 @@ transform:translateY(-5px);
 .retention-container{
     width:100%;
     height:calc(100vh - 390px);
-    overflow:auto;
-    background:#fff;
-    border-radius:0;
 
+    overflow-x:auto;
+    overflow-y:auto;
+
+    -webkit-overflow-scrolling:touch;
 }
 
 .retention-wrap{
