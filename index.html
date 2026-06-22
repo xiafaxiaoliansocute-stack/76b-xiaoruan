@@ -13,8 +13,6 @@ Features:
 <head>
 <link rel="icon" href="favicon.ico">
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=0.35, maximum-scale=5, user-scalable=yes">
 <title>xiaoruan.vip</title>
 
 <style>
@@ -123,12 +121,7 @@ content="width=device-width, initial-scale=0.35, maximum-scale=5, user-scalable=
 
 }
 /* ============ GLOBAL STYLES ============ */
-body{
-    font-family:Arial;
-    background:#f5f5f5;
-    margin:0;
-    padding:1vw;
-}
+body{font-family:Arial;background:#f5f5f5;margin:0;padding:1vw;}
 *{box-sizing:border-box;}
 
 /* ============ TAB NAVIGATION ============ */
@@ -166,34 +159,13 @@ color:white;
 .section{background:#fff;margin-bottom:25px;border-radius:8px;overflow:hidden;}
 .title{background:#d9d9d9;padding:10px;font-weight:bold;text-align:center;}
 .sub-title{background:#efefef;padding:8px;font-weight:bold;}
-#tab1 table,
-#tab2 table{
-
-    width:100%;
-    border-collapse:collapse;
-    background:white;
-    border-radius:12px;
-    overflow:hidden;
-    box-shadow:0 8px 25px rgba(0,0,0,.08);
-
-}
+table{width:100%;border-collapse:collapse;background:white;border-radius:12px;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,.08);}
 th,td{border:1px solid #333;padding:0.35vw;text-align:center;font-size:clamp(9px,0.65vw,16px);white-space:nowrap;}
 tbody tr{transition:.2s;}
 tbody tr:hover{background:#f3f8ff;}
 th{background:#bfc5cc;color:#222;}
 
 /* ============ TAB 2 STYLING ============ */
-.summary-container{
-
-    overflow-x:auto;
-
-    overflow-y:hidden;
-
-    padding:0 25px;
-
-    box-sizing:border-box;
-
-}
 .title2{text-align:center;font-size:20px;font-weight:bold;margin-bottom:10px;}
 .group1{background:#ffb74d;color:#222;}
 .group2{background:#4caf50;color:white;}
@@ -405,47 +377,33 @@ transform:translateY(-5px);
    TAB 3 - 实时数据
 ========================== */
 
-.realtime-header{
-
-    position:sticky;
-
-    top:0;
-
-    z-index:9999;
-
-    background:#fff;
-
-    overflow:hidden;
-
-    width:100%;
-
-}
-
 .realtime-wrap{
     width:100%;
-    height:calc(100vh - 270px);
-    overflow:auto;
+    height:calc(100vh - 220px);
+    overflow-y:auto;
+    overflow-x:auto;
     background:#fff;
+    border-radius:15px;
+    position:relative;
 }
 
-#realtimeHeader,
-#realtimeBody{
-
+#realtimeTable{
     width:100%;
     border-collapse:collapse;
     table-layout:fixed;
     font-size:14px;
-
 }
 
-#realtimeHeader th{
+#realtimeTable thead th{
+    position:sticky;
+    top:0;
     z-index:1000;
     background:#f3f3f3;
     height:42px;
     border:1px solid #ddd;
 }
 
-#realtimeBody td{
+#realtimeTable td{
     border:1px solid #ddd;
     padding:8px;
     vertical-align:top;
@@ -474,87 +432,40 @@ transform:translateY(-5px);
     color:#e53935;
     font-weight:bold;
 }
-.realtime-container{
 
-    width:100%;
-
-    height:calc(100vh - 220px);
-
-    overflow:auto;
-
-    background:#fff;
-
-    border-radius:0;
-
-}
-
-.realtime-wrap{
-
-    overflow:visible;
-
-}
 /*=========================
  TAB4 留存率
 =========================*/
 
-.retention-header{
-
-    position:sticky;
-
-    top:0;
-
-    z-index:9999;
-
-    background:#fff;
-
-    overflow:hidden;
-
-    width:100%;
-
-}
-
-.retention-container{
-    width:100%;
-    height:calc(100vh - 390px);
-
-    overflow-x:auto;
-    overflow-y:auto;
-
-    -webkit-overflow-scrolling:touch;
-}
-
 .retention-wrap{
-
-    overflow:visible;
-
+    width:100%;
+    height:calc(100vh - 220px);
+    overflow:auto;
+    background:#fff;
+    border-radius:15px;
 }
 
-#retentionHeader,
-#retentionBody{
+#retentionTable{
     width:100%;
     border-collapse:collapse;
-    table-layout:fixed;
+    table-layout:auto;
     font-size:14px;
-
 }
 
-#retentionHeader th,
-#retentionBody td{
-    box-sizing:border-box;
+#retentionTable th,
+#retentionTable td{
     border:1px solid #ddd;
     padding:10px;
     text-align:center;
     white-space:nowrap;
-
 }
 
-#retentionHeader th{
+#retentionTable thead th{
+    position:sticky;
+    top:0;
     background:#f3f3f3;
+    z-index:10;
     font-weight:bold;
-    border:1px solid #ddd;
-    padding:10px;
-    text-align:center;
-    white-space:nowrap;
 }
 
 </style>
@@ -720,9 +631,6 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 
 <!-- ============ TAB 2 - REAL-TIME DATA ANALYSIS ============ -->
 <div id="tab2" style="display:none" class="table-rain-wrap">
-
-<div class="summary-container">
-
 <table>
 <thead>
 <tr class="table-main-title">
@@ -773,42 +681,25 @@ window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazil
 </thead>
 <tbody id="body"></tbody>
 </table>
-
-</div>
-
 </div>
 <!-- ============ TAB 3 - 实时数据 ============ -->
 <div id="tab3" style="display:none">
 
-    <!-- Header -->
-    <div class="realtime-container">
-
-    <div class="realtime-header">
-        <table id="realtimeHeader"></table>
-    </div>
-
     <div class="realtime-wrap">
-        <table id="realtimeBody"></table>
+
+        <table id="realtimeTable"></table>
+
     </div>
 
-</div>
 </div>
 
 <!-- ============ TAB 4 - 留存率 ============ -->
 <div id="tab4" style="display:none">
-
     <div class="retentionFilter" id="retentionFilter"></div>
 
-    <!-- Thêm div này -->
-    <div class="retention-container">
+    <div class="retention-wrap">
 
-        <div class="retention-header">
-            <table id="retentionHeader"></table>
-        </div>
-
-        <div class="retention-wrap">
-            <table id="retentionBody"></table>
-        </div>
+        <table id="retentionTable"></table>
 
     </div>
 
@@ -873,49 +764,15 @@ function switchTab(n){
     applyHideZero();
 
     if(n===3){
-
-    requestAnimationFrame(()=>{
-
-        const firstRow=document.querySelector("#realtimeBody tbody tr");
-
-        if(firstRow){
-
-            const bodyCells=firstRow.children;
-
-            const headerCells=document.querySelectorAll("#realtimeHeader th");
-
-            headerCells.forEach((th,index)=>{
-
-                if(bodyCells[index]){
-
-                    th.style.width=
-                        bodyCells[index].getBoundingClientRect().width+"px";
-
-                }
-
-            });
-
-        }
-
-    });
-
-    setTimeout(()=>{
-
-        if(latestRealtimeRow){
-
-            document.getElementById(latestRealtimeRow)?.scrollIntoView({
-
-                behavior:"smooth",
-
-                block:"center"
-
-            });
-
-        }
-
-    },100);
-
-}
+        setTimeout(()=>{
+            if(latestRealtimeRow){
+                document.getElementById(latestRealtimeRow)?.scrollIntoView({
+                    behavior:"smooth",
+                    block:"center"
+                });
+            }
+        },100);
+    }
 }
 /* ============ GLOBAL DATA VARIABLE ============ */
 let globalData={};
@@ -958,16 +815,11 @@ fetch("data.json?t=" + Date.now())
     });
 renderTab1(data);
 renderTab2();
+renderTab3();
 
 renderRetentionButtons();
 
-requestAnimationFrame(()=>{
-
-    renderTab3();
-
-    renderTab4();
-
-});
+renderTab4();
 
 const sw = document.getElementById("zeroSwitch");
 if (sw) {
@@ -1006,31 +858,22 @@ if (sw) {
     `;
 
     // TAB3
-    document.getElementById("realtimeHeader").innerHTML="";
-document.getElementById("realtimeBody").innerHTML=`
-<tr>
-<td style="
-height:120px;
-text-align:center;
-font-size:30px;
-color:#999;">
-暂无数据
-</td>
-</tr>
-`;
+    document.getElementById("realtimeTable").innerHTML = `
+        <tr>
+            <td style="height:120px;text-align:center;font-size:30px;color:#999;">
+                暂无数据
+            </td>
+        </tr>
+    `;
+
     // TAB4
-   document.getElementById("retentionHeader").innerHTML="";
-document.getElementById("retentionBody").innerHTML=`
-<tr>
-<td style="
-height:120px;
-text-align:center;
-font-size:30px;
-color:#999;">
-暂无数据
-</td>
-</tr>
-`;
+    document.getElementById("retentionTable").innerHTML = `
+        <tr>
+            <td style="height:120px;text-align:center;font-size:30px;color:#999;">
+                暂无数据
+            </td>
+        </tr>
+    `;
 
     document.getElementById("updateTimeHero").innerHTML =
         "📅 数据更新时间：--";
@@ -2309,10 +2152,8 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
 
 function renderTab3(){
 
-    const headerTable = document.getElementById("realtimeHeader");
-const bodyTable = document.getElementById("realtimeBody");
-
-if(!headerTable || !bodyTable) return;
+    const table = document.getElementById("realtimeTable");
+    if(!table) return;
 
     const realtime = globalData.realtime || {};
 
@@ -2331,19 +2172,18 @@ if(!headerTable || !bodyTable) return;
     const today = dates[0];          // cột đầu tiên = hôm nay
     latestRealtimeRow = null;
 
-    let header = "<tr>";
+    let html = "<thead>";
 
-header += '<th class="time-col">时间</th>';
+    html += "<tr>";
+    html += '<th class="time-col">时间</th>';
 
-dates.forEach(d=>{
-    header += `<th>${d}</th>`;
-});
+    dates.forEach(d=>{
+        html += `<th>${d}</th>`;
+    });
 
-header += "</tr>";
-
-headerTable.innerHTML = header;
-
-let html = "<tbody>";
+    html += "</tr>";
+    html += "</thead>";
+    html += "<tbody>";
 
     let hours = Object.keys(realtime).sort().reverse();
 
@@ -2432,46 +2272,7 @@ ${row.diff ?? 0}
 
     html += "</tbody>";
 
-    bodyTable.innerHTML = html;
-
-/* ===== Đồng bộ chiều rộng Header và Body ===== */
-
-requestAnimationFrame(()=>{
-
-    requestAnimationFrame(()=>{
-
-        const firstRow = bodyTable.querySelector("tbody tr");
-
-        if(!firstRow) return;
-
-        const bodyCells = firstRow.children;
-
-        const headerCells = headerTable.querySelectorAll("th");
-
-        headerCells.forEach((th,index)=>{
-
-            if(bodyCells[index]){
-
-                th.style.width =
-                    bodyCells[index].getBoundingClientRect().width + "px";
-
-            }
-
-        });
-
-    });
-
-});
-
-/* ===== Đồng bộ cuộn ngang ===== */
-
-headerTable.parentElement.scrollLeft = 0;
-
-document.querySelector(".realtime-container").onscroll=function(){
-
-    headerTable.parentElement.scrollLeft=this.scrollLeft;
-
-};
+    table.innerHTML = html;
 
     // Tự cuộn tới giờ mới nhất của hôm nay
     if(latestRealtimeRow){
@@ -2506,10 +2307,8 @@ function renderTab4(){
     //====  TAB 2 76B  留存率 ====
 
 
-    const headerTable = document.getElementById("retentionHeader");
-const bodyTable = document.getElementById("retentionBody");
-
-if(!headerTable || !bodyTable) return;
+    const table = document.getElementById("retentionTable");
+    if(!table) return;
 
     const retention = globalData.retention || {};
     if(Object.keys(retention).length===0){
@@ -2535,32 +2334,31 @@ if(!headerTable || !bodyTable) return;
     return;
 }
 
-    headerTable.innerHTML = `
-<tr>
-
-<th>统计时间</th>
-<th>地区</th>
-<th>首充金额/人数</th>
-<th>充值金额</th>
-<th>提现人数</th>
-<th>提现金额</th>
-<th>复充金额/人数</th>
-<th>复充率</th>
-<th>2日留存</th>
-<th>3日留存</th>
-<th>4日留存</th>
-<th>5日留存</th>
-<th>6日留存</th>
-<th>7日留存</th>
-<th>10日留存</th>
-<th>14日留存</th>
-<th>30日留存</th>
-<th>60日留存</th>
-
-</tr>
-`;
-
-let html = "<tbody>";
+    let html = `
+    <thead>
+    <tr>
+        <th>统计时间</th>
+        <th>地区</th>
+        <th>首充金额/人数</th>
+        <th>充值金额</th>
+        <th>提现人数</th>
+        <th>提现金额</th>
+        <th>复充金额/人数</th>
+        <th>复充率</th>
+        <th>2日留存</th>
+        <th>3日留存</th>
+        <th>4日留存</th>
+        <th>5日留存</th>
+        <th>6日留存</th>
+        <th>7日留存</th>
+        <th>10日留存</th>
+        <th>14日留存</th>
+        <th>30日留存</th>
+        <th>60日留存</th>
+    </tr>
+    </thead>
+    <tbody>
+    `;
 
     const dates = Object.keys(retention).sort().reverse();
 
@@ -2626,46 +2424,7 @@ let html = "<tbody>";
 
     html += "</tbody>";
 
-    bodyTable.innerHTML = html;
-
-/* ===== Đồng bộ chiều rộng Header và Body ===== */
-
-requestAnimationFrame(()=>{
-
-    requestAnimationFrame(()=>{
-
-        const firstRow = bodyTable.querySelector("tbody tr");
-
-        if(!firstRow) return;
-
-        const bodyCells = firstRow.children;
-
-        const headerCells = headerTable.querySelectorAll("th");
-
-        headerCells.forEach((th,index)=>{
-
-            if(bodyCells[index]){
-
-                th.style.width =
-                    bodyCells[index].getBoundingClientRect().width + "px";
-
-            }
-
-        });
-
-    });
-
-});
-
-/* ===== Đồng bộ cuộn ngang ===== */
-
-headerTable.parentElement.scrollLeft = 0;
-
-document.querySelector(".retention-container").onscroll=function(){
-
-    headerTable.parentElement.scrollLeft=this.scrollLeft;
-
-};
+    table.innerHTML = html;
 
 applyHideZero();
 
@@ -2690,58 +2449,58 @@ applyHideZero();
   //====  TAB 2 NN22  留存率 ====
 
 function renderTab4_NN22(){
-
-const headerTable = document.getElementById("retentionHeader");
-const bodyTable   = document.getElementById("retentionBody");
-
-if(!headerTable || !bodyTable) return;
+const table = document.getElementById("retentionTable");
+    if(!table) return;
 
     const retention = globalData.retention || {};
     if(Object.keys(retention).length===0){
 
-    headerTable.innerHTML="";
+    table.innerHTML=`
+    <thead>
+        <tr><th>提示</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="
+                height:180px;
+                text-align:center;
+                font-size:32px;
+                color:#999;
+                font-weight:bold;">
+                暂无数据
+            </td>
+        </tr>
+    </tbody>
+    `;
 
-bodyTable.innerHTML=`
-<tr>
-<td colspan="18"
-style="
-height:180px;
-text-align:center;
-font-size:32px;
-color:#999;
-font-weight:bold;">
-暂无数据
-</td>
-</tr>
-`;
-
-return;
+    return;
 }
 
-    headerTable.innerHTML = `
-<tr>
-    <th>统计时间</th>
-    <th>地区</th>
-    <th>首充金额/人数</th>
-    <th>充值金额</th>
-    <th>提现人数</th>
-    <th>提现金额</th>
-    <th>复充金额/人数</th>
-    <th>复充率</th>
-    <th>2日留存</th>
-    <th>3日留存</th>
-    <th>4日留存</th>
-    <th>5日留存</th>
-    <th>6日留存</th>
-    <th>7日留存</th>
-    <th>10日留存</th>
-    <th>14日留存</th>
-    <th>30日留存</th>
-    <th>60日留存</th>
-</tr>
-`;
-
-let html = "<tbody>";
+    let html = `
+    <thead>
+    <tr>
+        <th>统计时间</th>
+        <th>地区</th>
+        <th>首充金额/人数</th>
+        <th>充值金额</th>
+        <th>提现人数</th>
+        <th>提现金额</th>
+        <th>复充金额/人数</th>
+        <th>复充率</th>
+        <th>2日留存</th>
+        <th>3日留存</th>
+        <th>4日留存</th>
+        <th>5日留存</th>
+        <th>6日留存</th>
+        <th>7日留存</th>
+        <th>10日留存</th>
+        <th>14日留存</th>
+        <th>30日留存</th>
+        <th>60日留存</th>
+    </tr>
+    </thead>
+    <tbody>
+    `;
 
     const dates = Object.keys(retention).sort().reverse();
 
@@ -2807,15 +2566,7 @@ let html = "<tbody>";
 
     html += "</tbody>";
 
-    bodyTable.innerHTML = html;
-
-    headerTable.parentElement.scrollLeft = 0;
-
-document.querySelector(".retention-wrap").addEventListener("scroll",function(){
-
-    headerTable.parentElement.scrollLeft = this.scrollLeft;
-
-});
+    table.innerHTML = html;
 
 applyHideZero();
 
@@ -2972,14 +2723,8 @@ let brazilTime = masterUpdateTime;
 
 renderTab1(newData);
 renderTab2();
-
-requestAnimationFrame(()=>{
-
-    renderTab3();
-
-    renderTab4();
-
-});
+renderTab3();
+renderTab4();
 
 const sw = document.getElementById("zeroSwitch");
 if (sw) {
