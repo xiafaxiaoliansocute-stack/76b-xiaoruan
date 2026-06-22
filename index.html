@@ -514,19 +514,15 @@ transform:translateY(-5px);
 .retention-container{
     width:100%;
     height:calc(100vh - 390px);
-
-    overflow-y:auto;
-    overflow-x:hidden;
-
+    overflow:auto;
     background:#fff;
     border-radius:0;
+
 }
 
 .retention-wrap{
 
-    width:100%;
-    overflow-x:hidden;
-    overflow-y:visible;
+    overflow:visible;
 
 }
 
@@ -535,22 +531,18 @@ transform:translateY(-5px);
     width:100%;
     border-collapse:collapse;
     table-layout:fixed;
-    font-size:clamp(10px,2.5vw,14px);
+    font-size:14px;
+
 }
 
 #retentionHeader th,
 #retentionBody td{
     box-sizing:border-box;
     border:1px solid #ddd;
-
-    padding:clamp(3px,1vw,10px);
-
+    padding:10px;
     text-align:center;
+    white-space:nowrap;
 
-    white-space:normal;
-    word-break:break-word;
-
-    font-size:clamp(10px,2.5vw,14px);
 }
 
 #retentionHeader th{
@@ -560,25 +552,6 @@ transform:translateY(-5px);
     padding:10px;
     text-align:center;
     white-space:nowrap;
-}
-
-@media (max-width:768px){
-
-    #retentionHeader th,
-    #retentionBody td{
-
-        padding:3px;
-        font-size:10px;
-
-    }
-
-    .retention-container{
-
-        overflow-y:auto;
-        overflow-x:hidden;
-
-    }
-
 }
 
 </style>
