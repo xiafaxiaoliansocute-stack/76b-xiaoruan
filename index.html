@@ -1367,13 +1367,13 @@ placeholder="请输入密码">
 <th style="width:180px">类型</th>
 <th>人均</th>
 <th>次日人均</th>
-<th style="width:150px">FB-人均</th>
-<th style="width:90px">H5</th>
-<th style="width:90px">PWA</th>
-<th style="width:90px">IOS</th>
-<th style="width:90px">TT</th>
-<th style="width:90px">KW</th>
-<th style="width:90px">WS</th>
+<th style="width:150px">FB-总</th>
+<th style="width:90px">FB-H5</th>
+<th style="width:90px">FB-PWA</th>
+<th style="width:90px">FB-IOS</th>
+<th style="width:90px">TT-PWA</th>
+<th style="width:90px">KW-PWA</th>
+<th style="width:90px">WS-H5</th>
 <th style="width:250px">类型</th>
 <th style="width:90px">比例</th>
 <th style="width:140px">类型</th>
@@ -2301,7 +2301,7 @@ list.forEach(item=>{
             "dsp-h5",
             "ws-h5",
             "其他"
-           
+            
         ];
 
         d = {
@@ -2406,11 +2406,11 @@ else if(item.key==="fb-pwa"){
     // ===== FB =====
 let h5   = globalData["fb-h5"]?.normalList || {};
 let h5a  = globalData["fb-h5-a"]?.normalList || {};
-
 let pwa  = globalData["fb-pwa"]?.normalList || {};
 let pwaa = globalData["fb-pwa-a"]?.normalList || {};
-
 let ios  = globalData["fb-ios"]?.normalList || {};
+
+
 
 // ===== TT =====
 let tt = globalData["tt-pwa"]?.normalList || {};
@@ -2432,8 +2432,12 @@ let ws = globalData["ws-h5"]?.normalList || {};
 let wsParent = globalData["ws-h5"]?.parentList || {};
 let wsChild = globalData["ws-h5"]?.childList || {};
 
-    let h5Avg=h5.rechargeCount?(h5.rechargeAmount/h5.rechargeCount).toFixed(2):0;
-    let pwaAvg=pwa.rechargeCount?(pwa.rechargeAmount/pwa.rechargeCount).toFixed(2):0;
+    let h5Amount = Number(h5.rechargeAmount || 0) + Number(h5a.rechargeAmount || 0);
+    let h5Count  = Number(h5.rechargeCount || 0) + Number(h5a.rechargeCount || 0);
+    let h5Avg = h5Count ? (h5Amount / h5Count).toFixed(2) : "0.00";
+    let pwaAmount = Number(pwa.rechargeAmount || 0) + Number(pwaa.rechargeAmount || 0);
+    let pwaCount  = Number(pwa.rechargeCount || 0) + Number(pwaa.rechargeCount || 0);
+    let pwaAvg = pwaCount ? (pwaAmount / pwaCount).toFixed(2) : "0.00";
     let iosAvg=ios.rechargeCount?(ios.rechargeAmount/ios.rechargeCount).toFixed(2):0;
     let ttAvg=tt.rechargeCount?(tt.rechargeAmount/tt.rechargeCount).toFixed(2):0;
     let kwAvg=kw.rechargeCount?(kw.rechargeAmount/kw.rechargeCount).toFixed(2):0;
