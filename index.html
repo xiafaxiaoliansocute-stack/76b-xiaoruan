@@ -1673,7 +1673,6 @@ function renderTab1_NN22(data){
 {key:"kwai-pwa",name:"KWAI-PWA"},
 {key:"dsp-h5",name:"DSP-H5"},
 {key:"ws-h5",name:"WS-H5"},
-{key:"回访",name:"回访"}
 ];
 const blocks=[
 {key:"normalList",name:"综合效果"},
@@ -2271,7 +2270,6 @@ const list=[
 {show:"DSP-H5",key:"dsp-h5"},
 {show:"ws-h5",key:"ws-h5"},
 {show:"官方渠道",key:"官方渠道"},
-{show:"回访",key:"回访"},
 {show:"其他",key:"其他"},
 {show:"- ",key:"test"},
 {show:"-",key:"test1"},
@@ -2302,8 +2300,8 @@ list.forEach(item=>{
             "kwai-pwa",
             "dsp-h5",
             "ws-h5",
-            "其他",
-            "回访"
+            "其他"
+           
         ];
 
         d = {
@@ -3232,7 +3230,7 @@ const table = document.getElementById("retentionTable");
 
             <td>巴西</td>
 
-            <td>${row.amount||0}<span style="padding:0 4px;">/</span>${row.count||0}</td>
+            <td>${row.recharge||0}<span style="padding:0 4px;">/</span>${row.count||0}</td>
 
             <td>${row.recharge||0}</td>
 
