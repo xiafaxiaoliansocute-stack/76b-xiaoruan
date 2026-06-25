@@ -89,7 +89,7 @@ retention_start = (report_day - timedelta(days=29)).strftime("%Y-%m-%d")
 
 result_data = {
     "update_time_brazil":
-        now_br.strftime("%Y-%m-%d %H:%M:%S"),
+        now_br.strftime("%Y-%m-%d %H:%M"),
     "report_day":
         report_day.strftime("%Y-%m-%d")
 }
