@@ -2745,22 +2745,89 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                         : "";
     let h5AvgText = item.key === "ALL_TOTAL"
         ? h5Avg
+        // ===== MỤC TÍNH 人均 fb 直推  =====
         : item.key === "fb-h5"
-            ? (h5Parent.rechargeCount ? (h5Parent.rechargeAmount / h5Parent.rechargeCount).toFixed(2) : 0)
+    ? (
+        (
+            Number(h5Parent.rechargeAmount||0) +
+            Number(h5aParent.rechargeAmount||0)
+        ) /
+        (
+            Number(h5Parent.rechargeCount||0) +
+            Number(h5aParent.rechargeCount||0)
+        )
+      ).toFixed(2)
+
+        // ===== MỤC TÍNH 人均 fb 裂变  =====
+
             : item.key === "fb-h5-a"
-                ? (h5Child.rechargeCount ? (h5Child.rechargeAmount / h5Child.rechargeCount).toFixed(2) : 0)
+    ? (
+        (
+            Number(h5Child.rechargeAmount||0) +
+            Number(h5aChild.rechargeAmount||0)
+        ) /
+        (
+            Number(h5Child.rechargeCount||0) +
+            Number(h5aChild.rechargeCount||0)
+        )
+      ).toFixed(2)
+
+      // ===== MỤC TÍNH 人均 fb 首充  =====
+
                 : item.key === "fb-pwa"
-                    ? (h5.firstRechargeCount ? (h5.firstRechargeAmount / h5.firstRechargeCount).toFixed(2) : 0)
+    ? (
+        (
+            Number(h5.firstRechargeAmount||0) +
+            Number(h5a.firstRechargeAmount||0)
+        ) /
+        (
+            Number(h5.firstRechargeCount||0) +
+            Number(h5a.firstRechargeCount||0)
+        )
+      ).toFixed(2)
+
                     : "";
-    let pwaAvgText = item.key === "ALL_TOTAL"
+    let pwaAvgText =
+    item.key === "ALL_TOTAL"
         ? pwaAvg
+
         : item.key === "fb-h5"
-            ? (pwaParent.rechargeCount ? (pwaParent.rechargeAmount / pwaParent.rechargeCount).toFixed(2) : 0)
-            : item.key === "fb-h5-a"
-                ? (pwaChild.rechargeCount ? (pwaChild.rechargeAmount / pwaChild.rechargeCount).toFixed(2) : 0)
-                : item.key === "fb-pwa"
-                    ? (pwa.firstRechargeCount ? (pwa.firstRechargeAmount / pwa.firstRechargeCount).toFixed(2) : 0)
-                    : "";
+            ? (
+                (
+                    Number(pwaParent.rechargeAmount || 0) +
+                    Number(pwaaParent.rechargeAmount || 0)
+                ) /
+                (
+                    Number(pwaParent.rechargeCount || 0) +
+                    Number(pwaaParent.rechargeCount || 0)
+                )
+            ).toFixed(2)
+
+        : item.key === "fb-h5-a"
+            ? (
+                (
+                    Number(pwaChild.rechargeAmount || 0) +
+                    Number(pwaaChild.rechargeAmount || 0)
+                ) /
+                (
+                    Number(pwaChild.rechargeCount || 0) +
+                    Number(pwaaChild.rechargeCount || 0)
+                )
+            ).toFixed(2)
+
+        : item.key === "fb-pwa"
+            ? (
+                (
+                    Number(pwa.firstRechargeAmount || 0) +
+                    Number(pwaa.firstRechargeAmount || 0)
+                ) /
+                (
+                    Number(pwa.firstRechargeCount || 0) +
+                    Number(pwaa.firstRechargeCount || 0)
+                )
+            ).toFixed(2)
+
+        : "";
     let iosAvgText = item.key === "ALL_TOTAL"
         ? iosAvg
         : item.key === "fb-h5"
