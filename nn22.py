@@ -946,33 +946,49 @@ with open(output_file, "w", encoding="utf-8") as f:
     )
 
 print(f"✅ Saved: {output_file}")
+
 import subprocess
 
 try:
+    # Git add
     subprocess.run(
         ["git", "add", "nn22.json"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+        check=True,
+        capture_output=True,
+        text=True
     )
 
-    result = subprocess.run(
+    # Git commit
+    commit = subprocess.run(
         ["git", "commit", "-m", "auto update data"],
         capture_output=True,
         text=True
     )
 
-    if "nothing to commit" in result.stdout:
+    if "nothing to commit" in commit.stdout.lower():
         print("ℹ️ No data changes")
-    else:
+    elif commit.returncode == 0:
         print("✅ Commit success")
+    else:
+        print("❌ Commit failed")
+        print(commit.stderr)
 
-    subprocess.run(
-        ["git", "push", "origin", "nn22"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+    # Git push (đẩy lên branch main)
+    push = subprocess.run(
+        ["git", "push", "origin", "main"],
+        capture_output=True,
+        text=True
     )
 
-    print("✅ GitHub updated")
+    if push.returncode == 0:
+        print("✅ GitHub updated")
+    else:
+        print("❌ GitHub push failed")
+        print(push.stderr)
+
+except subprocess.CalledProcessError as e:
+    print("❌ Git command error")
+    print(e.stderr)
 
 except Exception as e:
-    print("❌ GitHub push error:", e)
+    print("❌ Unexpected error:", e)
