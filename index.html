@@ -1736,22 +1736,41 @@ return total>0?((retain/total)*100).toFixed(2)+"%":"0.00%";
 }
 
 function retentionRateFB(countField){
-const retention = globalData.retention || {};
 
-const reportDate = new Date(globalData.report_day + "T00:00:00");
+    const retention = globalData.retention || {};
 
-reportDate.setDate(reportDate.getDate() - countField);
+    const reportDate = new Date(globalData.report_day + "T00:00:00");
+    reportDate.setDate(reportDate.getDate() - countField);
 
-const y = reportDate.getFullYear();
-const m = String(reportDate.getMonth() + 1).padStart(2,"0");
-const d = String(reportDate.getDate()).padStart(2,"0");
-const dateKey=`${y}-${m}-${d}`;
-const h5=retention[dateKey]?.["fb-h5"]||{};
-const pwa=retention[dateKey]?.["fb-pwa"]||{};
-const ios=retention[dateKey]?.["fb-ios"]||{};
-const total=Number(h5.count||0)+Number(pwa.count||0)+Number(ios.count||0);
-const retain=Number(h5[`count${countField}`]||0)+Number(pwa[`count${countField}`]||0)+Number(ios[`count${countField}`]||0);
-return total>0?((retain/total)*100).toFixed(2)+"%":"0.00%";
+    const y = reportDate.getFullYear();
+    const m = String(reportDate.getMonth()+1).padStart(2,"0");
+    const d = String(reportDate.getDate()).padStart(2,"0");
+
+    const dateKey = `${y}-${m}-${d}`;
+
+    const h5   = retention[dateKey]?.["fb-h5"]   || {};
+    const h5a  = retention[dateKey]?.["fb-h5-a"] || {};
+    const pwa  = retention[dateKey]?.["fb-pwa"]  || {};
+    const pwaa = retention[dateKey]?.["fb-pwa-a"]|| {};
+    const ios  = retention[dateKey]?.["fb-ios"]  || {};
+
+    const total =
+        Number(h5.count || 0) +
+        Number(h5a.count || 0) +
+        Number(pwa.count || 0) +
+        Number(pwaa.count || 0) +
+        Number(ios.count || 0);
+
+    const retain =
+        Number(h5[`count${countField}`] || 0) +
+        Number(h5a[`count${countField}`] || 0) +
+        Number(pwa[`count${countField}`] || 0) +
+        Number(pwaa[`count${countField}`] || 0) +
+        Number(ios[`count${countField}`] || 0);
+
+    return total
+        ? ((retain / total) * 100).toFixed(2) + "%"
+        : "0.00%";
 }
 
 
