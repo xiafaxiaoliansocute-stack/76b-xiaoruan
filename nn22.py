@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 # ======================
 
 ACCOUNT = "xiaoruan16011"
-TOKEN = "98ydw8xrmnfszddv0u5ggtwo9ho4kuy33aa64y3p"
+TOKEN = "7p7xcxhbl2hm3ka3211x4u2we0um8k4nrg1wa0uv"
 
 BASE_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.effect"
 HOUR_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportSum"
