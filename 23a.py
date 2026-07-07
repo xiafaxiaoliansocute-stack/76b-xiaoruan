@@ -21,6 +21,7 @@ REGION_ID = 1
 
 CHANNELS = {
     "fb-h5": 190,
+    "fb-h5-a": 243,
     "fb-ios": 191,
     "fb-pwa": 189,
     "fb-pwa-a": 212,
