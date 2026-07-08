@@ -1312,7 +1312,7 @@ placeholder="请输入密码">
 </div>
 
 <div style="display:flex;flex-direction:column;align-items:flex-end;gap:35px;">
-
+    
     <button
     onclick="logout()"
     style="background:#dc3545;color:white;border:none;padding:15px 28px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:15px;">
@@ -3580,18 +3580,22 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
         item.key === "ALL_TOTAL" || item.key === "fb-h5" || item.key === "fb-h5-a"
             ? nextAvg
             : "";
+
+      // ===== MỤC TÍNH THỨ TỰ 人均 大盘 直推 裂变 首充 =====      
     let fbNormalText =
-        item.key === "ALL_TOTAL"
-            ? fbNormalAvg
-            : item.key === "fb-h5"
-                ? fbParentAvg
-                : item.key === "fb-h5-a"
-                    ? fbParentAvg
-                    : item.key === "fb-ios"
-                        ? fbChildAvg
-                            : "";
+    item.key === "ALL_TOTAL"
+        ? fbNormalAvg
+        : item.key === "fb-h5"
+            ? fbParentAvg
+            : item.key === "fb-h5-a"
+                ? fbChildAvg
+                : item.key === "fb-ios"
+                    ? fbFirstAvg
+                    : "";
     let h5AvgText = item.key === "ALL_TOTAL"
         ? h5Avg
+
+        
         // ===== MỤC TÍNH 人均 fb 直推  =====
         : item.key === "fb-h5"
     ? (
