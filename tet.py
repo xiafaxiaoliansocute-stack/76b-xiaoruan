@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import pyotp
 import gspread
+import time
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from google.oauth2.service_account import Credentials
@@ -145,7 +146,7 @@ ACCOUNT = USERNAME
 
 LOGIN_URL = "https://api6.o-9-d-4.com/api/backend/trpc/auth.login"
 
-URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportList"
+URL = "https://api6.o-9-d-4.com/api/backend/trpc/returnVisit.list"
 
 
 # ==========================
@@ -235,152 +236,199 @@ headers = {
 
 
 # ==========================
-# 拉取数据
+# 获取用户列表 returnVisit.list
+# 测试100条
 # ==========================
 
-all_data = []
-
-page = 1
 PAGE_SIZE = 100
-
-START_TIME, END_TIME = get_brazil_time_range()
-
-while True:
+PAGE = 1
 
 
-    payload = {
-        "json": {
+payload = {
 
-            "tenantId": TENANT_ID,
+    "json": {
 
-            "regionId": REGION_ID,
+        # 必须是 table
+        "queryType": "table",
 
-            "channelId": [],
+        "regionId": REGION_ID,
 
-            "page": page,
+        "tenantId": TENANT_ID,
 
-            "pageSize": PAGE_SIZE,
+        "page": PAGE,
 
+        "pageSize": PAGE_SIZE,
 
-            "order": [
-                {
-                    "key": "channelId",
-                    "type": "desc"
-                },
-                {
-                    "key": "isOfficial",
-                    "type": "desc"
-                }
-            ],
-            "startTime": START_TIME,
-            "endTime": END_TIME
-        }
+        "order": [
+
+            {
+                "key": "",
+                "type": "desc"
+            }
+
+        ]
+
     }
 
-    r = requests.get(
+}
 
-        URL,
-
-        headers=headers,
-
-        params={
-            "input": json.dumps(
-                payload,
-                separators=(",", ":")
-            )
-        },
-
-        timeout=30
-
-    )
-
-
-
-    print("HTTP:", r.status_code)
-
-
-
-    if r.status_code != 200:
-
-        print(r.text)
-
-        break
-
-
-
-    data = r.json()
-
-
-
-    json_data = data["result"]["data"]["json"]
-
-
-
-    print("KEY:", json_data.keys())
-
-
-
-    rows = json_data.get("list", [])
-
-
-
-    print(
-        f"Page {page}: {len(rows)}"
-    )
-
-
-
-    if not rows:
-
-        break
-
-
-
-    all_data.extend(rows)
-
-
-
-    if len(rows) < PAGE_SIZE:
-
-        break
-
-
-
-    page += 1
-
-
-
-
-# ==========================
-# 保存 Excel
-# ==========================
-
-print("==========================")
 
 print(
-    "TOTAL:",
-    len(all_data)
+    "请求 Page:",
+    PAGE
+)
+
+
+r = requests.get(
+
+    URL,
+
+    headers=headers,
+
+    params={
+
+        "input": json.dumps(
+            payload,
+            separators=(",", ":")
+        )
+
+    },
+
+    timeout=30
+
+)
+
+
+print(
+    "HTTP:",
+    r.status_code
+)
+
+
+data = r.json()
+
+
+# ==========================
+# API ERROR
+# ==========================
+
+if "result" not in data:
+
+    print("API ERROR:")
+
+    print(
+        json.dumps(
+            data,
+            indent=2,
+            ensure_ascii=False
+        )
+    )
+
+    exit()
+
+
+
+json_data = (
+    data["result"]
+    ["data"]
+    ["json"]
+)
+
+
+print(
+    json.dumps(
+        json_data,
+        indent=2,
+        ensure_ascii=False
+    )
 )
 
 
 
-df = pd.DataFrame(all_data)
+# ==========================
+# 解析 pageData
+# ==========================
+
+if isinstance(json_data, dict):
+
+    rows = (
+        json_data
+        .get("pageData", [])
+    )
+
+elif isinstance(json_data, list):
+
+    rows = json_data
+
+else:
+
+    rows = []
+
+
+
+print(
+    "数量:",
+    len(rows)
+)
+
+
+
+if rows:
+
+    print(
+        json.dumps(
+            rows[0],
+            indent=2,
+            ensure_ascii=False
+        )
+    )
+
+
+
+# ==========================
+# DataFrame
+# ==========================
+
+df = pd.DataFrame(rows)
+
+
+# 手机号保持文本
+if "phoneNumber" in df.columns:
+
+    df["phoneNumber"] = (
+        df["phoneNumber"]
+        .astype(str)
+    )
 
 
 print(df.head())
 
 
+# ==========================
+# Excel
+# ==========================
 
 df.to_excel(
-    "channel_hourReportList.xlsx",
+
+    "returnVisit_test100.xlsx",
+
     index=False
+
 )
 
 
 print(
-    "✅ 已保存 channel_hourReportList.xlsx"
+    "✅ 保存完成 returnVisit_test100.xlsx"
 )
 
 
-# 上传 Google Sheet
+# ==========================
+# Google Sheet
+# ==========================
+
 upload_google_sheet(df)
+
+
+print(
+    "✅ Google Sheet 上传完成"
+)

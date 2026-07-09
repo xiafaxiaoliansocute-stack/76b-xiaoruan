@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import pyotp
 import gspread
+import time
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from google.oauth2.service_account import Credentials
@@ -145,7 +146,7 @@ ACCOUNT = USERNAME
 
 LOGIN_URL = "https://api6.o-9-d-4.com/api/backend/trpc/auth.login"
 
-URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportList"
+URL = "https://api6.o-9-d-4.com/api/backend/trpc/userDay.listMultiDay"
 
 
 # ==========================
@@ -235,152 +236,127 @@ headers = {
 
 
 # ==========================
-# 拉取数据
+# 测试：只获取100条
 # ==========================
 
-all_data = []
-
-page = 1
 PAGE_SIZE = 100
+page = 1
 
-START_TIME, END_TIME = get_brazil_time_range()
+payload = {
 
-while True:
+    "json": {
 
+        "page": page,
 
-    payload = {
-        "json": {
+        "pageSize": PAGE_SIZE,
 
-            "tenantId": TENANT_ID,
+        "valueType": "phone",
 
-            "regionId": REGION_ID,
+        "isRecharge": True,
 
-            "channelId": [],
+        "queryTime": datetime.now(
+            BRAZIL_TZ
+        ).strftime(
+            "%Y-%m-%d"
+        ),
 
-            "page": page,
+        "type": "normal",
 
-            "pageSize": PAGE_SIZE,
+        "regionId": REGION_ID,
 
+        "tenantId": TENANT_ID,
 
-            "order": [
-                {
-                    "key": "channelId",
-                    "type": "desc"
-                },
-                {
-                    "key": "isOfficial",
-                    "type": "desc"
-                }
-            ],
-            "startTime": START_TIME,
-            "endTime": END_TIME
-        }
+        "queryData": [],
+
+        "order": [
+            {
+                "key": "",
+                "type": "desc"
+            }
+        ],
+
+        "queryType": "table"
+
     }
 
-    r = requests.get(
-
-        URL,
-
-        headers=headers,
-
-        params={
-            "input": json.dumps(
-                payload,
-                separators=(",", ":")
-            )
-        },
-
-        timeout=30
-
-    )
+}
 
 
-
-    print("HTTP:", r.status_code)
-
+print("请求 Page:", page)
 
 
-    if r.status_code != 200:
+r = requests.get(
 
-        print(r.text)
+    URL,
 
-        break
+    headers=headers,
 
+    params={
+        "input": json.dumps(
+            payload,
+            separators=(",", ":")
+        )
+    },
 
+    timeout=30
 
-    data = r.json()
-
-
-
-    json_data = data["result"]["data"]["json"]
-
-
-
-    print("KEY:", json_data.keys())
-
-
-
-    rows = json_data.get("list", [])
-
-
-
-    print(
-        f"Page {page}: {len(rows)}"
-    )
-
-
-
-    if not rows:
-
-        break
-
-
-
-    all_data.extend(rows)
-
-
-
-    if len(rows) < PAGE_SIZE:
-
-        break
-
-
-
-    page += 1
-
-
-
-
-# ==========================
-# 保存 Excel
-# ==========================
-
-print("==========================")
-
-print(
-    "TOTAL:",
-    len(all_data)
 )
 
 
+print("HTTP:", r.status_code)
 
-df = pd.DataFrame(all_data)
+
+data = r.json()
+
+
+json_data = (
+    data["result"]
+    ["data"]
+    ["json"]
+)
+
+
+print(
+    "JSON TYPE:",
+    type(json_data)
+)
+
+
+# userDay.list 返回直接list
+
+if isinstance(json_data, list):
+
+    rows = json_data
+
+else:
+
+    rows = (
+        json_data
+        .get("pageList", {})
+        .get("pageData", [])
+    )
+
+
+print(
+    "数量:",
+    len(rows)
+)
+
+
+# 保存100条
+
+df = pd.DataFrame(rows)
 
 
 print(df.head())
 
 
-
 df.to_excel(
-    "channel_hourReportList.xlsx",
+    "userDay_test100.xlsx",
     index=False
 )
 
 
 print(
-    "✅ 已保存 channel_hourReportList.xlsx"
+    "✅ 保存完成 userDay_test100.xlsx"
 )
-
-
-# 上传 Google Sheet
-upload_google_sheet(df)

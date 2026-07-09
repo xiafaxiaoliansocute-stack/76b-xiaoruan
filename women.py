@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import pyotp
 import gspread
+import time
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from google.oauth2.service_account import Credentials
@@ -127,14 +128,14 @@ def upload_google_sheet(df):
 
     print("✅ Google Sheet 更新成功")
 
-TENANT_ID = 4505213
+TENANT_ID = 4687099
 REGION_ID = 1
 
 # 登录账号
-USERNAME = "16027tg01"
-PASSWORD = "16027tg01"
+USERNAME = "qzry14011"
+PASSWORD = "qzry14011"
 
-OTP_SECRET = "EZ3GIXA7C5DEA6ZP"
+OTP_SECRET = "MR3VA72VIR7QKNKR"
 
 TOTP = pyotp.TOTP(OTP_SECRET).now()
 
@@ -143,9 +144,9 @@ print("当前OTP:", TOTP)
 ACCOUNT = USERNAME
 
 
-LOGIN_URL = "https://api6.o-9-d-4.com/api/backend/trpc/auth.login"
+LOGIN_URL = "https://api4.i-j-k-8.com/api/backend/trpc/auth.login"
 
-URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportList"
+URL = "https://api4.i-j-k-8.com/api/backend/trpc/withdrawal.allReviewedList"
 
 
 # ==========================
@@ -159,8 +160,8 @@ def get_token():
         "content-type": "application/json",
         "client-language": "zh-CN",
         "account": USERNAME,
-        "origin": "https://admin6-000-kd083bq.c-9-m-1.com",
-        "referer": "https://admin6-000-kd083bq.c-9-m-1.com/",
+        'origin': 'https://admin-14011-19ecc3.m-9-y-j.com',
+        "referer": "https://admin-14011-19ecc3.m-9-y-j.com/",
         "user-agent": "Mozilla/5.0"
     }
 
@@ -225,162 +226,239 @@ headers = {
     "client-language": "zh-CN",
     "content-type": "application/json",
     "fingerprint-id": "3w08hakZFjz23WJBjwjx",
-    "origin": "https://admin6-000-kd083bq.c-9-m-1.com",
+    "origin": "https://admin-14011-19ecc3.m-9-y-j.com",
     "pragma": "no-cache",
-    "referer": "https://admin6-000-kd083bq.c-9-m-1.com/",
+    "referer": "https://admin-14011-19ecc3.m-9-y-j.com/",
     "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/149.0.0.0 Safari/537.36",
-    "x-admin-host": "admin6-000-kd083bq.c-9-m-1.com",
+    "x-admin-host": "admin-14011-19ecc3.m-9-y-j.com",
 }
 
 
 
 # ==========================
-# 拉取数据
+# 获取用户列表 returnVisit.list
+# 测试100条
 # ==========================
 
-all_data = []
-
-page = 1
 PAGE_SIZE = 100
-
-START_TIME, END_TIME = get_brazil_time_range()
-
-while True:
+PAGE = 1
 
 
-    payload = {
-        "json": {
+payload = {
 
-            "tenantId": TENANT_ID,
+    "json": {
 
-            "regionId": REGION_ID,
+        "queryType": "table",
 
-            "channelId": [],
+        "regionId": REGION_ID,
 
-            "page": page,
+        "tenantId": TENANT_ID,
 
-            "pageSize": PAGE_SIZE,
+        "page": PAGE,
 
+        "pageSize": PAGE_SIZE,
 
-            "order": [
-                {
-                    "key": "channelId",
-                    "type": "desc"
-                },
-                {
-                    "key": "isOfficial",
-                    "type": "desc"
-                }
-            ],
-            "startTime": START_TIME,
-            "endTime": END_TIME
-        }
+        "order": [
+
+            {
+                "key": "",
+                "type": "desc"
+            }
+
+        ]
+
     }
 
-    r = requests.get(
+}
 
-        URL,
-
-        headers=headers,
-
-        params={
-            "input": json.dumps(
-                payload,
-                separators=(",", ":")
-            )
-        },
-
-        timeout=30
-
-    )
-
-
-
-    print("HTTP:", r.status_code)
-
-
-
-    if r.status_code != 200:
-
-        print(r.text)
-
-        break
-
-
-
-    data = r.json()
-
-
-
-    json_data = data["result"]["data"]["json"]
-
-
-
-    print("KEY:", json_data.keys())
-
-
-
-    rows = json_data.get("list", [])
-
-
-
-    print(
-        f"Page {page}: {len(rows)}"
-    )
-
-
-
-    if not rows:
-
-        break
-
-
-
-    all_data.extend(rows)
-
-
-
-    if len(rows) < PAGE_SIZE:
-
-        break
-
-
-
-    page += 1
-
-
-
-
-# ==========================
-# 保存 Excel
-# ==========================
-
-print("==========================")
 
 print(
-    "TOTAL:",
-    len(all_data)
+    "请求 Page:",
+    PAGE
+)
+
+
+r = requests.get(
+
+    URL,
+
+    headers=headers,
+
+    params={
+
+        "input": json.dumps(
+            payload,
+            separators=(",", ":")
+        )
+
+    },
+
+    timeout=30
+
+)
+
+
+print(
+    "HTTP:",
+    r.status_code
+)
+
+
+data = r.json()
+
+
+# ==========================
+# API ERROR
+# ==========================
+
+if "result" not in data:
+
+    print("API ERROR:")
+
+    print(
+        json.dumps(
+            data,
+            indent=2,
+            ensure_ascii=False
+        )
+    )
+
+    exit()
+
+
+
+# ==========================
+# 获取 JSON 数据
+# ==========================
+
+json_data = (
+
+    data["result"]
+    ["data"]
+    ["json"]
+
+)
+
+
+print(
+    json.dumps(
+        json_data,
+        indent=2,
+        ensure_ascii=False
+    )
 )
 
 
 
-df = pd.DataFrame(all_data)
+# ==========================
+# 解析 queryData
+# ==========================
+
+if isinstance(json_data, dict):
+
+    rows = (
+
+        json_data
+        .get("queryData", [])
+
+    )
+
+
+elif isinstance(json_data, list):
+
+    rows = json_data
+
+
+else:
+
+    rows = []
+
+
+
+print(
+    "数量:",
+    len(rows)
+)
+
+
+# 总数量
+
+if isinstance(json_data, dict):
+
+    print(
+        "总用户:",
+        json_data.get("userSum", 0)
+    )
+
+
+
+if rows:
+
+    print(
+        json.dumps(
+            rows[0],
+            indent=2,
+            ensure_ascii=False
+        )
+    )
+
+
+
+# ==========================
+# DataFrame
+# ==========================
+
+df = pd.DataFrame(rows)
+
+
+
+# 手机号保持文本
+
+for col in [
+    "phoneNumber",
+    "account",
+    "userId"
+]:
+
+    if col in df.columns:
+
+        df[col] = (
+            df[col]
+            .astype(str)
+        )
+
 
 
 print(df.head())
 
 
 
+# ==========================
+# Excel
+# ==========================
+
 df.to_excel(
-    "channel_hourReportList.xlsx",
+
+    "returnVisit_test100.xlsx",
+
     index=False
+
 )
 
 
 print(
-    "✅ 已保存 channel_hourReportList.xlsx"
+    "✅ 保存完成 returnVisit_test100.xlsx"
 )
 
 
-# 上传 Google Sheet
+
+# ==========================
+# Google Sheet
+# ==========================
+
 upload_google_sheet(df)
+
+
+print(
+    "✅ Google Sheet 上传完成"
+)
