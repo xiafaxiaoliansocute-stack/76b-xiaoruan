@@ -1,5 +1,5 @@
 {
-    "update_time_brazil": "2026-07-09 11:00",
+    "update_time_brazil": "2026-07-09 12:00",
     "report_day": "2026-07-09",
     "realtime": {},
     "hour_report": {
@@ -19,15 +19,7 @@
                 "rechargeAmount": 0
             }
         },
-        "tt-pwa": {
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
-        "ws-h5": {
+        "fb-pwa": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -36,14 +28,6 @@
             }
         },
         "fb-h5": {
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
-        "kwai-pwa": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -67,7 +51,23 @@
                 "rechargeAmount": 0
             }
         },
-        "fb-pwa": {
+        "kwai-pwa": {
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
+        },
+        "ws-h5": {
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
+        },
+        "tt-pwa": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -88,7 +88,13 @@
         "childList": {},
         "promotionList": {}
     },
-    "ws-h5": {
+    "fb-ios": {
+        "normalList": {},
+        "parentList": {},
+        "childList": {},
+        "promotionList": {}
+    },
+    "fb-pwa": {
         "normalList": {},
         "parentList": {},
         "childList": {},
@@ -106,25 +112,19 @@
         "childList": {},
         "promotionList": {}
     },
-    "fb-ios": {
-        "normalList": {},
-        "parentList": {},
-        "childList": {},
-        "promotionList": {}
-    },
-    "fb-pwa": {
-        "normalList": {},
-        "parentList": {},
-        "childList": {},
-        "promotionList": {}
-    },
-    "kwai-pwa": {
+    "ws-h5": {
         "normalList": {},
         "parentList": {},
         "childList": {},
         "promotionList": {}
     },
     "回访": {
+        "normalList": {},
+        "parentList": {},
+        "childList": {},
+        "promotionList": {}
+    },
+    "kwai-pwa": {
         "normalList": {},
         "parentList": {},
         "childList": {},
