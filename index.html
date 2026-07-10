@@ -1422,6 +1422,12 @@ placeholder="请输入密码">
 </div>
     
 <script>
+    // =======================
+// LOGIN VERSION
+// Đổi số này mỗi khi đổi mật khẩu
+// =======================
+const LOGIN_VERSION = "2";
+
     let currentSite = "76B";
 
 // JSON TƯƠNG ỨNG VỚI ĐÀI
@@ -4834,25 +4840,26 @@ function login(){
 let user=document.getElementById("user").value;
 let pass=document.getElementById("pass").value;
 
-if(user==="xiaoruan" && pass==="xiaoruan"){
+if(user==="xiaoruan" && pass==="123456"){
 
     localStorage.setItem("isLoggedIn","true");
 
-    // Hỏi có lưu không
-    // Chỉ hỏi đúng 1 lần
-if(localStorage.getItem("rememberAsked")!=="true"){
+    // 保存当前密码版本
+    localStorage.setItem("loginVersion", LOGIN_VERSION);
 
-    if(confirm("你是否要保存账号和密码？")){
 
-        localStorage.setItem("savedUser",user);
-        localStorage.setItem("savedPass",pass);
+    if(localStorage.getItem("rememberAsked")!=="true"){
 
+        if(confirm("你是否要保存账号和密码？")){
+
+            localStorage.setItem("savedUser",user);
+            localStorage.setItem("savedPass",pass);
+
+        }
+
+        localStorage.setItem("rememberAsked","true");
     }
 
-    // Đánh dấu đã hỏi
-    localStorage.setItem("rememberAsked","true");
-
-}
 
     document.getElementById("loginPage").style.display="none";
 
@@ -4897,8 +4904,24 @@ document.getElementById("pass").value=savedPass;
 }
 
 // Nếu đã đăng nhập thì vào luôn
-if(localStorage.getItem("isLoggedIn")==="true"){
-document.getElementById("loginPage").style.display="none";
+const loginStatus = localStorage.getItem("isLoggedIn");
+const oldVersion = localStorage.getItem("loginVersion");
+
+
+if(
+    loginStatus==="true" &&
+    oldVersion===LOGIN_VERSION
+){
+
+    document.getElementById("loginPage").style.display="none";
+
+}else{
+
+    // 密码版本不一致，强制退出
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("loginVersion");
+
+    document.getElementById("loginPage").style.display="flex";
 }
 
 });
