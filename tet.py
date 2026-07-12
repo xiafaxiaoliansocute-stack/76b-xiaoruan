@@ -1,434 +1,225 @@
-import json
 import requests
-import pandas as pd
-import pyotp
-import gspread
+import json
 import time
-from datetime import datetime, timedelta, timezone
+import random
+
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
-from google.oauth2.service_account import Credentials
-import gspread
-# ==========================
+
+# =====================================================
 # CONFIG
-# ==========================
-# ==========================
-# BRAZIL TIME RANGE
-# ==========================
+# =====================================================
 
-BRAZIL_TZ = ZoneInfo("America/Sao_Paulo")
+TOKEN = "ajgnfuepdrbjhle6orecg93ed4yf6nds0url8cru"
 
-
-def get_brazil_time_range():
-
-    now = datetime.now(BRAZIL_TZ)
-
-
-    # 00:00 - 00:59 lấy ngày hôm trước
-    if now.hour == 0:
-
-        target_day = now.date() - timedelta(days=1)
-
-        start = datetime(
-            target_day.year,
-            target_day.month,
-            target_day.day,
-            0,0,0,
-            tzinfo=BRAZIL_TZ
-        )
-
-        end = datetime(
-            target_day.year,
-            target_day.month,
-            target_day.day,
-            23,59,59,
-            tzinfo=BRAZIL_TZ
-        )
-
-
-    # 01:00 trở đi lấy ngày hiện tại
-    else:
-
-        start = now.replace(
-            hour=0,
-            minute=0,
-            second=0,
-            microsecond=0
-        )
-
-        end = now
-
-
-    start_utc = start.astimezone(timezone.utc)
-    end_utc = end.astimezone(timezone.utc)
-
-
-    start_str = start_utc.strftime(
-        "%Y-%m-%dT%H:%M:%S.000Z"
-    )
-
-    end_str = end_utc.strftime(
-        "%Y-%m-%dT%H:%M:%S.999Z"
-    )
-
-
-    print("Brazil now:", now)
-    print("API START:", start_str)
-    print("API END:", end_str)
-
-
-    return start_str, end_str
-
-
-# ==========================
-# GOOGLE SHEET CONFIG
-# ==========================
-
-GOOGLE_SHEET_ID = "1qw3l5FVfEnHN1JsA-KWwo7cIpgXfy4vVUHcI5Reh_ww"
-
-CREDENTIAL_FILE = "/Users/xiaoruan/Documents/data_get/credentials.json"
-
-
-def upload_google_sheet(df):
-
-    scope = [
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive"
-    ]
-
-    creds = Credentials.from_service_account_file(
-        CREDENTIAL_FILE,
-        scopes=scope
-    )
-
-    client = gspread.authorize(creds)
-
-    sheet = client.open_by_key(
-        GOOGLE_SHEET_ID
-    )
-
-    worksheet = sheet.get_worksheet(0)
-
-
-    # Không xóa sheet, giữ A1
-
-
-    # xử lý NaN
-    df = df.fillna("")
-
-
-    values = df.fillna("").values.tolist()
-
-
-    # chỉ cập nhật từ A2
-    worksheet.update(
-        range_name="A2",
-        values=values
-    )
-
-
-    print("✅ Google Sheet 更新成功")
-
-TENANT_ID = 4505213
+ACCOUNT = "xiaoruan16021"
+TENANT_ID = 2654039
 REGION_ID = 1
 
-# 登录账号
-USERNAME = "16027tg01"
-PASSWORD = "16027tg01"
+URL = "https://api6.o-9-d-4.com/api/backend/trpc/user.list"
 
-OTP_SECRET = "EZ3GIXA7C5DEA6ZP"
-
-TOTP = pyotp.TOTP(OTP_SECRET).now()
-
-print("当前OTP:", TOTP)
-
-ACCOUNT = USERNAME
-
-
-LOGIN_URL = "https://api6.o-9-d-4.com/api/backend/trpc/auth.login"
-
-URL = "https://api6.o-9-d-4.com/api/backend/trpc/returnVisit.list"
-
-
-# ==========================
-# 获取 TOKEN
-# ==========================
-
-def get_token():
-
-    login_headers = {
-        "accept": "*/*",
-        "content-type": "application/json",
-        "client-language": "zh-CN",
-        "account": USERNAME,
-        "origin": "https://admin6-000-kd083bq.c-9-m-1.com",
-        "referer": "https://admin6-000-kd083bq.c-9-m-1.com/",
-        "user-agent": "Mozilla/5.0"
-    }
-
-
-    payload = {
-        "json": {
-            "username": USERNAME,
-            "password": PASSWORD,
-            "totp": TOTP,
-            "hToken": ""
-        }
-    }
-
-
-    r = requests.post(
-        LOGIN_URL,
-        headers=login_headers,
-        json=payload,
-        timeout=30
-    )
-
-
-    if r.status_code != 200:
-        print("登录失败:")
-        print(r.text)
-        exit()
-
-
-    data = r.json()
-
-    print(data)
-
-
-    token = data["result"]["data"]["json"]["token"]
-
-
-    print("✅ 登录成功")
-    print("TOKEN:", token)
-
-
-    return token
-
-
-
-# ==========================
-# 获取 TOKEN
-# ==========================
-
-TOKEN = get_token()
-
-
-
-# ==========================
-# API HEADERS
-# ==========================
-
-headers = {
+HEADERS = {
     "accept": "*/*",
     "authorization": f"Bearer {TOKEN}",
     "account": ACCOUNT,
-    "cache-control": "no-cache",
     "client-language": "zh-CN",
     "content-type": "application/json",
-    "fingerprint-id": "3w08hakZFjz23WJBjwjx",
-    "origin": "https://admin6-000-kd083bq.c-9-m-1.com",
-    "pragma": "no-cache",
-    "referer": "https://admin6-000-kd083bq.c-9-m-1.com/",
-    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/149.0.0.0 Safari/537.36",
-    "x-admin-host": "admin6-000-kd083bq.c-9-m-1.com",
+    "fingerprint-id": "6hUecf0K0ity09A0YcED",
+    "origin": "https://admin-16021-9fab47.c-9-m-1.com",
+    "referer": "https://admin-16021-9fab47.c-9-m-1.com/",
+    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "accept-language": "vi,fr-FR;q=0.9,fr;q=0.8,en-US;q=0.7,en;q=0.6,zh-CN;q=0.5",
+"cache-control": "no-cache",
+"pragma": "no-cache",
+    "x-admin-host": "admin-16021-9fab47.c-9-m-1.com",
+}
+session = requests.Session()
+session.headers.update(HEADERS)
+# =====================================================
+# 登录类型
+# =====================================================
+
+APP_TYPES = {
+    "全部": None,
+    "安卓H5": "AndroidH5",
+    "苹果H5": "iOSH5",
+    "PWA": "PWA",
+    "APK": "APK",
+    "苹果APP": "iOSApp",
+    "电脑系统": "DesktopOS",
 }
 
+# =====================================================
+# Brazil yesterday
+# =====================================================
+
+def get_yesterday_range():
+    tz = ZoneInfo("America/Sao_Paulo")
+
+    now = datetime.now(tz)
+
+    yesterday = now.date() - timedelta(days=1)
+
+    start = datetime.combine(
+        yesterday,
+        datetime.min.time(),
+        tzinfo=tz
+    )
+
+    end = datetime.combine(
+        yesterday,
+        datetime.max.time().replace(microsecond=0),
+        tzinfo=tz
+    )
+
+    return (
+        yesterday.strftime("%Y-%m-%d"),
+        start.astimezone(ZoneInfo("UTC")).strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+        end.astimezone(ZoneInfo("UTC")).strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+    )
 
 
-# ==========================
-# 获取用户列表 returnVisit.list
-# 测试100条
-# ==========================
+# =====================================================
+# API
+# =====================================================
 
-PAGE_SIZE = 100
-PAGE = 1
+def get_total(app_type, start_time, end_time):
 
-
-payload = {
-
-    "json": {
-
-        # 必须是 table
-        "queryType": "table",
-
-        "regionId": REGION_ID,
-
-        "tenantId": TENANT_ID,
-
-        "page": PAGE,
-
-        "pageSize": PAGE_SIZE,
-
-        "order": [
-
-            {
-                "key": "",
-                "type": "desc"
-            }
-
-        ]
-
+    payload = {
+        "json": {
+            "queryType": "userId",
+            "regionId": REGION_ID,
+            "tenantId": TENANT_ID,
+            "loginStartTime": start_time,
+            "loginEndTime": end_time,
+            "page": 1,
+            "pageSize": 1,
+            "order": [
+                {
+                    "key": "",
+                    "type": "desc"
+                }
+            ]
+        }
     }
 
-}
+    if app_type is not None:
+        payload["json"]["appType"] = app_type
 
+    params = {
+        "input": json.dumps(payload, separators=(",", ":"))
+    }
 
-print(
-    "请求 Page:",
-    PAGE
-)
+    for retry in range(10):
 
+        try:
 
-r = requests.get(
+            r = session.get(
+                URL,
+                params=params,
+                timeout=30,
+                allow_redirects=True
+            )
 
-    URL,
+            # =========================
+            # 成功
+            # =========================
+            if r.status_code == 200:
 
-    headers=headers,
+                data = r.json()
 
-    params={
+                # In JSON khi cần debug
+                # print(json.dumps(data, indent=2, ensure_ascii=False))
 
-        "input": json.dumps(
-            payload,
-            separators=(",", ":")
-        )
+                total = (
+                    data.get("result", {})
+                        .get("data", {})
+                        .get("json", {})
+                        .get("userList", {})
+                        .get("total")
+                )
 
-    },
+                if total is None:
+                    print("❌ Không tìm thấy userList.total")
+                    print(json.dumps(data, indent=2, ensure_ascii=False))
+                    return 0
 
-    timeout=30
+                return total
 
-)
+            # =========================
+            # 被限流
+            # =========================
+            elif r.status_code == 429:
 
+                wait = random.randint(1, 5)
+                print(f"⚠️ 429，等待 {wait} 秒...")
+                time.sleep(wait)
+                continue
 
-print(
-    "HTTP:",
-    r.status_code
-)
+            # =========================
+            # TOKEN失效
+            # =========================
+            elif r.status_code == 401:
 
+                print("❌ TOKEN 已失效")
+                return 0
 
-data = r.json()
+            else:
 
+                print(f"HTTP {r.status_code}")
+                print(r.text)
+                time.sleep(3)
 
-# ==========================
-# API ERROR
-# ==========================
+        except Exception as e:
 
-if "result" not in data:
+            print("Exception:", e)
+            time.sleep(5)
 
-    print("API ERROR:")
+    return 0
 
-    print(
-        json.dumps(
-            data,
-            indent=2,
-            ensure_ascii=False
-        )
-    )
 
-    exit()
+# =====================================================
+# MAIN
+# =====================================================
 
+def main():
 
+    day, start_time, end_time = get_yesterday_range()
 
-json_data = (
-    data["result"]
-    ["data"]
-    ["json"]
-)
+    print("=" * 60)
+    print("Brazil Date :", day)
+    print("Start       :", start_time)
+    print("End         :", end_time)
+    print("=" * 60)
 
+    results = {}
 
-print(
-    json.dumps(
-        json_data,
-        indent=2,
-        ensure_ascii=False
-    )
-)
+    for i, (name, app) in enumerate(APP_TYPES.items(), 1):
 
+        print(f"\n[{i}/{len(APP_TYPES)}] 查询 {name}")
 
+        total = get_total(app, start_time, end_time)
 
-# ==========================
-# 解析 pageData
-# ==========================
+        results[name] = total
 
-if isinstance(json_data, dict):
+        print(f"{name:<12}: {total:,}")
 
-    rows = (
-        json_data
-        .get("pageData", [])
-    )
+        if i != len(APP_TYPES):
 
-elif isinstance(json_data, list):
+          sleep_time = random.randint(3, 5)
 
-    rows = json_data
+    print(f"休息 {sleep_time} 秒...")
 
-else:
+    time.sleep(sleep_time)
 
-    rows = []
+    print()
+    print("=" * 60)
+    print(f"{'登录类型':<15}{'人数':>15}")
+    print("=" * 60)
 
+    for name, total in results.items():
+        print(f"{name:<15}{total:>15,}")
 
-
-print(
-    "数量:",
-    len(rows)
-)
-
-
-
-if rows:
-
-    print(
-        json.dumps(
-            rows[0],
-            indent=2,
-            ensure_ascii=False
-        )
-    )
-
-
-
-# ==========================
-# DataFrame
-# ==========================
-
-df = pd.DataFrame(rows)
-
-
-# 手机号保持文本
-if "phoneNumber" in df.columns:
-
-    df["phoneNumber"] = (
-        df["phoneNumber"]
-        .astype(str)
-    )
-
-
-print(df.head())
-
-
-# ==========================
-# Excel
-# ==========================
-
-df.to_excel(
-
-    "returnVisit_test100.xlsx",
-
-    index=False
-
-)
-
-
-print(
-    "✅ 保存完成 returnVisit_test100.xlsx"
-)
-
-
-# ==========================
-# Google Sheet
-# ==========================
-
-upload_google_sheet(df)
-
-
-print(
-    "✅ Google Sheet 上传完成"
-)
+    print("=" * 60)
+if __name__ == "__main__":
+    main()
