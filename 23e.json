@@ -1,5 +1,5 @@
 {
-    "update_time_brazil": "2026-07-15 13:01",
+    "update_time_brazil": "2026-07-15 14:01",
     "report_day": "2026-07-15",
     "realtime": {},
     "hour_report": {
@@ -19,7 +19,39 @@
                 "rechargeAmount": 0
             }
         },
+        "fb-h5": {
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
+        },
+        "上架包": {
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
+        },
         "fb-ios": {
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
+        },
+        "tt-pwa": {
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
+        },
+        "fb-h5-a": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -44,38 +76,6 @@
             }
         },
         "fb-pwa-b": {
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
-        "tt-pwa": {
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
-        "fb-h5-a": {
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
-        "fb-h5": {
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
-        "上架包": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -126,25 +126,13 @@
         "childList": {},
         "promotionList": {}
     },
-    "fb-pwa-a": {
-        "normalList": {},
-        "parentList": {},
-        "childList": {},
-        "promotionList": {}
-    },
-    "fb-h5-a": {
-        "normalList": {},
-        "parentList": {},
-        "childList": {},
-        "promotionList": {}
-    },
     "ws-h5": {
         "normalList": {},
         "parentList": {},
         "childList": {},
         "promotionList": {}
     },
-    "fb-ios": {
+    "tt-pwa": {
         "normalList": {},
         "parentList": {},
         "childList": {},
@@ -168,7 +156,13 @@
         "childList": {},
         "promotionList": {}
     },
-    "tt-pwa": {
+    "fb-h5-a": {
+        "normalList": {},
+        "parentList": {},
+        "childList": {},
+        "promotionList": {}
+    },
+    "fb-ios": {
         "normalList": {},
         "parentList": {},
         "childList": {},
@@ -181,6 +175,12 @@
         "promotionList": {}
     },
     "DL": {
+        "normalList": {},
+        "parentList": {},
+        "childList": {},
+        "promotionList": {}
+    },
+    "fb-pwa-a": {
         "normalList": {},
         "parentList": {},
         "childList": {},
