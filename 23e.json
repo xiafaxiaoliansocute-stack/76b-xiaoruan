@@ -1,5 +1,5 @@
 {
-    "update_time_brazil": "2026-07-15 21:01",
+    "update_time_brazil": "2026-07-15 22:01",
     "report_day": "2026-07-15",
     "realtime": {},
     "hour_report": {
@@ -19,15 +19,7 @@
                 "rechargeAmount": 0
             }
         },
-        "tt-pwa": {
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
-        "fb-pwa-b": {
+        "fb-pwa-a": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -43,7 +35,15 @@
                 "rechargeAmount": 0
             }
         },
-        "上架包": {
+        "fb-pwa-b": {
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
+        },
+        "tt-pwa": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -59,14 +59,6 @@
                 "rechargeAmount": 0
             }
         },
-        "fb-h5-a": {
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
         "kwai-pwa": {
             "promotionList": {
                 "firstRechargeCount": 0,
@@ -75,7 +67,7 @@
                 "rechargeAmount": 0
             }
         },
-        "fb-pwa-a": {
+        "上架包": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -91,7 +83,7 @@
                 "rechargeAmount": 0
             }
         },
-        "其他": {
+        "fb-h5-a": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -106,6 +98,14 @@
                 "rechargeCount": 0,
                 "rechargeAmount": 0
             }
+        },
+        "其他": {
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
         }
     },
     "ALL_TOTAL": {
@@ -114,7 +114,7 @@
         "childList": {},
         "promotionList": {}
     },
-    "fb-h5-a": {
+    "fb-ios": {
         "normalList": {},
         "parentList": {},
         "childList": {},
@@ -132,7 +132,13 @@
         "childList": {},
         "promotionList": {}
     },
-    "fb-ios": {
+    "fb-h5": {
+        "normalList": {},
+        "parentList": {},
+        "childList": {},
+        "promotionList": {}
+    },
+    "fb-h5-a": {
         "normalList": {},
         "parentList": {},
         "childList": {},
@@ -144,25 +150,7 @@
         "childList": {},
         "promotionList": {}
     },
-    "DL": {
-        "normalList": {},
-        "parentList": {},
-        "childList": {},
-        "promotionList": {}
-    },
-    "kwai-pwa": {
-        "normalList": {},
-        "parentList": {},
-        "childList": {},
-        "promotionList": {}
-    },
     "tt-pwa": {
-        "normalList": {},
-        "parentList": {},
-        "childList": {},
-        "promotionList": {}
-    },
-    "fb-pwa": {
         "normalList": {},
         "parentList": {},
         "childList": {},
@@ -174,13 +162,25 @@
         "childList": {},
         "promotionList": {}
     },
-    "fb-h5": {
+    "fb-pwa-a": {
         "normalList": {},
         "parentList": {},
         "childList": {},
         "promotionList": {}
     },
-    "fb-pwa-a": {
+    "kwai-pwa": {
+        "normalList": {},
+        "parentList": {},
+        "childList": {},
+        "promotionList": {}
+    },
+    "fb-pwa": {
+        "normalList": {},
+        "parentList": {},
+        "childList": {},
+        "promotionList": {}
+    },
+    "DL": {
         "normalList": {},
         "parentList": {},
         "childList": {},
