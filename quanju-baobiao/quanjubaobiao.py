@@ -24,7 +24,7 @@ CREDENTIALS_FILE = "/Users/xiaoruan/Documents/data_get/credentials.json"
 
 SHEET_ID = "1gfsTt_nL0wK2mepUAXkBgRqZHLYRY3xqWmbAxkzp0ao"
 
-SHEET_NAME = "test8386"
+SHEET_NAME = "j88后台汇总"
 
 scope = [
 
@@ -74,7 +74,7 @@ WEBS = [
         "name":"16011-NN22",
         "api":"https://api6.o-9-d-4.com",
         "tenantId":2175621,
-        "token":"smblr04tjn6lnv6pebt82m1c3pv06bzs42vd2uaj",
+        "token":"0vkpu7olptxu5eak9ewzv5f4yq75t998wcsxcoan",
         "account":"xiaoruan16011",
         "adminHost":"admin-16011-34bc8f.c-9-m-1.com"
     },
@@ -82,7 +82,7 @@ WEBS = [
         "name":"2306-76B",
         "api":"https://api3.a-b-c-5.com",
         "tenantId":5317688,
-        "token":"svf0rhx0tomstyvp3fv78p4s35zgyimpw64r6nk6",
+        "token":"qhe8ztcwxtsiyl8qvajajjsqpf759pvmibguw07x",
         "account":"xiaoruan2306",
         "adminHost":"admin-2306-66b1c5.m-b-d-1.com"
     },
@@ -114,7 +114,7 @@ WEBS = [
         "name":"2502-55UU",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":1823786,
-        "token":"amk23dabwweswp99jxp00b01ntor4o2hv2vw96vm",
+        "token":"ntgi1ffg2dtgbb57r4cp63upq2suebxft838ex7w",
         "account":"xiaoruan2502",
         "adminHost":"admin-2502-29b1ef.y-7-l-x.com"
     },
@@ -130,7 +130,7 @@ WEBS = [
         "name":"720-BB22",
         "api":"https://api4.i-j-k-8.com",
         "tenantId":6247284,
-        "token":"lyyj2acywca2symddkfl1vn5sz4f8oro2kfsuo9w",
+        "token":"r69gdvc7k6n6359pfsjy6hd4akdrx857apj0hvv6",
         "account":"xiaoruan720",
         "adminHost":"admin4-720-05ec73.m-9-y-j.com"
     },
@@ -146,7 +146,7 @@ WEBS = [
         "name":"2501-XX11",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":9933402,
-        "token":"5rnmrahcfxcbk6bdftmmy3agsd2ujcy4jctrgeoi",
+        "token":"go89yybmkqgpz6jk1yc081r5cd675sp5wy3bcftc",
         "account":"xiaoruan2501",
         "adminHost":"admin-2501-a5aaf3.y-7-l-x.com"
     },
@@ -154,7 +154,7 @@ WEBS = [
         "name":"928-44WW",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":4552161,
-        "token":"nubrkm8tqfhruzg61ey83wsiut6qc3pbk9gexiiy",
+        "token":"vpajinyytsxhthy1mjmftfvukoosy1bk8pfklysc",
         "account":"xiaoruan928",
         "adminHost":"admin5-928-mdywmz.y-7-l-x.com"
     },
@@ -162,7 +162,7 @@ WEBS = [
         "name":"923-33NN",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":4077356,
-        "token":"pyy6qgztufcm8nralagc8h9s7nxhxsv25pjc221o",
+        "token":"95robq9v8f5glmn9k2fdome4aqw1i3mgjhhsp0yg",
         "account":"xiaoruan923",
         "adminHost":"admin5-923-nevem0.y-7-l-x.com"
     },
@@ -242,7 +242,7 @@ WEBS = [
         "name":"619-77BB",
         "api":"https://api3.a-b-c-5.com",
         "tenantId":4040571,
-        "token":"tk1mr6ra2i4znzazmdymv4glohg8rvrqf5j5ftna",
+        "token":"fct4mu4oeqzhc6n4xz9zyc1iuqm41gw30cvjaq2h",
         "account":"77xiaoruan",
         "adminHost":"admin3-619-2ac217.m-b-d-1.com"
     }
@@ -484,11 +484,8 @@ def get_web_data(web):
                 "endTime":END_TIME
 
             }
-
         })
-
     }
-
 
     # ============================================
     # dashboard request

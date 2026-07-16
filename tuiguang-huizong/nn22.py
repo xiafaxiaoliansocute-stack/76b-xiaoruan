@@ -9,29 +9,29 @@ from zoneinfo import ZoneInfo
 # CONFIG
 # ======================
 
-ACCOUNT = "jiqiren23e"
-TOKEN = "r9brpo1u0vrf4s2r7gyernjead7gm5aze8f8sj47"
+ACCOUNT = "xiaoruan16011"
+TOKEN = "0vkpu7olptxu5eak9ewzv5f4yq75t998wcsxcoan"
 
 BASE_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.effect"
 HOUR_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportSum"
 REALTIME_URL = "https://api6.o-9-d-4.com/api/backend/trpc/realTimeData.list"
 
-TENANT_ID = 9503839
+
+TENANT_ID = 2175621
 REGION_ID = 1
 
 CHANNELS = {
-    "fb-h5": 308,
-    "fb-h5-a": 243,
-    "fb-ios": 307,
-    "fb-pwa": 306,
-    "fb-pwa-a": 212,
-    "fb-pwa-b": 213,
-    "tt-pwa": 305,
-    "kwai-pwa": 215,
-    "上架包": 195,
-    "DL": 264,
-    "其他": 194,
-    "ws-h5": 214
+    "fb-h5": 35,
+    "fb-h5-a": 45,
+    "fb-pwa": 37,
+    "fb-pwa-a": 46,
+    "fb-ios": 36,
+    "tt-pwa": 39,
+    "kwai-pwa": 38,
+    "dsp-h5": 47,
+    "回访": 34,
+    "其他": 33,
+    "ws-h5": 40
 
 }
 
@@ -45,8 +45,8 @@ headers = {
     "authorization": f"Bearer {TOKEN}",
     "client-language": "zh-CN",
     "content-type": "application/json",
-    "origin": "https://admin-16028-5acf36.c-9-m-1.com",
-    "referer": "https://admin-16028-5acf36.c-9-m-1.com/",
+    "origin": "https://admin-16011-34bc8f.c-9-m-1.com",
+    "referer": "https://admin-16011-34bc8f.c-9-m-1.com/",
 }
 from requests.adapters import HTTPAdapter
 
@@ -62,6 +62,7 @@ adapter = HTTPAdapter(
 
 session.mount("https://", adapter)
 session.mount("http://", adapter)
+
 
 # ======================
 # TIME (BRAZIL)
@@ -146,19 +147,18 @@ def fix_retention_amounts(row):
     money_fields = [
         "recharge",
         "withdrawals",
-        "repeatRechargeAmount"
+        "repeatRechargeAmount",
+        "amount"
     ]
 
     for key in list(row.keys()):
 
-        if isinstance(row.get(key), (int, float)):
-
-            # amount, amount1, amount2... amount59
-            if key.startswith("amount"):
+        if key in money_fields:
+            if isinstance(row[key], (int, float)):
                 row[key] = round(row[key] / 100)
 
-            # các trường tiền khác
-            elif key in money_fields:
+        if key.startswith("amount"):
+            if isinstance(row[key], (int, float)):
                 row[key] = round(row[key] / 100)
 
     return row
@@ -564,6 +564,7 @@ with ThreadPoolExecutor(max_workers=10) as executor:
 
 
 
+
 RETENTION_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.dayRetention"
 
 result_data["retention"] = {}
@@ -906,9 +907,9 @@ for date in dates:
 
                 brazil_time = utc_time - timedelta(hours=3)
 
-                   # Chỉ lấy các mốc 00 và 30 phút
+                 # Chỉ lấy các mốc 00 và 30 phút
                 if brazil_time.minute not in (0, 30):
-                    continue
+                 continue
 
                 time_key = brazil_time.strftime("%H:%M")
 
@@ -934,7 +935,7 @@ for date in dates:
 # ======================
 
 
-output_file = "/Users/xiaoruan/Desktop/76b-getdata/23e.json"
+output_file = "/Users/xiaoruan/Desktop/76b-getdata/tuiguang-huizong/nn22.json"
 
 with open(output_file, "w", encoding="utf-8") as f:
     json.dump(
@@ -945,33 +946,49 @@ with open(output_file, "w", encoding="utf-8") as f:
     )
 
 print(f"✅ Saved: {output_file}")
+
 import subprocess
 
 try:
+    # Git add
     subprocess.run(
-        ["git", "add", "23e.json"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+        ["git", "add", "nn22.json"],
+        check=True,
+        capture_output=True,
+        text=True
     )
 
-    result = subprocess.run(
+    # Git commit
+    commit = subprocess.run(
         ["git", "commit", "-m", "auto update data"],
         capture_output=True,
         text=True
     )
 
-    if "nothing to commit" in result.stdout:
+    if "nothing to commit" in commit.stdout.lower():
         print("ℹ️ No data changes")
-    else:
+    elif commit.returncode == 0:
         print("✅ Commit success")
+    else:
+        print("❌ Commit failed")
+        print(commit.stderr)
 
-    subprocess.run(
+    # Git push (đẩy lên branch main)
+    push = subprocess.run(
         ["git", "push", "origin", "main"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+        capture_output=True,
+        text=True
     )
 
-    print("✅ GitHub updated")
+    if push.returncode == 0:
+        print("✅ GitHub updated")
+    else:
+        print("❌ GitHub push failed")
+        print(push.stderr)
+
+except subprocess.CalledProcessError as e:
+    print("❌ Git command error")
+    print(e.stderr)
 
 except Exception as e:
-    print("❌ GitHub push error:", e)
+    print("❌ Unexpected error:", e)

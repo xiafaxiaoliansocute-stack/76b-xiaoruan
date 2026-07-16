@@ -9,25 +9,29 @@ from zoneinfo import ZoneInfo
 # CONFIG
 # ======================
 
-ACCOUNT = "xiaoruan2300"
-TOKEN = "svf0rhx0tomstyvp3fv78p4s35zgyimpw64r6nk6"
+ACCOUNT = "jiqiren23e"
+TOKEN = "r9brpo1u0vrf4s2r7gyernjead7gm5aze8f8sj47"
 
-BASE_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.effect"
-HOUR_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.hourReportSum"
-REALTIME_URL = "https://api3.a-b-c-5.com/api/backend/trpc/realTimeData.list"
+BASE_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.effect"
+HOUR_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportSum"
+REALTIME_URL = "https://api6.o-9-d-4.com/api/backend/trpc/realTimeData.list"
 
-TENANT_ID = 5317688
+TENANT_ID = 9503839
 REGION_ID = 1
 
 CHANNELS = {
-    "fb-h5": 5554,
-    "fb-pwa": 5552,
-    "fb-ios": 5553,
-    "tt-pwa": 5551,
-    "kwai-pwa": 5555,
-    "回访": 5585,
-    "其他": 5540, 
-    "ws-h5": 5586
+    "fb-h5": 308,
+    "fb-h5-a": 243,
+    "fb-ios": 307,
+    "fb-pwa": 306,
+    "fb-pwa-a": 212,
+    "fb-pwa-b": 213,
+    "tt-pwa": 305,
+    "kwai-pwa": 215,
+    "上架包": 195,
+    "DL": 264,
+    "其他": 194,
+    "ws-h5": 214
 
 }
 
@@ -41,8 +45,8 @@ headers = {
     "authorization": f"Bearer {TOKEN}",
     "client-language": "zh-CN",
     "content-type": "application/json",
-    "origin": "https://admin-2306-66b1c5.m-b-d-1.com",
-    "referer": "https://admin-2306-66b1c5.m-b-d-1.com/",
+    "origin": "https://admin-16028-5acf36.c-9-m-1.com",
+    "referer": "https://admin-16028-5acf36.c-9-m-1.com/",
 }
 from requests.adapters import HTTPAdapter
 
@@ -560,7 +564,7 @@ with ThreadPoolExecutor(max_workers=10) as executor:
 
 
 
-RETENTION_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.dayRetention"
+RETENTION_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.dayRetention"
 
 result_data["retention"] = {}
 # ======================
@@ -930,7 +934,7 @@ for date in dates:
 # ======================
 
 
-output_file = "/Users/xiaoruan/Desktop/76b-getdata/data.json"
+output_file = "/Users/xiaoruan/Desktop/76b-getdata/tuiguang-huizong/23e.json"
 
 with open(output_file, "w", encoding="utf-8") as f:
     json.dump(
@@ -945,7 +949,7 @@ import subprocess
 
 try:
     subprocess.run(
-        ["git", "add", "data.json"],
+        ["git", "add", "23e.json"],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
     )

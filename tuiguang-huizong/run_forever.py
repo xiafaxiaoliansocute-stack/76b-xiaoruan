@@ -8,19 +8,19 @@ while True:
         print("🚀 Run:", datetime.now())
 
         subprocess.run(
-            ["python3", "/Users/xiaoruan/Desktop/76b-getdata/main.py"],
+            ["python3", "/Users/xiaoruan/Desktop/76b-getdata/tuiguang-huizong/main.py"],
             check=True
         )
         subprocess.run(
-           ["python3", "/Users/xiaoruan/Desktop/76b-getdata/nn22.py"],
+           ["python3", "/Users/xiaoruan/Desktop/76b-getdata/tuiguang-huizong/nn22.py"],
             check=True
         )
         subprocess.run(
-           ["python3", "/Users/xiaoruan/Desktop/76b-getdata/23a.py"],
+           ["python3", "/Users/xiaoruan/Desktop/76b-getdata/tuiguang-huizong/23a.py"],
             check=True
         )
         subprocess.run(
-           ["python3", "/Users/xiaoruan/Desktop/76b-getdata/23e.py"],
+           ["python3", "/Users/xiaoruan/Desktop/76b-getdata/tuiguang-huizong/23e.py"],
             check=True
         )
 

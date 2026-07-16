@@ -934,7 +934,7 @@ for date in dates:
 # ======================
 
 
-output_file = "/Users/xiaoruan/Desktop/76b-getdata/23a.json"
+output_file = "/Users/xiaoruan/Desktop/76b-getdata/tuiguang-huizong/23a.json"
 
 with open(output_file, "w", encoding="utf-8") as f:
     json.dump(
