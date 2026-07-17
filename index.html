@@ -1023,6 +1023,67 @@ transform:translateY(-5px);
     font-size:17px;
 }
 
+.realtime-flex{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    width:100%;
+
+}
+
+
+.old-data{
+
+    text-align:center;
+
+    flex:1;
+
+}
+
+
+.five-change{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    border-left:1px solid #ddd;
+
+    min-height:180px;
+
+}
+
+
+.five-title{
+
+    font-weight:bold;
+
+    color:#1677ff;
+
+    margin-bottom:10px;
+
+    white-space:nowrap;
+
+}
+.change-row{
+
+    white-space:nowrap;
+
+    margin:8px 0;
+
+}
 .green-text{
     color:#169c32;
     font-weight:bold;
@@ -4667,150 +4728,268 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
 //==== KẾT THÚC  TAB 2 NN22  实时数据分析 ====
 
 
-
 /* ============ RENDER TAB 3 - 实时数据 ============ */
+
+
+function getBefore5Minute(hour){
+
+    let [h,m] = hour.split(":").map(Number);
+
+    let total = h * 60 + m - 5;
+
+    if(total < 0){
+        total += 1440;
+    }
+
+
+    let hh = String(Math.floor(total / 60)).padStart(2,"0");
+    let mm = String(total % 60).padStart(2,"0");
+
+
+    return `${hh}:${mm}`;
+
+}
+
+/* ============ lấy số trước / ============ */
+
+function getOrderRechargeAmount(value){
+
+    if(!value) return 0;
+
+    // nếu là số
+    if(typeof value === "number"){
+        return value;
+    }
+
+    // lấy phần trước dấu /
+    return Number(
+        String(value)
+        .split("/")[0]
+        .replace(/,/g,"")
+        .trim()
+    ) || 0;
+
+}
+
+function calc5MinuteChange(current, previous){
+
+    current = current || {};
+    previous = previous || {};
+
+    return {
+
+        firstRecharge:
+            Number(current.firstRechargeCount || 0)
+            -
+            Number(previous.firstRechargeCount || 0),
+
+
+        rechargeUser:
+            Number(current.rechargeCount || 0)
+            -
+            Number(previous.rechargeCount || 0),
+
+
+        // 充值金额 = 订单充值 - 订单充值
+        rechargeAmount:
+
+            getOrderRechargeAmount(current.orderRecharge)
+            -
+            getOrderRechargeAmount(previous.orderRecharge)
+
+    };
+
+}
+
 
 function renderTab3(){
 
     const table = document.getElementById("realtimeTable");
+
     if(!table) return;
-
     const realtime = globalData.realtime || {};
-
-    const dates = [];
-
+    const dates=[];
     Object.values(realtime).forEach(v=>{
         Object.keys(v).forEach(d=>{
+
             if(!dates.includes(d)){
                 dates.push(d);
             }
+
         });
+
     });
 
     dates.sort().reverse();
-
-    const today = dates[0];          // cột đầu tiên = hôm nay
-    latestRealtimeRow = null;
-
-    let html = "<thead>";
-
-    html += "<tr>";
-    html += '<th class="time-col">时间</th>';
-
+    const today = dates[0];
+    latestRealtimeRow=null;
+    let html="<thead>";
+    html+="<tr>";
+    html+='<th class="time-col">时间</th>';
     dates.forEach(d=>{
-        html += `<th>${d}</th>`;
+        html+=`<th>${d}</th>`;
+
     });
 
-    html += "</tr>";
-    html += "</thead>";
-    html += "<tbody>";
-
-    let hours = Object.keys(realtime).sort().reverse();
-
-    // Đưa 00:00 lên đầu và hiển thị thành 24:00
+    html+="</tr>";
+    html+="</thead>";
+    html+="<tbody>";
+    let hours=Object.keys(realtime).sort().reverse();
     if(hours.includes("00:00")){
-        hours = hours.filter(h=>h!=="00:00");
+        hours=hours.filter(h=>h!=="00:00");
         hours.unshift("00:00");
+
     }
 
     hours.forEach(hour=>{
-
-        const todayRow = realtime[hour]?.[today];
-
-        // Chỉ lấy giờ mới nhất của ngày hôm nay
+        const todayRow=realtime[hour]?.[today];
         if(
             !latestRealtimeRow &&
             todayRow &&
             (
-                Number(todayRow.loginCount || 0) > 0 ||
-                Number(todayRow.registerCount || 0) > 0 ||
-                Number(todayRow.betCount || 0) > 0 ||
-                Number(todayRow.rechargeCount || 0) > 0 ||
-                Number(todayRow.firstRechargeCount || 0) > 0
+                Number(todayRow.loginCount||0)>0 ||
+                Number(todayRow.registerCount||0)>0 ||
+                Number(todayRow.rechargeCount||0)>0 ||
+                Number(todayRow.firstRechargeCount||0)
             )
         ){
-            latestRealtimeRow = `row-${hour}`;
+
+            latestRealtimeRow=`row-${hour}`;
+
         }
 
-        html += `<tr id="row-${hour}">`;
+        html+=`<tr id="row-${hour}">`;
+        const showHour =
+            hour==="00:00"
+            ?
+            "24:00"
+            :
+            hour;
 
-        const showHour = hour==="00:00" ? "24:00" : hour;
-
-        html += `<td class="time-col">${showHour}</td>`;
+        html+=`
+        <td class="time-col">
+        ${showHour}
+        </td>
+        `;
 
         dates.forEach(date=>{
-
-            const row = realtime[hour]?.[date];
-
+            const row=realtime[hour]?.[date];
             if(!row){
-                html += "<td></td>";
+
+                html+=`
+                <td></td>
+                `;
+
                 return;
+
             }
 
-            html += `
+            // ===== 5分钟对比 =====
+            const beforeHour=getBefore5Minute(hour);
+            const beforeRow=
+                realtime[beforeHour]?.[date];
+            const change5=
+                calc5MinuteChange(
+                    row,
+                    beforeRow
+                );
+
+            html+=`
 <td class="realtime-cell">
-
+<div class="realtime-flex">
+<div class="old-data">
 登录用户：${row.loginCount ?? 0}<br>
-
 新增注册：${row.registerCount ?? 0}<br>
-
 投注用户：${row.betCount ?? 0}<br>
-
 同时在线：${row.onlineCount ?? 0}<br>
-
 首充用户：${row.firstRechargeCount ?? 0}<br>
-
 裂变首充：${row.subFirstRechargeCount ?? 0}<br>
-
 充值用户：${row.rechargeCount ?? 0}<br>
-
 <span class="green-text">
 平台盈利：${row.tenantProfit ?? 0}
-</span><br>
+</span>
+<br>
 
 人工充值：${row.manualRecharge ?? ""}<br>
-
-订单充值：${row.orderRecharge ?? ""}<br>
-
-人工提现：${row.manualWithdraw ?? ""}<br>
-
-订单提现：${row.orderWithdraw ?? ""}<br>
-
+订单充值：
+${row.orderRecharge ?? ""}<br>
+人工提现：
+${row.manualWithdraw ?? ""}<br>
+订单提现：
+${row.orderWithdraw ?? ""}<br>
 充提差：
-<span class="${Number(row.diff || 0) >= 0 ? "green-text" : "red-text"}">
+
+<span class="
+${Number(row.diff||0)>=0
+?
+"green-text"
+:
+"red-text"}
+">
+
 ${row.diff ?? 0}
-</span><br>
 
-赠送金额：${row.discount ?? 0}
+</span>
 
-</td>`;
+<br>
+
+赠送金额：
+${row.discount ?? 0}
+</div>
+<div class="five-change">
+<div class="five-title">
+5分钟增长幅度
+</div>
+
+<div class="change-row">
+首充用户：
+<span class="${change5.firstRecharge>=0?'green-text':'red-text'}">
+${change5.firstRecharge>=0?"+":""}${change5.firstRecharge}
+</span>
+</div>
+<div class="change-row">
+
+充值用户：
+<span class="${change5.rechargeUser>=0?'green-text':'red-text'}">
+${change5.rechargeUser>=0?"+":""}${change5.rechargeUser}
+</span>
+</div>
+
+<div class="change-row">
+充值金额：
+<span class="${change5.rechargeAmount>=0?'green-text':'red-text'}">
+${change5.rechargeAmount>=0?"+":""}${change5.rechargeAmount}
+</span>
+</div>
+</div>
+</td>
+
+`;
         });
 
-        html += "</tr>";
-
+        html+="</tr>";
     });
 
-    html += "</tbody>";
-
-    table.innerHTML = html;
-
-    // Tự cuộn tới giờ mới nhất của hôm nay
+    html+="</tbody>";
+    table.innerHTML=html;
     if(latestRealtimeRow){
-
         setTimeout(()=>{
+            document
+            .getElementById(latestRealtimeRow)
+            ?.scrollIntoView({
 
-            document.getElementById(latestRealtimeRow)?.scrollIntoView({
                 behavior:"smooth",
+
                 block:"start"
+
             });
 
         },100);
-
     }
-
 }
 
-//==== KẾT THÚC  TAB 2  实时数据分析 ========================================================================
+
+//==== KẾT THÚC  TAB 3  实时数据报表 ========================================================================
 
 
 
