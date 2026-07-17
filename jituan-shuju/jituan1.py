@@ -3,48 +3,32 @@ import requests
 import pandas as pd
 import pyotp
 import gspread
-
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from google.oauth2.service_account import Credentials
-
-
 
 # ==========================
 # BRAZIL TIME
 # ==========================
 
 BRAZIL_TZ = ZoneInfo("America/Sao_Paulo")
-
-
-
 def get_brazil_time_range():
-
     now = datetime.now(BRAZIL_TZ)
-
-
     def utc_format(dt):
-
         return dt.astimezone(
             timezone.utc
         ).strftime(
             "%Y-%m-%dT%H:%M:%S.000Z"
         )
 
-
-    # ==========================
+    # =========================
     # 00:00 - 00:59
     # lấy nguyên ngày hôm qua
     # ==========================
 
     if now.hour == 0:
-
-
         day_1 = now.date() - timedelta(days=1)
-
         day_2 = now.date() - timedelta(days=2)
-
-
 
         today_start = datetime(
             day_1.year,
@@ -53,7 +37,6 @@ def get_brazil_time_range():
             0,0,0,
             tzinfo=BRAZIL_TZ
         )
-
 
         today_end = datetime(
             day_1.year,
@@ -73,7 +56,6 @@ def get_brazil_time_range():
             tzinfo=BRAZIL_TZ
         )
 
-
         yesterday_end = datetime(
             day_2.year,
             day_2.month,
@@ -82,16 +64,12 @@ def get_brazil_time_range():
             tzinfo=BRAZIL_TZ
         )
 
-
-
     # ==========================
     # 01:00 trở đi
     # lấy realtime
     # ==========================
 
     else:
-
-
         today_start = now.replace(
             hour=0,
             minute=0,
@@ -99,38 +77,21 @@ def get_brazil_time_range():
             microsecond=0
         )
 
-
         today_end = now
-
-
-
         yesterday_start = today_start - timedelta(days=1)
-
-
         yesterday_end = now - timedelta(days=1)
 
-
-
-
     return {
-
-
         "今日": {
-
             "start":
                 utc_format(today_start),
-
             "end":
                 utc_format(today_end)
-
         },
 
-
         "昨日": {
-
             "start":
                 utc_format(yesterday_start),
-
             "end":
                 utc_format(yesterday_end)
 
@@ -141,48 +102,26 @@ def get_brazil_time_range():
 # GOOGLE SHEET CONFIG
 # ==========================
 
-
 GOOGLE_SHEET_ID = (
     "1qw3l5FVfEnHN1JsA-KWwo7cIpgXfy4vVUHcI5Reh_ww"
 )
-
 
 CREDENTIAL_FILE = (
     "/Users/xiaoruan/Documents/data_get/credentials.json"
 )
 
-
-
-
-
-
 # ==========================
 # LOGIN CONFIG
 # ==========================
 
-
 TENANT_ID = 9910053
-
 REGION_ID = 1
-
-
-
 USERNAME = "16026tg1"
-
 PASSWORD = "16026tg1"
-
-
-
 OTP_SECRET = "FYDDMUQACRUVEWY2"
-
-
-
-
 LOGIN_URL = (
     "https://api6.o-9-d-4.com/api/backend/trpc/auth.login"
 )
-
-
 
 URL = (
     "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportList"
@@ -192,55 +131,34 @@ URL = (
 # LOGIN GET TOKEN
 # ==========================
 
-
 TOTP = pyotp.TOTP(
     OTP_SECRET
 ).now()
-
 
 print(
     "当前OTP:",
     TOTP
 )
 
-
-
-
 def get_token():
-
-
     login_headers = {
-
-
         "accept": "*/*",
-
-
         "content-type":
             "application/json",
-
-
         "client-language":
             "zh-CN",
-
-
         "account":
             USERNAME,
-
-
         "origin":
             "https://admin6-000-kd083bq.c-9-m-1.com",
 
-
         "referer":
             "https://admin6-000-kd083bq.c-9-m-1.com/",
-
 
         "user-agent":
             "Mozilla/5.0"
 
     }
-
-
 
     payload = {
 

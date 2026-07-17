@@ -5,7 +5,7 @@ import time
 
 BRAZIL = ZoneInfo("America/Sao_Paulo")
 
-SCRIPT = "/Users/xiaoruan/Desktop/76b-getdata/quanjubaobiao.py"
+SCRIPT = "/Users/xiaoruan/Desktop/76b-getdata/quanju-baobiao/quanjubaobiao.py"
 
 
 def run_job():

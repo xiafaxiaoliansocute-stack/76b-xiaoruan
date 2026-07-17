@@ -906,9 +906,8 @@ for date in dates:
 
                 brazil_time = utc_time - timedelta(hours=3)
 
-                   # Chỉ lấy các mốc 00 và 30 phút
-                if brazil_time.minute not in (0, 30):
-                    continue
+                   # lấy đầy đủ 5 phút/lần
+                time_key = brazil_time.strftime("%H:%M")
 
                 time_key = brazil_time.strftime("%H:%M")
 
@@ -934,7 +933,7 @@ for date in dates:
 # ======================
 
 
-output_file = "/Users/xiaoruan/Desktop/76b-getdata/tuiguang-huizong/23a.json"
+output_file = "/Users/xiaoruan/Desktop/76b-getdata/23a.json"
 
 with open(output_file, "w", encoding="utf-8") as f:
     json.dump(

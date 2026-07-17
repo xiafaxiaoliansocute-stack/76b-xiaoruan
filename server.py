@@ -9,6 +9,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 print("SERVER =", __file__)
 print("BASE_DIR =", BASE_DIR)
 print("NN22 EXISTS =", os.path.exists(os.path.join(BASE_DIR, "nn22.json")))
+print("23E EXISTS =", os.path.exists(os.path.join(BASE_DIR, "23e.json")))
 
 
 # ================= HOME =================
@@ -17,32 +18,41 @@ def home():
     return send_from_directory(BASE_DIR, "index.html")
 
 
-# ================= RUN 2 FILE SONG SONG =================
+# ================= RUN 3 FILE SONG SONG =================
 @app.route("/run")
 def run_script():
 
     try:
         print("========== RUN PARALLEL ==========")
 
-        # Chạy song song
+        # main.py
         p1 = subprocess.Popen(
             ["python3", os.path.join(BASE_DIR, "main.py")]
         )
 
+        # nn22.py
         p2 = subprocess.Popen(
             ["python3", os.path.join(BASE_DIR, "nn22.py")]
         )
 
-        # Đợi cả hai chạy xong
+        # 23e.py
+        p3 = subprocess.Popen(
+            ["python3", os.path.join(BASE_DIR, "23e.py")]
+        )
+
+
+        # Đợi cả 3 chạy xong
         p1.wait()
         p2.wait()
+        p3.wait()
 
         print("✅ main.py finished")
         print("✅ nn22.py finished")
+        print("✅ 23e.py finished")
 
         return jsonify({
             "success": True,
-            "message": "Both scripts finished"
+            "message": "All scripts finished"
         })
 
     except Exception as e:
@@ -54,6 +64,7 @@ def run_script():
             "error": str(e)
         })
 
+
 # ================= DATA FILE =================
 @app.route("/data.json")
 def data_json():
@@ -63,6 +74,11 @@ def data_json():
 @app.route("/nn22.json")
 def nn22_json():
     return send_from_directory(BASE_DIR, "nn22.json")
+
+
+@app.route("/23e.json")
+def e23_json():
+    return send_from_directory(BASE_DIR, "23e.json")
 
 
 

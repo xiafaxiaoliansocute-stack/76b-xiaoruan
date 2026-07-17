@@ -9,7 +9,6 @@ import requests
 import gspread
 import pandas as pd
 import time
-
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from google.oauth2.service_account import Credentials
@@ -60,6 +59,15 @@ worksheet = client.open_by_key(
 # ==========================================================
 
 WEBS = [
+
+   {
+        "name":"16028-23E",
+        "api":"https://api6.o-9-d-4.com",
+        "tenantId":9503839,
+        "token":"66bvjnpp25t5v0rj085m8l4bmn7il7coxii1a0k6",
+        "account":"xiaoruan16028",
+        "adminHost":"admin-16028-5acf36.c-9-m-1.com"
+    },
 
     {
         "name":"16021-23A",
@@ -253,7 +261,7 @@ WEBS = [
 
 
 # ==========================================================
-# Brazil Time
+# chạy theo giờ lấy theo giờ brazil 
 # ==========================================================
 
 BRAZIL_TZ = ZoneInfo("America/Sao_Paulo")
@@ -344,8 +352,9 @@ END_TIME = TIME["end_time"]
 print("🇧🇷 Brazil Time :",datetime.now(BRAZIL_TZ))
 
 print("📅 Query Date :",QUERY_DATE)
+
 # ==========================================================
-# HEADERS
+# tiêu đề trình xử lý và lấy số liệu 
 # ==========================================================
 
 def make_headers(web):
@@ -370,7 +379,7 @@ def make_headers(web):
 
 
 # ==========================================================
-# GET ONE WEBSITE
+# THÀNH VIÊN ĐĂNG NHẬP TRONG NGÀY (PHÂN CÁC LOẠI ĐĂNG NHÂP)
 # ==========================================================
 APP_TYPES = {
     "全部": None,
@@ -391,7 +400,7 @@ def get_web_data(web):
     session.headers.update(headers)
 
     # ============================================
-    # dashboard.tenantDaily
+    # dashboard.tenantDaily(MỤC QUANJU-BAOBIAO)
     # ============================================
 
     params = {
@@ -417,7 +426,7 @@ def get_web_data(web):
     }
 
     # ============================================
-    # mục lấy touzhu
+    # MỤC LẤY TỔNG TIỀN TOUZHU
     # ============================================
 
     effect_params = {
@@ -699,6 +708,7 @@ def get_web_data(web):
 
 NEED_COLUMNS = [
 
+    "site",
     "time",
     "registerCount",
     "betCount",
@@ -779,6 +789,7 @@ GROUPS = [
     {
         "start": "A",
         "columns": [
+            "site",
             "time",
             "registerCount",
             "betCount",
@@ -789,7 +800,7 @@ GROUPS = [
     },
 
     {
-        "start": "H",
+        "start": "I",
         "columns": [
             "firstRechargeAmount",
             "subFirstRechargeAmount",
@@ -800,7 +811,7 @@ GROUPS = [
     },
 
     {
-        "start": "S",
+        "start": "T",
         "columns": [
             "validBetAmount",
             "profitAmount"
@@ -808,7 +819,7 @@ GROUPS = [
     },
 
     {
-    "start": "AC",
+    "start": "AD",
     "columns": [
     "discountAmount",
     "commission",
@@ -862,8 +873,19 @@ def build_dataframe(data, web):
 
     df = pd.DataFrame(rows)
 
-    # Thêm tên website trước ngày
-    df["time"] = f'【{web["name"]}】' + df["time"].astype(str)
+
+# ==========================
+# Tách tên站点 và 日期
+# ==========================
+
+    df.insert(
+    0,
+    "site",
+    "【" + str(web["name"]).replace("-", "】")
+)
+
+
+    df["time"] = df["time"].astype(str)
 
     # ==========================
     # assets total
@@ -905,6 +927,7 @@ def build_dataframe(data, web):
 
 
     # Chia 100 cho các cột tiền
+    
     for col in df.columns:
         if col in NO_DIVIDE:
             continue

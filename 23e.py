@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 # ======================
 
 ACCOUNT = "jiqiren23e"
-TOKEN = "r9brpo1u0vrf4s2r7gyernjead7gm5aze8f8sj47"
+TOKEN = "wd3m9hahb3hibha0qqykyw2vz4jjie81h0107hdl"
 
 BASE_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.effect"
 HOUR_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportSum"
@@ -21,17 +21,15 @@ REGION_ID = 1
 
 CHANNELS = {
     "fb-h5": 308,
-    "fb-h5-a": 243,
     "fb-ios": 307,
     "fb-pwa": 306,
-    "fb-pwa-a": 212,
-    "fb-pwa-b": 213,
+    "fb-pwa-a": 340,
+    "fb-pwa-b": 341,
     "tt-pwa": 305,
-    "kwai-pwa": 215,
-    "上架包": 195,
+    "kwai-pwa": 339,
+    "上架包": 342,
     "DL": 264,
-    "其他": 194,
-    "ws-h5": 214
+    "其他": 336
 
 }
 
@@ -906,9 +904,8 @@ for date in dates:
 
                 brazil_time = utc_time - timedelta(hours=3)
 
-                   # Chỉ lấy các mốc 00 và 30 phút
-                if brazil_time.minute not in (0, 30):
-                    continue
+                   # lấy đầy đủ 5 phút/lần
+                time_key = brazil_time.strftime("%H:%M")
 
                 time_key = brazil_time.strftime("%H:%M")
 
@@ -934,7 +931,7 @@ for date in dates:
 # ======================
 
 
-output_file = "/Users/xiaoruan/Desktop/76b-getdata/tuiguang-huizong/23e.json"
+output_file = "/Users/xiaoruan/Desktop/76b-getdata/23e.json"
 
 with open(output_file, "w", encoding="utf-8") as f:
     json.dump(

@@ -3,7 +3,7 @@ import subprocess
 from datetime import datetime
 
 PYTHON = "/usr/local/bin/python3"
-SCRIPT = "/Users/xiaoruan/Desktop/76b-getdata/jituan1.py"
+SCRIPT = "/Users/xiaoruan/Desktop/76b-getdata/jituan-shuju/jituan1.py"
 
 
 def run_script():

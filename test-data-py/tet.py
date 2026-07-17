@@ -1,225 +1,631 @@
 import requests
 import json
-import time
-import random
+import gspread
+
 
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-# =====================================================
+from google.oauth2.service_account import Credentials
+
+
+
+# ==================================================
 # CONFIG
-# =====================================================
+# ==================================================
 
-TOKEN = "ajgnfuepdrbjhle6orecg93ed4yf6nds0url8cru"
+TENANT_ID = 2175621
 
-ACCOUNT = "xiaoruan16021"
-TENANT_ID = 2654039
-REGION_ID = 1
 
-URL = "https://api6.o-9-d-4.com/api/backend/trpc/user.list"
+TOKEN = "0vkpu7olptxu5eak9ewzv5f4yq75t998wcsxcoan"
+
+
+ACCOUNT = "xiaoruan16011"
+
+
+FINGERPRINT_ID = "6hUecf0K0ity09A0YcED"
+
+
+
+API_URL = (
+"https://api6.o-9-d-4.com/api/backend/trpc/realTimeData.list"
+)
+
+
+
+# Google Sheet
+
+CREDENTIALS_FILE = (
+"/Users/xiaoruan/Documents/data_get/credentials.json"
+)
+
+
+SHEET_ID = (
+"1gfsTt_nL0wK2mepUAXkBgRqZHLYRY3xqWmbAxkzp0ao"
+)
+
+
+SHEET_NAME = "66aa"
+
+
+
+
+
+# ==================================================
+# HEADER
+# ==================================================
+
 
 HEADERS = {
-    "accept": "*/*",
-    "authorization": f"Bearer {TOKEN}",
-    "account": ACCOUNT,
-    "client-language": "zh-CN",
-    "content-type": "application/json",
-    "fingerprint-id": "6hUecf0K0ity09A0YcED",
-    "origin": "https://admin-16021-9fab47.c-9-m-1.com",
-    "referer": "https://admin-16021-9fab47.c-9-m-1.com/",
-    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-    "accept-language": "vi,fr-FR;q=0.9,fr;q=0.8,en-US;q=0.7,en;q=0.6,zh-CN;q=0.5",
-"cache-control": "no-cache",
-"pragma": "no-cache",
-    "x-admin-host": "admin-16021-9fab47.c-9-m-1.com",
-}
-session = requests.Session()
-session.headers.update(HEADERS)
-# =====================================================
-# 登录类型
-# =====================================================
 
-APP_TYPES = {
-    "全部": None,
-    "安卓H5": "AndroidH5",
-    "苹果H5": "iOSH5",
-    "PWA": "PWA",
-    "APK": "APK",
-    "苹果APP": "iOSApp",
-    "电脑系统": "DesktopOS",
+"authorization":
+f"Bearer {TOKEN}",
+
+"account":
+ACCOUNT,
+
+"client-language":
+"zh-CN",
+
+"fingerprint-id":
+FINGERPRINT_ID,
+
+"x-admin-host":
+"admin-16011-34bc8f.c-9-m-1.com",
+
+"origin":
+"https://admin-16011-34bc8f.c-9-m-1.com",
+
+"user-agent":
+"Mozilla/5.0"
+
 }
 
-# =====================================================
-# Brazil yesterday
-# =====================================================
 
-def get_yesterday_range():
-    tz = ZoneInfo("America/Sao_Paulo")
 
-    now = datetime.now(tz)
 
-    yesterday = now.date() - timedelta(days=1)
+# ==================================================
+# 获取最近4天时间
+# ==================================================
 
-    start = datetime.combine(
-        yesterday,
-        datetime.min.time(),
-        tzinfo=tz
-    )
 
-    end = datetime.combine(
-        yesterday,
-        datetime.max.time().replace(microsecond=0),
-        tzinfo=tz
-    )
+def get_target_time():
 
-    return (
-        yesterday.strftime("%Y-%m-%d"),
-        start.astimezone(ZoneInfo("UTC")).strftime("%Y-%m-%dT%H:%M:%S.000Z"),
-        end.astimezone(ZoneInfo("UTC")).strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+
+    brazil = ZoneInfo(
+        "America/Sao_Paulo"
     )
 
 
-# =====================================================
+    now = datetime.now(
+        brazil
+    )
+
+
+    # 21:03 -> 21:00
+
+    target = now.replace(
+
+        minute=0,
+
+        second=0,
+
+        microsecond=0
+
+    )
+
+
+
+    result=[]
+
+
+    for i in range(4):
+
+
+        t = target - timedelta(
+            days=i
+        )
+
+
+        result.append({
+
+            "date":
+            t.strftime("%Y-%m-%d"),
+
+
+            "time":
+            t.strftime("%H:%M")
+
+        })
+
+
+    return result
+
+
+
+
+
+# ==================================================
 # API
-# =====================================================
+# ==================================================
 
-def get_total(app_type, start_time, end_time):
 
-    payload = {
-        "json": {
-            "queryType": "userId",
-            "regionId": REGION_ID,
-            "tenantId": TENANT_ID,
-            "loginStartTime": start_time,
-            "loginEndTime": end_time,
-            "page": 1,
-            "pageSize": 1,
-            "order": [
-                {
-                    "key": "",
-                    "type": "desc"
-                }
-            ]
-        }
+def get_api(date):
+
+
+    params={
+
+
+        "input":json.dumps({
+
+            "json":{
+
+                "tenantId":
+                TENANT_ID,
+
+
+                "dateTime":
+                date
+
+            }
+
+        })
+
     }
 
-    if app_type is not None:
-        payload["json"]["appType"] = app_type
 
-    params = {
-        "input": json.dumps(payload, separators=(",", ":"))
-    }
 
-    for retry in range(10):
+    r=requests.get(
 
-        try:
+        API_URL,
 
-            r = session.get(
-                URL,
-                params=params,
-                timeout=30,
-                allow_redirects=True
-            )
+        params=params,
 
-            # =========================
-            # 成功
-            # =========================
-            if r.status_code == 200:
+        headers=HEADERS,
 
-                data = r.json()
+        timeout=30
 
-                # In JSON khi cần debug
-                # print(json.dumps(data, indent=2, ensure_ascii=False))
+    )
 
-                total = (
-                    data.get("result", {})
-                        .get("data", {})
-                        .get("json", {})
-                        .get("userList", {})
-                        .get("total")
+
+    print(
+        "API",
+        date,
+        r.status_code
+    )
+
+
+    return r.json()
+
+
+
+
+
+
+# ==================================================
+# 查找对应时间
+# ==================================================
+
+
+def get_rows():
+
+
+    result={}
+
+
+
+    targets=get_target_time()
+
+
+
+    for target in targets:
+
+
+        date=target["date"]
+
+        need_time=target["time"]
+
+
+
+        api=get_api(
+            date
+        )
+
+
+
+        rows=(
+
+            api["result"]
+            ["data"]
+            ["json"]
+
+        )
+
+
+
+        for row in rows:
+
+
+            utc=datetime.fromisoformat(
+
+                row["createTime"].replace(
+                    "Z",
+                    "+00:00"
                 )
 
-                if total is None:
-                    print("❌ Không tìm thấy userList.total")
-                    print(json.dumps(data, indent=2, ensure_ascii=False))
-                    return 0
-
-                return total
-
-            # =========================
-            # 被限流
-            # =========================
-            elif r.status_code == 429:
-
-                wait = random.randint(1, 5)
-                print(f"⚠️ 429，等待 {wait} 秒...")
-                time.sleep(wait)
-                continue
-
-            # =========================
-            # TOKEN失效
-            # =========================
-            elif r.status_code == 401:
-
-                print("❌ TOKEN 已失效")
-                return 0
-
-            else:
-
-                print(f"HTTP {r.status_code}")
-                print(r.text)
-                time.sleep(3)
-
-        except Exception as e:
-
-            print("Exception:", e)
-            time.sleep(5)
-
-    return 0
+            )
 
 
-# =====================================================
+            brazil=utc.astimezone(
+
+                ZoneInfo(
+                    "America/Sao_Paulo"
+                )
+
+            )
+
+
+            show_time=brazil.strftime(
+                "%H:%M"
+            )
+
+
+
+            if show_time==need_time:
+
+
+
+                result[date]=row
+
+
+
+                break
+
+
+
+    return result
+
+
+
+
+
+# ==================================================
+# 生成网页样式
+# ==================================================
+
+
+def make_sheet_data(data):
+
+
+    dates = list(data.keys())
+
+    dates.sort(
+        reverse=True
+    )
+
+
+    result = []
+
+
+    # header
+
+    result.append(
+        ["指标"] + dates
+    )
+
+
+    fields = [
+
+        ("登录用户","loginCount"),
+
+        ("新增注册","registerCount"),
+
+        ("投注用户","betCount"),
+
+        ("同时在线","onlineCount"),
+
+        ("首充用户","firstRechargeCount"),
+
+        ("裂变首充","subFirstRechargeCount"),
+
+        ("充值用户","rechargeCount"),
+
+        ("平台盈利","tenantProfitAmount"),
+
+        ("充值金额","rechargeAmount"),
+
+        ("充值订单","rechargeTimes"),
+
+        ("提现金额","withdrawAmount"),
+
+        ("提现订单","withdrawTimes"),
+
+        ("赠送金额","discountAmount")
+
+    ]
+
+
+
+    for name,key in fields:
+
+
+        row=[name]
+
+
+        for d in dates:
+
+
+            value=data[d][key]
+
+
+            # 金额除100
+
+            if key in [
+
+                "tenantProfitAmount",
+
+                "rechargeAmount",
+
+                "withdrawAmount",
+
+                "discountAmount"
+
+            ]:
+
+                value=value/100
+
+
+
+            row.append(
+                value
+            )
+
+
+        result.append(
+            row
+        )
+
+
+
+    # 充提差
+
+    row=["充提差"]
+
+
+    for d in dates:
+
+
+        r=data[d]
+
+
+        diff=(
+
+            r["rechargeAmount"]
+
+            -
+
+            r["withdrawAmount"]
+
+        )/100
+
+
+        row.append(
+            diff
+        )
+
+
+    result.append(
+        row
+    )
+
+
+
+    # 人工充值/订单数
+
+    row=["人工充值/订单数"]
+
+
+    for d in dates:
+
+        r=data[d]
+
+        row.append(
+
+            f'{r["manualRechargeAmount"]/100:.2f} / {r["manualRechargeTimes"]}'
+
+        )
+
+
+    result.append(row)
+
+
+
+    # 订单充值/订单数
+
+    row=["订单充值/订单数"]
+
+
+    for d in dates:
+
+        r=data[d]
+
+        row.append(
+
+            f'{r["orderRechargeAmount"]/100:.2f} / {r["orderRechargeTimes"]}'
+
+        )
+
+
+    result.append(row)
+
+
+
+    # 人工提现/订单数
+
+    row=["人工提现/订单数"]
+
+
+    for d in dates:
+
+        r=data[d]
+
+        row.append(
+
+            f'{r["manualWithdrawAmount"]/100:.2f} / {r["manualWithdrawTimes"]}'
+
+        )
+
+
+    result.append(row)
+
+
+
+    # 订单提现/订单数
+
+    row=["订单提现/订单数"]
+
+
+    for d in dates:
+
+        r=data[d]
+
+        row.append(
+
+            f'{r["orderWithdrawAmount"]/100:.2f} / {r["orderWithdrawTimes"]}'
+
+        )
+
+
+    result.append(row)
+
+
+
+    return result
+
+# ==================================================
+# 上传 Google Sheet
+# ==================================================
+
+
+def upload(rows):
+
+
+    scope=[
+
+        "https://www.googleapis.com/auth/spreadsheets",
+
+        "https://www.googleapis.com/auth/drive"
+
+    ]
+
+
+
+    creds=Credentials.from_service_account_file(
+
+        CREDENTIALS_FILE,
+
+        scopes=scope
+
+    )
+
+
+
+    client=gspread.authorize(
+        creds
+    )
+
+
+
+    sh=client.open_by_key(
+        SHEET_ID
+    )
+
+
+    ws=sh.worksheet(
+        SHEET_NAME
+    )
+
+
+    ws.clear()
+
+
+
+    ws.update(
+        rows
+    )
+
+
+
+    # 自动换行
+
+    ws.format(
+
+        "A1:E20",
+
+        {
+
+        "wrapStrategy":"WRAP",
+
+        "verticalAlignment":"TOP"
+
+        }
+
+    )
+
+
+
+    # 调整列宽
+
+    ws.columns_auto_resize(
+        0,
+        5
+    )
+
+
+
+    print(
+        "✅ 上传66aa完成"
+    )
+
+
+
+
+
+
+# ==================================================
 # MAIN
-# =====================================================
+# ==================================================
 
-def main():
 
-    day, start_time, end_time = get_yesterday_range()
+if __name__=="__main__":
 
-    print("=" * 60)
-    print("Brazil Date :", day)
-    print("Start       :", start_time)
-    print("End         :", end_time)
-    print("=" * 60)
 
-    results = {}
+    print(
+        "开始运行"
+    )
 
-    for i, (name, app) in enumerate(APP_TYPES.items(), 1):
 
-        print(f"\n[{i}/{len(APP_TYPES)}] 查询 {name}")
+    data=get_rows()
 
-        total = get_total(app, start_time, end_time)
 
-        results[name] = total
 
-        print(f"{name:<12}: {total:,}")
+    print(
+        "获取日期:",
+        list(data.keys())
+    )
 
-        if i != len(APP_TYPES):
 
-          sleep_time = random.randint(3, 5)
 
-    print(f"休息 {sleep_time} 秒...")
+    rows=make_sheet_data(
+        data
+    )
 
-    time.sleep(sleep_time)
 
-    print()
-    print("=" * 60)
-    print(f"{'登录类型':<15}{'人数':>15}")
-    print("=" * 60)
+    upload(
+        rows
+    )
 
-    for name, total in results.items():
-        print(f"{name:<15}{total:>15,}")
 
-    print("=" * 60)
-if __name__ == "__main__":
-    main()
+    print(
+        "全部完成"
+    )
