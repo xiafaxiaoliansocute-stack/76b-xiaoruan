@@ -1477,57 +1477,37 @@ const retentionGroupHeader =
 const tableMainTitle =
     document.getElementById("tableMainTitle");
 
-// ===== SỬA TỪ ĐÂY  =====
+// ===== SỬA TỪ ĐÂY CÓ ĐÀI MỚI CHỈ VIÊC THÊM TÊN  =====
 
-if(site === "23A"){
+if(site === "23A" || site === "23E"){
 
     // 人均 +1 cột
     extraHeader.style.display = "";
     avgGroupHeader.colSpan = 11;
 
+
     // 留存率 +1 cột
     retentionExtraHeader.style.display = "";
     retentionGroupHeader.colSpan = 7;
 
+
     // Tổng bảng +2 cột
     tableMainTitle.colSpan = 38;
+
 
 }else{
 
     extraHeader.style.display = "none";
     avgGroupHeader.colSpan = 10;
 
-    retentionExtraHeader.style.display = "none";
-    retentionGroupHeader.colSpan = 6;
-
-    tableMainTitle.colSpan = 36;
-}
-// ===== SỬA TỪ ĐÂY  =====
-
-if(site === "23E"){
-
-    // 人均 +1 cột
-    extraHeader.style.display = "";
-    avgGroupHeader.colSpan = 11;
-
-    // 留存率 +1 cột
-    retentionExtraHeader.style.display = "";
-    retentionGroupHeader.colSpan = 7;
-
-    // Tổng bảng +2 cột
-    tableMainTitle.colSpan = 38;
-
-}else{
-
-    extraHeader.style.display = "none";
-    avgGroupHeader.colSpan = 10;
 
     retentionExtraHeader.style.display = "none";
     retentionGroupHeader.colSpan = 6;
 
-    tableMainTitle.colSpan = 36;
-}
 
+    tableMainTitle.colSpan = 36;
+
+}
 // ===== TỚI ĐÂY LÀ KẾT THÚC  =====
 
 document.querySelectorAll(".site-btn").forEach(btn=>{
