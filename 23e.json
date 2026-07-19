@@ -1,5 +1,5 @@
 {
-    "update_time_brazil": "2026-07-19 19:01",
+    "update_time_brazil": "2026-07-19 20:01",
     "report_day": "2026-07-19",
     "realtime": {
         "00:00": {
@@ -15101,6 +15101,22 @@
             }
         },
         "19:05": {
+            "2026-07-19": {
+                "loginCount": 58,
+                "registerCount": 48,
+                "betCount": 25,
+                "onlineCount": 6,
+                "firstRechargeCount": 45,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 46,
+                "tenantProfit": 54.13,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "460 / 46",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 460,
+                "discount": 1.4
+            },
             "2026-07-18": {
                 "loginCount": 12,
                 "registerCount": 5,
@@ -15151,6 +15167,22 @@
             }
         },
         "19:10": {
+            "2026-07-19": {
+                "loginCount": 58,
+                "registerCount": 48,
+                "betCount": 25,
+                "onlineCount": 5,
+                "firstRechargeCount": 45,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 46,
+                "tenantProfit": 54.13,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "460 / 46",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 460,
+                "discount": 1.4
+            },
             "2026-07-18": {
                 "loginCount": 12,
                 "registerCount": 5,
@@ -15201,6 +15233,22 @@
             }
         },
         "19:15": {
+            "2026-07-19": {
+                "loginCount": 58,
+                "registerCount": 48,
+                "betCount": 25,
+                "onlineCount": 5,
+                "firstRechargeCount": 45,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 46,
+                "tenantProfit": 54.13,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "460 / 46",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 460,
+                "discount": 1.4
+            },
             "2026-07-18": {
                 "loginCount": 12,
                 "registerCount": 5,
@@ -15251,6 +15299,22 @@
             }
         },
         "19:20": {
+            "2026-07-19": {
+                "loginCount": 58,
+                "registerCount": 48,
+                "betCount": 25,
+                "onlineCount": 5,
+                "firstRechargeCount": 45,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 46,
+                "tenantProfit": 54.13,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "460 / 46",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 460,
+                "discount": 1.4
+            },
             "2026-07-18": {
                 "loginCount": 12,
                 "registerCount": 5,
@@ -15301,6 +15365,22 @@
             }
         },
         "19:25": {
+            "2026-07-19": {
+                "loginCount": 58,
+                "registerCount": 48,
+                "betCount": 25,
+                "onlineCount": 5,
+                "firstRechargeCount": 45,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 46,
+                "tenantProfit": 54.13,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "460 / 46",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 460,
+                "discount": 1.4
+            },
             "2026-07-18": {
                 "loginCount": 12,
                 "registerCount": 5,
@@ -15351,6 +15431,22 @@
             }
         },
         "19:30": {
+            "2026-07-19": {
+                "loginCount": 58,
+                "registerCount": 48,
+                "betCount": 25,
+                "onlineCount": 5,
+                "firstRechargeCount": 45,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 46,
+                "tenantProfit": 54.13,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "460 / 46",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 460,
+                "discount": 1.4
+            },
             "2026-07-18": {
                 "loginCount": 12,
                 "registerCount": 5,
@@ -15401,6 +15497,22 @@
             }
         },
         "19:35": {
+            "2026-07-19": {
+                "loginCount": 58,
+                "registerCount": 48,
+                "betCount": 25,
+                "onlineCount": 5,
+                "firstRechargeCount": 45,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 46,
+                "tenantProfit": 54.13,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "460 / 46",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 460,
+                "discount": 1.4
+            },
             "2026-07-18": {
                 "loginCount": 12,
                 "registerCount": 5,
@@ -15451,6 +15563,22 @@
             }
         },
         "19:40": {
+            "2026-07-19": {
+                "loginCount": 58,
+                "registerCount": 48,
+                "betCount": 25,
+                "onlineCount": 6,
+                "firstRechargeCount": 45,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 46,
+                "tenantProfit": 54.13,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "460 / 46",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 460,
+                "discount": 1.4
+            },
             "2026-07-18": {
                 "loginCount": 12,
                 "registerCount": 5,
@@ -15501,6 +15629,22 @@
             }
         },
         "19:45": {
+            "2026-07-19": {
+                "loginCount": 58,
+                "registerCount": 48,
+                "betCount": 25,
+                "onlineCount": 6,
+                "firstRechargeCount": 45,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 46,
+                "tenantProfit": 54.13,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "460 / 46",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 460,
+                "discount": 1.4
+            },
             "2026-07-18": {
                 "loginCount": 12,
                 "registerCount": 5,
@@ -15551,6 +15695,22 @@
             }
         },
         "19:50": {
+            "2026-07-19": {
+                "loginCount": 58,
+                "registerCount": 48,
+                "betCount": 25,
+                "onlineCount": 6,
+                "firstRechargeCount": 45,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 46,
+                "tenantProfit": 54.13,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "460 / 46",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 460,
+                "discount": 1.4
+            },
             "2026-07-18": {
                 "loginCount": 12,
                 "registerCount": 5,
@@ -15601,6 +15761,22 @@
             }
         },
         "19:55": {
+            "2026-07-19": {
+                "loginCount": 58,
+                "registerCount": 48,
+                "betCount": 25,
+                "onlineCount": 6,
+                "firstRechargeCount": 45,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 46,
+                "tenantProfit": 54.13,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "460 / 46",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 460,
+                "discount": 1.4
+            },
             "2026-07-18": {
                 "loginCount": 12,
                 "registerCount": 5,
@@ -15651,6 +15827,22 @@
             }
         },
         "20:00": {
+            "2026-07-19": {
+                "loginCount": 58,
+                "registerCount": 48,
+                "betCount": 25,
+                "onlineCount": 6,
+                "firstRechargeCount": 45,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 46,
+                "tenantProfit": 54.13,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "460 / 46",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 460,
+                "discount": 1.4
+            },
             "2026-07-18": {
                 "loginCount": 12,
                 "registerCount": 5,
@@ -18093,171 +18285,7 @@
                 "rechargeAmount": 50
             }
         },
-        "fb-pwa-a": {
-            "tenantId": 9503839,
-            "tenantName": "16028",
-            "regionId": 1,
-            "regionName": "巴西",
-            "registerCount": 0,
-            "loginCount": 0,
-            "firstRechargeCount": 0,
-            "firstRechargeAmount": 0,
-            "rechargeCount": 0,
-            "rechargeAmount": 0,
-            "withdrawCount": 0,
-            "withdrawAmount": 0,
-            "betCount": 0,
-            "betAmount": 0,
-            "validBetAmount": 0,
-            "reward": 0,
-            "rechargeTimes": 0,
-            "withdrawTimes": 0,
-            "rechargeWithdrawDiff": 0,
-            "splitRegisterCount": 0,
-            "splitLoginCount": 0,
-            "splitFirstRechargeCount": 0,
-            "splitFirstRechargeAmount": 0,
-            "splitRechargeCount": 0,
-            "splitRechargeAmount": 0,
-            "splitWithdrawCount": 0,
-            "splitWithdrawAmount": 0,
-            "splitBetCount": 0,
-            "splitBetAmount": 0,
-            "splitValidBetAmount": 0,
-            "splitReward": 0,
-            "splitRechargeTimes": 0,
-            "splitWithdrawTimes": 0,
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
-        "fb-pwa": {
-            "tenantId": 9503839,
-            "tenantName": "16028",
-            "regionId": 1,
-            "regionName": "巴西",
-            "registerCount": 0,
-            "loginCount": 0,
-            "firstRechargeCount": 0,
-            "firstRechargeAmount": 0,
-            "rechargeCount": 0,
-            "rechargeAmount": 0,
-            "withdrawCount": 0,
-            "withdrawAmount": 0,
-            "betCount": 0,
-            "betAmount": 0,
-            "validBetAmount": 0,
-            "reward": 0,
-            "rechargeTimes": 0,
-            "withdrawTimes": 0,
-            "rechargeWithdrawDiff": 0,
-            "splitRegisterCount": 0,
-            "splitLoginCount": 0,
-            "splitFirstRechargeCount": 0,
-            "splitFirstRechargeAmount": 0,
-            "splitRechargeCount": 0,
-            "splitRechargeAmount": 0,
-            "splitWithdrawCount": 0,
-            "splitWithdrawAmount": 0,
-            "splitBetCount": 0,
-            "splitBetAmount": 0,
-            "splitValidBetAmount": 0,
-            "splitReward": 0,
-            "splitRechargeTimes": 0,
-            "splitWithdrawTimes": 0,
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
-        "fb-ios": {
-            "tenantId": 9503839,
-            "tenantName": "16028",
-            "regionId": 1,
-            "regionName": "巴西",
-            "registerCount": 0,
-            "loginCount": 0,
-            "firstRechargeCount": 0,
-            "firstRechargeAmount": 0,
-            "rechargeCount": 0,
-            "rechargeAmount": 0,
-            "withdrawCount": 0,
-            "withdrawAmount": 0,
-            "betCount": 0,
-            "betAmount": 0,
-            "validBetAmount": 0,
-            "reward": 0,
-            "rechargeTimes": 0,
-            "withdrawTimes": 0,
-            "rechargeWithdrawDiff": 0,
-            "splitRegisterCount": 0,
-            "splitLoginCount": 0,
-            "splitFirstRechargeCount": 0,
-            "splitFirstRechargeAmount": 0,
-            "splitRechargeCount": 0,
-            "splitRechargeAmount": 0,
-            "splitWithdrawCount": 0,
-            "splitWithdrawAmount": 0,
-            "splitBetCount": 0,
-            "splitBetAmount": 0,
-            "splitValidBetAmount": 0,
-            "splitReward": 0,
-            "splitRechargeTimes": 0,
-            "splitWithdrawTimes": 0,
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
         "fb-pwa-b": {
-            "tenantId": 9503839,
-            "tenantName": "16028",
-            "regionId": 1,
-            "regionName": "巴西",
-            "registerCount": 0,
-            "loginCount": 0,
-            "firstRechargeCount": 0,
-            "firstRechargeAmount": 0,
-            "rechargeCount": 0,
-            "rechargeAmount": 0,
-            "withdrawCount": 0,
-            "withdrawAmount": 0,
-            "betCount": 0,
-            "betAmount": 0,
-            "validBetAmount": 0,
-            "reward": 0,
-            "rechargeTimes": 0,
-            "withdrawTimes": 0,
-            "rechargeWithdrawDiff": 0,
-            "splitRegisterCount": 0,
-            "splitLoginCount": 0,
-            "splitFirstRechargeCount": 0,
-            "splitFirstRechargeAmount": 0,
-            "splitRechargeCount": 0,
-            "splitRechargeAmount": 0,
-            "splitWithdrawCount": 0,
-            "splitWithdrawAmount": 0,
-            "splitBetCount": 0,
-            "splitBetAmount": 0,
-            "splitValidBetAmount": 0,
-            "splitReward": 0,
-            "splitRechargeTimes": 0,
-            "splitWithdrawTimes": 0,
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
-        "fb-h5": {
             "tenantId": 9503839,
             "tenantName": "16028",
             "regionId": 1,
@@ -18339,6 +18367,88 @@
                 "rechargeAmount": 50
             }
         },
+        "上架包": {
+            "tenantId": 9503839,
+            "tenantName": "16028",
+            "regionId": 1,
+            "regionName": "巴西",
+            "registerCount": 0,
+            "loginCount": 0,
+            "firstRechargeCount": 0,
+            "firstRechargeAmount": 0,
+            "rechargeCount": 0,
+            "rechargeAmount": 0,
+            "withdrawCount": 0,
+            "withdrawAmount": 0,
+            "betCount": 0,
+            "betAmount": 0,
+            "validBetAmount": 0,
+            "reward": 0,
+            "rechargeTimes": 0,
+            "withdrawTimes": 0,
+            "rechargeWithdrawDiff": 0,
+            "splitRegisterCount": 0,
+            "splitLoginCount": 0,
+            "splitFirstRechargeCount": 0,
+            "splitFirstRechargeAmount": 0,
+            "splitRechargeCount": 0,
+            "splitRechargeAmount": 0,
+            "splitWithdrawCount": 0,
+            "splitWithdrawAmount": 0,
+            "splitBetCount": 0,
+            "splitBetAmount": 0,
+            "splitValidBetAmount": 0,
+            "splitReward": 0,
+            "splitRechargeTimes": 0,
+            "splitWithdrawTimes": 0,
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
+        },
+        "fb-h5": {
+            "tenantId": 9503839,
+            "tenantName": "16028",
+            "regionId": 1,
+            "regionName": "巴西",
+            "registerCount": 0,
+            "loginCount": 0,
+            "firstRechargeCount": 0,
+            "firstRechargeAmount": 0,
+            "rechargeCount": 0,
+            "rechargeAmount": 0,
+            "withdrawCount": 0,
+            "withdrawAmount": 0,
+            "betCount": 0,
+            "betAmount": 0,
+            "validBetAmount": 0,
+            "reward": 0,
+            "rechargeTimes": 0,
+            "withdrawTimes": 0,
+            "rechargeWithdrawDiff": 0,
+            "splitRegisterCount": 0,
+            "splitLoginCount": 0,
+            "splitFirstRechargeCount": 0,
+            "splitFirstRechargeAmount": 0,
+            "splitRechargeCount": 0,
+            "splitRechargeAmount": 0,
+            "splitWithdrawCount": 0,
+            "splitWithdrawAmount": 0,
+            "splitBetCount": 0,
+            "splitBetAmount": 0,
+            "splitValidBetAmount": 0,
+            "splitReward": 0,
+            "splitRechargeTimes": 0,
+            "splitWithdrawTimes": 0,
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
+        },
         "tt-pwa": {
             "tenantId": 9503839,
             "tenantName": "16028",
@@ -18380,7 +18490,7 @@
                 "rechargeAmount": 0
             }
         },
-        "DL": {
+        "fb-ios": {
             "tenantId": 9503839,
             "tenantName": "16028",
             "regionId": 1,
@@ -18421,7 +18531,89 @@
                 "rechargeAmount": 0
             }
         },
-        "上架包": {
+        "fb-pwa": {
+            "tenantId": 9503839,
+            "tenantName": "16028",
+            "regionId": 1,
+            "regionName": "巴西",
+            "registerCount": 0,
+            "loginCount": 0,
+            "firstRechargeCount": 0,
+            "firstRechargeAmount": 0,
+            "rechargeCount": 0,
+            "rechargeAmount": 0,
+            "withdrawCount": 0,
+            "withdrawAmount": 0,
+            "betCount": 0,
+            "betAmount": 0,
+            "validBetAmount": 0,
+            "reward": 0,
+            "rechargeTimes": 0,
+            "withdrawTimes": 0,
+            "rechargeWithdrawDiff": 0,
+            "splitRegisterCount": 0,
+            "splitLoginCount": 0,
+            "splitFirstRechargeCount": 0,
+            "splitFirstRechargeAmount": 0,
+            "splitRechargeCount": 0,
+            "splitRechargeAmount": 0,
+            "splitWithdrawCount": 0,
+            "splitWithdrawAmount": 0,
+            "splitBetCount": 0,
+            "splitBetAmount": 0,
+            "splitValidBetAmount": 0,
+            "splitReward": 0,
+            "splitRechargeTimes": 0,
+            "splitWithdrawTimes": 0,
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
+        },
+        "fb-pwa-a": {
+            "tenantId": 9503839,
+            "tenantName": "16028",
+            "regionId": 1,
+            "regionName": "巴西",
+            "registerCount": 0,
+            "loginCount": 0,
+            "firstRechargeCount": 0,
+            "firstRechargeAmount": 0,
+            "rechargeCount": 0,
+            "rechargeAmount": 0,
+            "withdrawCount": 0,
+            "withdrawAmount": 0,
+            "betCount": 0,
+            "betAmount": 0,
+            "validBetAmount": 0,
+            "reward": 0,
+            "rechargeTimes": 0,
+            "withdrawTimes": 0,
+            "rechargeWithdrawDiff": 0,
+            "splitRegisterCount": 0,
+            "splitLoginCount": 0,
+            "splitFirstRechargeCount": 0,
+            "splitFirstRechargeAmount": 0,
+            "splitRechargeCount": 0,
+            "splitRechargeAmount": 0,
+            "splitWithdrawCount": 0,
+            "splitWithdrawAmount": 0,
+            "splitBetCount": 0,
+            "splitBetAmount": 0,
+            "splitValidBetAmount": 0,
+            "splitReward": 0,
+            "splitRechargeTimes": 0,
+            "splitWithdrawTimes": 0,
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
+        },
+        "DL": {
             "tenantId": 9503839,
             "tenantName": "16028",
             "regionId": 1,
@@ -18549,6 +18741,51 @@
         },
         "promotionList": {}
     },
+    "fb-ios": {
+        "normalList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "parentList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "childList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "promotionList": {}
+    },
     "fb-h5": {
         "normalList": {
             "registerCount": null,
@@ -18577,6 +18814,51 @@
             "betAmount": null,
             "validBetAmount": null,
             "reward": null
+        },
+        "childList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "promotionList": {}
+    },
+    "kwai-pwa": {
+        "normalList": {
+            "registerCount": 21,
+            "firstRechargeCount": 20,
+            "firstRechargeAmount": 200,
+            "rechargeCount": 20,
+            "rechargeAmount": 200,
+            "withdrawCount": 0,
+            "withdrawAmount": 0,
+            "withdrawFee": 0,
+            "betCount": 0,
+            "betAmount": 0,
+            "validBetAmount": 0,
+            "reward": 120
+        },
+        "parentList": {
+            "registerCount": 21,
+            "firstRechargeCount": 20,
+            "firstRechargeAmount": 200,
+            "rechargeCount": 20,
+            "rechargeAmount": 200,
+            "withdrawCount": 0,
+            "withdrawAmount": 0,
+            "withdrawFee": 0,
+            "betCount": 0,
+            "betAmount": 0,
+            "validBetAmount": 0,
+            "reward": 120
         },
         "childList": {
             "registerCount": null,
@@ -18639,7 +18921,52 @@
         },
         "promotionList": {}
     },
-    "fb-pwa-b": {
+    "DL": {
+        "normalList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "parentList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "childList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "promotionList": {}
+    },
+    "fb-pwa-a": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -18729,51 +19056,6 @@
         },
         "promotionList": {}
     },
-    "fb-pwa": {
-        "normalList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "parentList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "childList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "promotionList": {}
-    },
     "上架包": {
         "normalList": {
             "registerCount": 25,
@@ -18819,52 +19101,7 @@
         },
         "promotionList": {}
     },
-    "kwai-pwa": {
-        "normalList": {
-            "registerCount": 21,
-            "firstRechargeCount": 20,
-            "firstRechargeAmount": 200,
-            "rechargeCount": 20,
-            "rechargeAmount": 200,
-            "withdrawCount": 0,
-            "withdrawAmount": 0,
-            "withdrawFee": 0,
-            "betCount": 0,
-            "betAmount": 0,
-            "validBetAmount": 0,
-            "reward": 120
-        },
-        "parentList": {
-            "registerCount": 21,
-            "firstRechargeCount": 20,
-            "firstRechargeAmount": 200,
-            "rechargeCount": 20,
-            "rechargeAmount": 200,
-            "withdrawCount": 0,
-            "withdrawAmount": 0,
-            "withdrawFee": 0,
-            "betCount": 0,
-            "betAmount": 0,
-            "validBetAmount": 0,
-            "reward": 120
-        },
-        "childList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "promotionList": {}
-    },
-    "DL": {
+    "fb-pwa": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -18909,52 +19146,7 @@
         },
         "promotionList": {}
     },
-    "fb-ios": {
-        "normalList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "parentList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "childList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "promotionList": {}
-    },
-    "fb-pwa-a": {
+    "fb-pwa-b": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -19057,7 +19249,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-06-20",
                 "type": "recharge",
                 "recharge": 0,
@@ -19113,7 +19305,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-06-20",
                 "type": "recharge",
                 "recharge": 0,
@@ -19169,7 +19361,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-06-20",
                 "type": "recharge",
                 "recharge": 0,
@@ -19337,7 +19529,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-06-20",
                 "type": "recharge",
                 "recharge": 0,
@@ -19449,7 +19641,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-06-20",
                 "type": "recharge",
                 "recharge": 0,
@@ -19561,7 +19753,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-06-20",
                 "type": "recharge",
                 "recharge": 0,
@@ -19675,7 +19867,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-06-21",
                 "type": "recharge",
                 "recharge": 0,
@@ -19731,7 +19923,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-06-21",
                 "type": "recharge",
                 "recharge": 0,
@@ -19787,7 +19979,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-06-21",
                 "type": "recharge",
                 "recharge": 0,
@@ -19955,7 +20147,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-06-21",
                 "type": "recharge",
                 "recharge": 0,
@@ -20067,7 +20259,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-06-21",
                 "type": "recharge",
                 "recharge": 0,
@@ -20179,7 +20371,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-06-21",
                 "type": "recharge",
                 "recharge": 0,
@@ -20293,7 +20485,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-06-22",
                 "type": "recharge",
                 "recharge": 0,
@@ -20349,7 +20541,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-06-22",
                 "type": "recharge",
                 "recharge": 0,
@@ -20405,7 +20597,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-06-22",
                 "type": "recharge",
                 "recharge": 0,
@@ -20573,7 +20765,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-06-22",
                 "type": "recharge",
                 "recharge": 0,
@@ -20685,7 +20877,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-06-22",
                 "type": "recharge",
                 "recharge": 0,
@@ -20797,7 +20989,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-06-22",
                 "type": "recharge",
                 "recharge": 0,
@@ -20911,7 +21103,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-06-23",
                 "type": "recharge",
                 "recharge": 0,
@@ -20967,7 +21159,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-06-23",
                 "type": "recharge",
                 "recharge": 0,
@@ -21023,7 +21215,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-06-23",
                 "type": "recharge",
                 "recharge": 0,
@@ -21191,7 +21383,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-06-23",
                 "type": "recharge",
                 "recharge": 0,
@@ -21303,7 +21495,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-06-23",
                 "type": "recharge",
                 "recharge": 0,
@@ -21415,7 +21607,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-06-23",
                 "type": "recharge",
                 "recharge": 0,
@@ -21529,7 +21721,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-06-24",
                 "type": "recharge",
                 "recharge": 0,
@@ -21585,7 +21777,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-06-24",
                 "type": "recharge",
                 "recharge": 0,
@@ -21641,7 +21833,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-06-24",
                 "type": "recharge",
                 "recharge": 0,
@@ -21809,7 +22001,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-06-24",
                 "type": "recharge",
                 "recharge": 0,
@@ -21921,7 +22113,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-06-24",
                 "type": "recharge",
                 "recharge": 0,
@@ -22033,7 +22225,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-06-24",
                 "type": "recharge",
                 "recharge": 0,
@@ -22147,7 +22339,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-06-25",
                 "type": "recharge",
                 "recharge": 0,
@@ -22203,7 +22395,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-06-25",
                 "type": "recharge",
                 "recharge": 0,
@@ -22259,7 +22451,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-06-25",
                 "type": "recharge",
                 "recharge": 0,
@@ -22427,7 +22619,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-06-25",
                 "type": "recharge",
                 "recharge": 0,
@@ -22539,7 +22731,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-06-25",
                 "type": "recharge",
                 "recharge": 0,
@@ -22651,7 +22843,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-06-25",
                 "type": "recharge",
                 "recharge": 0,
@@ -22765,7 +22957,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-06-26",
                 "type": "recharge",
                 "recharge": 0,
@@ -22821,7 +23013,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-06-26",
                 "type": "recharge",
                 "recharge": 0,
@@ -22877,7 +23069,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-06-26",
                 "type": "recharge",
                 "recharge": 0,
@@ -23045,7 +23237,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-06-26",
                 "type": "recharge",
                 "recharge": 0,
@@ -23157,7 +23349,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-06-26",
                 "type": "recharge",
                 "recharge": 0,
@@ -23269,7 +23461,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-06-26",
                 "type": "recharge",
                 "recharge": 0,
@@ -23383,7 +23575,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-06-27",
                 "type": "recharge",
                 "recharge": 0,
@@ -23439,7 +23631,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-06-27",
                 "type": "recharge",
                 "recharge": 0,
@@ -23495,7 +23687,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-06-27",
                 "type": "recharge",
                 "recharge": 0,
@@ -23663,7 +23855,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-06-27",
                 "type": "recharge",
                 "recharge": 0,
@@ -23775,7 +23967,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-06-27",
                 "type": "recharge",
                 "recharge": 0,
@@ -23887,7 +24079,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-06-27",
                 "type": "recharge",
                 "recharge": 0,
@@ -24001,7 +24193,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-06-28",
                 "type": "recharge",
                 "recharge": 0,
@@ -24057,7 +24249,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-06-28",
                 "type": "recharge",
                 "recharge": 0,
@@ -24113,7 +24305,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-06-28",
                 "type": "recharge",
                 "recharge": 0,
@@ -24281,7 +24473,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-06-28",
                 "type": "recharge",
                 "recharge": 0,
@@ -24393,7 +24585,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-06-28",
                 "type": "recharge",
                 "recharge": 0,
@@ -24505,7 +24697,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-06-28",
                 "type": "recharge",
                 "recharge": 0,
@@ -24619,7 +24811,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-06-29",
                 "type": "recharge",
                 "recharge": 0,
@@ -24675,7 +24867,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-06-29",
                 "type": "recharge",
                 "recharge": 0,
@@ -24731,7 +24923,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-06-29",
                 "type": "recharge",
                 "recharge": 0,
@@ -24899,7 +25091,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-06-29",
                 "type": "recharge",
                 "recharge": 0,
@@ -25011,7 +25203,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-06-29",
                 "type": "recharge",
                 "recharge": 0,
@@ -25123,7 +25315,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-06-29",
                 "type": "recharge",
                 "recharge": 0,
@@ -25237,7 +25429,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-06-30",
                 "type": "recharge",
                 "recharge": 0,
@@ -25293,7 +25485,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-06-30",
                 "type": "recharge",
                 "recharge": 0,
@@ -25349,7 +25541,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-06-30",
                 "type": "recharge",
                 "recharge": 0,
@@ -25517,7 +25709,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-06-30",
                 "type": "recharge",
                 "recharge": 0,
@@ -25629,7 +25821,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-06-30",
                 "type": "recharge",
                 "recharge": 0,
@@ -25741,7 +25933,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-06-30",
                 "type": "recharge",
                 "recharge": 0,
@@ -25855,7 +26047,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-01",
                 "type": "recharge",
                 "recharge": 0,
@@ -25911,7 +26103,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-01",
                 "type": "recharge",
                 "recharge": 0,
@@ -25967,7 +26159,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-01",
                 "type": "recharge",
                 "recharge": 0,
@@ -26135,7 +26327,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-01",
                 "type": "recharge",
                 "recharge": 0,
@@ -26247,7 +26439,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-01",
                 "type": "recharge",
                 "recharge": 0,
@@ -26359,7 +26551,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-01",
                 "type": "recharge",
                 "recharge": 0,
@@ -26473,7 +26665,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-02",
                 "type": "recharge",
                 "recharge": 0,
@@ -26529,7 +26721,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-02",
                 "type": "recharge",
                 "recharge": 0,
@@ -26585,7 +26777,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-02",
                 "type": "recharge",
                 "recharge": 0,
@@ -26753,7 +26945,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-02",
                 "type": "recharge",
                 "recharge": 0,
@@ -26865,7 +27057,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-02",
                 "type": "recharge",
                 "recharge": 0,
@@ -26977,7 +27169,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-02",
                 "type": "recharge",
                 "recharge": 0,
@@ -27091,7 +27283,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-03",
                 "type": "recharge",
                 "recharge": 0,
@@ -27147,7 +27339,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-03",
                 "type": "recharge",
                 "recharge": 0,
@@ -27203,7 +27395,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-03",
                 "type": "recharge",
                 "recharge": 0,
@@ -27371,7 +27563,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-03",
                 "type": "recharge",
                 "recharge": 0,
@@ -27483,7 +27675,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-03",
                 "type": "recharge",
                 "recharge": 0,
@@ -27595,7 +27787,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-03",
                 "type": "recharge",
                 "recharge": 0,
@@ -27709,7 +27901,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-04",
                 "type": "recharge",
                 "recharge": 0,
@@ -27765,7 +27957,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-04",
                 "type": "recharge",
                 "recharge": 0,
@@ -27821,7 +28013,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-04",
                 "type": "recharge",
                 "recharge": 0,
@@ -27989,7 +28181,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-04",
                 "type": "recharge",
                 "recharge": 0,
@@ -28101,7 +28293,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-04",
                 "type": "recharge",
                 "recharge": 0,
@@ -28213,7 +28405,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-04",
                 "type": "recharge",
                 "recharge": 0,
@@ -28327,7 +28519,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-05",
                 "type": "recharge",
                 "recharge": 0,
@@ -28383,7 +28575,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-05",
                 "type": "recharge",
                 "recharge": 0,
@@ -28439,7 +28631,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-05",
                 "type": "recharge",
                 "recharge": 0,
@@ -28607,7 +28799,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-05",
                 "type": "recharge",
                 "recharge": 0,
@@ -28719,7 +28911,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-05",
                 "type": "recharge",
                 "recharge": 0,
@@ -28831,7 +29023,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-05",
                 "type": "recharge",
                 "recharge": 0,
@@ -28945,7 +29137,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-06",
                 "type": "recharge",
                 "recharge": 0,
@@ -29001,7 +29193,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-06",
                 "type": "recharge",
                 "recharge": 0,
@@ -29057,7 +29249,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-06",
                 "type": "recharge",
                 "recharge": 0,
@@ -29225,7 +29417,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-06",
                 "type": "recharge",
                 "recharge": 0,
@@ -29337,7 +29529,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-06",
                 "type": "recharge",
                 "recharge": 0,
@@ -29449,7 +29641,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-06",
                 "type": "recharge",
                 "recharge": 0,
@@ -29563,7 +29755,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-07",
                 "type": "recharge",
                 "recharge": 0,
@@ -29619,7 +29811,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-07",
                 "type": "recharge",
                 "recharge": 0,
@@ -29675,7 +29867,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-07",
                 "type": "recharge",
                 "recharge": 0,
@@ -29843,7 +30035,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-07",
                 "type": "recharge",
                 "recharge": 0,
@@ -29955,7 +30147,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-07",
                 "type": "recharge",
                 "recharge": 0,
@@ -30067,7 +30259,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-07",
                 "type": "recharge",
                 "recharge": 0,
@@ -30181,7 +30373,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-08",
                 "type": "recharge",
                 "recharge": 0,
@@ -30237,7 +30429,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-08",
                 "type": "recharge",
                 "recharge": 0,
@@ -30293,7 +30485,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-08",
                 "type": "recharge",
                 "recharge": 0,
@@ -30461,7 +30653,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-08",
                 "type": "recharge",
                 "recharge": 0,
@@ -30573,7 +30765,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-08",
                 "type": "recharge",
                 "recharge": 0,
@@ -30685,7 +30877,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-08",
                 "type": "recharge",
                 "recharge": 0,
@@ -30799,7 +30991,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-09",
                 "type": "recharge",
                 "recharge": 0,
@@ -30855,7 +31047,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-09",
                 "type": "recharge",
                 "recharge": 0,
@@ -30911,7 +31103,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-09",
                 "type": "recharge",
                 "recharge": 0,
@@ -31079,7 +31271,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-09",
                 "type": "recharge",
                 "recharge": 0,
@@ -31191,7 +31383,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-09",
                 "type": "recharge",
                 "recharge": 0,
@@ -31303,7 +31495,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-09",
                 "type": "recharge",
                 "recharge": 0,
@@ -31417,7 +31609,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-10",
                 "type": "recharge",
                 "recharge": 0,
@@ -31473,7 +31665,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-10",
                 "type": "recharge",
                 "recharge": 0,
@@ -31529,7 +31721,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-10",
                 "type": "recharge",
                 "recharge": 0,
@@ -31697,7 +31889,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-10",
                 "type": "recharge",
                 "recharge": 0,
@@ -31809,7 +32001,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-10",
                 "type": "recharge",
                 "recharge": 0,
@@ -31921,7 +32113,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-10",
                 "type": "recharge",
                 "recharge": 0,
@@ -32035,7 +32227,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-11",
                 "type": "recharge",
                 "recharge": 0,
@@ -32091,7 +32283,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-11",
                 "type": "recharge",
                 "recharge": 0,
@@ -32147,7 +32339,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-11",
                 "type": "recharge",
                 "recharge": 0,
@@ -32315,7 +32507,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-11",
                 "type": "recharge",
                 "recharge": 0,
@@ -32427,7 +32619,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-11",
                 "type": "recharge",
                 "recharge": 0,
@@ -32539,7 +32731,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-11",
                 "type": "recharge",
                 "recharge": 0,
@@ -32653,7 +32845,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-12",
                 "type": "recharge",
                 "recharge": 0,
@@ -32709,7 +32901,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-12",
                 "type": "recharge",
                 "recharge": 0,
@@ -32765,7 +32957,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-12",
                 "type": "recharge",
                 "recharge": 0,
@@ -32933,7 +33125,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-12",
                 "type": "recharge",
                 "recharge": 0,
@@ -33045,7 +33237,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-12",
                 "type": "recharge",
                 "recharge": 0,
@@ -33157,7 +33349,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-12",
                 "type": "recharge",
                 "recharge": 0,
@@ -33271,7 +33463,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-13",
                 "type": "recharge",
                 "recharge": 0,
@@ -33327,7 +33519,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-13",
                 "type": "recharge",
                 "recharge": 0,
@@ -33383,7 +33575,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-13",
                 "type": "recharge",
                 "recharge": 0,
@@ -33551,7 +33743,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-13",
                 "type": "recharge",
                 "recharge": 0,
@@ -33663,7 +33855,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-13",
                 "type": "recharge",
                 "recharge": 0,
@@ -33775,7 +33967,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-13",
                 "type": "recharge",
                 "recharge": 0,
@@ -33889,7 +34081,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-14",
                 "type": "recharge",
                 "recharge": 0,
@@ -33945,7 +34137,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-14",
                 "type": "recharge",
                 "recharge": 0,
@@ -34001,7 +34193,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-14",
                 "type": "recharge",
                 "recharge": 0,
@@ -34169,7 +34361,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-14",
                 "type": "recharge",
                 "recharge": 0,
@@ -34281,7 +34473,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-14",
                 "type": "recharge",
                 "recharge": 0,
@@ -34393,7 +34585,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-14",
                 "type": "recharge",
                 "recharge": 0,
@@ -34507,7 +34699,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-15",
                 "type": "recharge",
                 "recharge": 0,
@@ -34563,7 +34755,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-15",
                 "type": "recharge",
                 "recharge": 0,
@@ -34619,7 +34811,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-15",
                 "type": "recharge",
                 "recharge": 0,
@@ -34787,7 +34979,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-15",
                 "type": "recharge",
                 "recharge": 0,
@@ -34899,7 +35091,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-15",
                 "type": "recharge",
                 "recharge": 0,
@@ -35011,7 +35203,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-15",
                 "type": "recharge",
                 "recharge": 0,
@@ -35125,7 +35317,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-16",
                 "type": "recharge",
                 "recharge": 0,
@@ -35181,7 +35373,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-16",
                 "type": "recharge",
                 "recharge": 0,
@@ -35237,7 +35429,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-16",
                 "type": "recharge",
                 "recharge": 0,
@@ -35405,7 +35597,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-16",
                 "type": "recharge",
                 "recharge": 0,
@@ -35517,7 +35709,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-16",
                 "type": "recharge",
                 "recharge": 0,
@@ -35629,7 +35821,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-16",
                 "type": "recharge",
                 "recharge": 0,
@@ -35743,7 +35935,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-17",
                 "type": "recharge",
                 "recharge": 0,
@@ -35799,7 +35991,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-17",
                 "type": "recharge",
                 "recharge": 0,
@@ -35855,7 +36047,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-17",
                 "type": "recharge",
                 "recharge": 0,
@@ -36023,7 +36215,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-17",
                 "type": "recharge",
                 "recharge": 0,
@@ -36135,7 +36327,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-17",
                 "type": "recharge",
                 "recharge": 0,
@@ -36247,7 +36439,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-17",
                 "type": "recharge",
                 "recharge": 0,
@@ -36361,7 +36553,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-18",
                 "type": "recharge",
                 "recharge": 0,
@@ -36417,7 +36609,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-18",
                 "type": "recharge",
                 "recharge": 0,
@@ -36473,7 +36665,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-18",
                 "type": "recharge",
                 "recharge": 0,
@@ -36641,7 +36833,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-18",
                 "type": "recharge",
                 "recharge": 0,
@@ -36753,7 +36945,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-18",
                 "type": "recharge",
                 "recharge": 0,
@@ -36865,7 +37057,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-18",
                 "type": "recharge",
                 "recharge": 0,
@@ -36979,7 +37171,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa": {
+            "fb-pwa-b": {
                 "time": "2026-07-19",
                 "type": "recharge",
                 "recharge": 0,
@@ -37035,18 +37227,18 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "上架包": {
+            "fb-pwa-a": {
                 "time": "2026-07-19",
                 "type": "recharge",
-                "recharge": 250,
+                "recharge": 0,
                 "withdrawCount": 0,
                 "withdrawals": 0,
-                "betting": 115770,
-                "validBetting": 115770,
+                "betting": 0,
+                "validBetting": 0,
                 "repeatRechargeAmount": 0,
                 "repeatRechargeCount": 0,
-                "validBetAmount": 115770,
-                "count": 25,
+                "validBetAmount": 0,
+                "count": 0,
                 "count1": 0,
                 "count2": 0,
                 "count3": 0,
@@ -37068,7 +37260,7 @@
                 "repeatCount13": 0,
                 "repeatCount29": 0,
                 "repeatCount59": 0,
-                "amount": 250,
+                "amount": 0,
                 "amount1": 0,
                 "amount2": 0,
                 "amount3": 0,
@@ -37079,7 +37271,7 @@
                 "amount13": 0,
                 "amount29": 0,
                 "amount59": 0,
-                "validBet": 115770,
+                "validBet": 0,
                 "validBet1": 0,
                 "validBet2": 0,
                 "validBet3": 0,
@@ -37091,7 +37283,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "其他": {
+            "fb-h5": {
                 "time": "2026-07-19",
                 "type": "recharge",
                 "recharge": 0,
@@ -37259,18 +37451,18 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-h5": {
+            "上架包": {
                 "time": "2026-07-19",
                 "type": "recharge",
-                "recharge": 0,
+                "recharge": 250,
                 "withdrawCount": 0,
                 "withdrawals": 0,
-                "betting": 0,
-                "validBetting": 0,
+                "betting": 115770,
+                "validBetting": 115770,
                 "repeatRechargeAmount": 0,
                 "repeatRechargeCount": 0,
-                "validBetAmount": 0,
-                "count": 0,
+                "validBetAmount": 115770,
+                "count": 25,
                 "count1": 0,
                 "count2": 0,
                 "count3": 0,
@@ -37292,7 +37484,7 @@
                 "repeatCount13": 0,
                 "repeatCount29": 0,
                 "repeatCount59": 0,
-                "amount": 0,
+                "amount": 250,
                 "amount1": 0,
                 "amount2": 0,
                 "amount3": 0,
@@ -37303,7 +37495,7 @@
                 "amount13": 0,
                 "amount29": 0,
                 "amount59": 0,
-                "validBet": 0,
+                "validBet": 115770,
                 "validBet1": 0,
                 "validBet2": 0,
                 "validBet3": 0,
@@ -37371,7 +37563,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-b": {
+            "fb-pwa": {
                 "time": "2026-07-19",
                 "type": "recharge",
                 "recharge": 0,
@@ -37483,7 +37675,7 @@
                 "validBet29": 0,
                 "validBet59": 0
             },
-            "fb-pwa-a": {
+            "其他": {
                 "time": "2026-07-19",
                 "type": "recharge",
                 "recharge": 0,
