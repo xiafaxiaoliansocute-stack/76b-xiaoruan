@@ -1,29 +1,27 @@
 import subprocess
 import time
 from datetime import datetime, timedelta
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 while True:
 
     try:
         print("🚀 Run:", datetime.now())
 
-        subprocess.run(
-            ["python3", "/Users/xiaoruan/Desktop/76b-getdata/main.py"],
-            check=True
-        )
-        subprocess.run(
-           ["python3", "/Users/xiaoruan/Desktop/76b-getdata/nn22.py"],
-            check=True
-        )
-        subprocess.run(
-           ["python3", "/Users/xiaoruan/Desktop/76b-getdata/23a.py"],
-            check=True
-        )
-        subprocess.run(
-           ["python3", "/Users/xiaoruan/Desktop/76b-getdata/23e.py"],
-            check=True
-        )
+        files = [
+            "main.py",
+            "nn22.py",
+            "23a.py",
+            "23e.py"
+        ]
 
+        for file in files:
+            subprocess.run(
+                ["python3", os.path.join(BASE_DIR, file)],
+                check=True
+            )
 
         print("✅ Done")
 
