@@ -1,12 +1,12 @@
 import requests
 import json
-import gspread
+import time
 
 
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-from google.oauth2.service_account import Credentials
+
 
 
 
@@ -14,38 +14,35 @@ from google.oauth2.service_account import Credentials
 # CONFIG
 # ==================================================
 
-TENANT_ID = 2175621
+TENANT_ID = 2654039
+
+REGION_ID = 1
 
 
-TOKEN = "0vkpu7olptxu5eak9ewzv5f4yq75t998wcsxcoan"
+ACCOUNT = "xiaoruan16021"
 
 
-ACCOUNT = "xiaoruan16011"
+TOKEN = "40c2mcwk81wlcw6vs7unbh66f8qv98xa4pn2bhlv"
 
 
 FINGERPRINT_ID = "6hUecf0K0ity09A0YcED"
 
 
 
-API_URL = (
-"https://api6.o-9-d-4.com/api/backend/trpc/realTimeData.list"
+RETENTION_URL = (
+    "https://api6.o-9-d-4.com/api/backend/trpc/channel.dayRetention"
 )
 
 
 
-# Google Sheet
-
-CREDENTIALS_FILE = (
-"/Users/xiaoruan/Documents/data_get/credentials.json"
+HOST = (
+    "admin-16021-9fab47.c-9-m-1.com"
 )
 
 
-SHEET_ID = (
-"1gfsTt_nL0wK2mepUAXkBgRqZHLYRY3xqWmbAxkzp0ao"
+ORIGIN = (
+    "https://admin-16021-9fab47.c-9-m-1.com"
 )
-
-
-SHEET_NAME = "66aa"
 
 
 
@@ -55,537 +52,349 @@ SHEET_NAME = "66aa"
 # HEADER
 # ==================================================
 
-
 HEADERS = {
 
-"authorization":
-f"Bearer {TOKEN}",
 
-"account":
-ACCOUNT,
+    "authorization":
+        f"Bearer {TOKEN}",
 
-"client-language":
-"zh-CN",
 
-"fingerprint-id":
-FINGERPRINT_ID,
+    "account":
+        ACCOUNT,
 
-"x-admin-host":
-"admin-16011-34bc8f.c-9-m-1.com",
 
-"origin":
-"https://admin-16011-34bc8f.c-9-m-1.com",
+    "client-language":
+        "zh-CN",
 
-"user-agent":
-"Mozilla/5.0"
+
+    "fingerprint-id":
+        FINGERPRINT_ID,
+
+
+    "x-admin-host":
+        HOST,
+
+
+    "origin":
+        ORIGIN,
+
+
+    "referer":
+        ORIGIN + "/",
+
+
+    "user-agent":
+        "Mozilla/5.0"
 
 }
 
 
 
 
+
+
+
 # ==================================================
-# 获取最近4天时间
+# DATE
 # ==================================================
 
-
-def get_target_time():
-
-
-    brazil = ZoneInfo(
-        "America/Sao_Paulo"
-    )
-
-
-    now = datetime.now(
-        brazil
-    )
-
-
-    # 21:03 -> 21:00
-
-    target = now.replace(
-
-        minute=0,
-
-        second=0,
-
-        microsecond=0
-
-    )
+BRAZIL_TZ = ZoneInfo(
+    "America/Sao_Paulo"
+)
 
 
 
-    result=[]
+now = datetime.now(
+    BRAZIL_TZ
+)
 
 
-    for i in range(4):
+
+START_DAY = (
+    now.date()
+    -
+    timedelta(days=90)
+)
 
 
-        t = target - timedelta(
-            days=i
-        )
+
+END_DAY = (
+    now.date()
+    -
+    timedelta(days=1)
+)
 
 
-        result.append({
-
-            "date":
-            t.strftime("%Y-%m-%d"),
 
 
-            "time":
-            t.strftime("%H:%M")
 
-        })
+print(
+    "🇧🇷 Brazil:",
+    now
+)
 
 
-    return result
+print(
+    "日期:",
+    START_DAY,
+    "→",
+    END_DAY
+)
+
+
+
+
 
 
 
 
 
 # ==================================================
-# API
+# 测试 batch retention
 # ==================================================
 
-
-def get_api(date):
-
-
-    params={
-
-
-        "input":json.dumps({
-
-            "json":{
-
-                "tenantId":
-                TENANT_ID,
+def get_retention_batch(
+        channel_ids,
+        parent_type
+):
 
 
-                "dateTime":
-                date
+    payload = {
 
-            }
 
-        })
+        "json":{
+
+
+            "tenantId":TENANT_ID,
+
+
+            "regionId":REGION_ID,
+
+
+
+            # ⭐ 关键
+            "channelIds":channel_ids,
+
+
+
+            "startTime":
+                str(START_DAY),
+
+
+
+            "endTime":
+                str(END_DAY),
+
+
+
+
+            "type":
+                "recharge",
+
+
+
+
+            "parentType":
+                parent_type,
+
+
+
+            "page":
+                1,
+
+
+
+            "pageSize":
+                500,
+
+
+
+            "order":[
+
+
+                {
+
+                    "key":"time",
+
+                    "type":"desc"
+
+                }
+
+            ],
+
+
+
+
+            "timeType":
+                "days_90",
+
+
+
+
+
+            "retentionDays":[
+
+
+                0,
+
+                1,
+
+                2,
+
+                3,
+
+                4,
+
+                5,
+
+                6,
+
+                9,
+
+                13,
+
+                29,
+
+                59
+
+            ]
+
+        }
 
     }
 
 
 
-    r=requests.get(
 
-        API_URL,
 
-        params=params,
-
-        headers=HEADERS,
-
-        timeout=30
-
+    print(
+        "\n请求channel数量:",
+        len(channel_ids)
     )
 
 
     print(
-        "API",
-        date,
-        r.status_code
+        "channelIds:",
+        channel_ids
     )
 
 
-    return r.json()
 
 
 
+    try:
 
 
-
-# ==================================================
-# 查找对应时间
-# ==================================================
+        r=requests.get(
 
 
-def get_rows():
+            RETENTION_URL,
 
 
-    result={}
+            params={
 
 
+                "input":
+                json.dumps(
 
-    targets=get_target_time()
+                    payload,
 
+                    separators=(',',':')
 
-
-    for target in targets:
-
-
-        date=target["date"]
-
-        need_time=target["time"]
-
-
-
-        api=get_api(
-            date
-        )
-
-
-
-        rows=(
-
-            api["result"]
-            ["data"]
-            ["json"]
-
-        )
-
-
-
-        for row in rows:
-
-
-            utc=datetime.fromisoformat(
-
-                row["createTime"].replace(
-                    "Z",
-                    "+00:00"
                 )
 
-            )
+            },
 
 
-            brazil=utc.astimezone(
+            headers=HEADERS,
 
-                ZoneInfo(
-                    "America/Sao_Paulo"
-                )
 
-            )
+            timeout=120
 
 
-            show_time=brazil.strftime(
-                "%H:%M"
-            )
-
-
-
-            if show_time==need_time:
-
-
-
-                result[date]=row
-
-
-
-                break
-
-
-
-    return result
-
-
-
-
-
-# ==================================================
-# 生成网页样式
-# ==================================================
-
-
-def make_sheet_data(data):
-
-
-    dates = list(data.keys())
-
-    dates.sort(
-        reverse=True
-    )
-
-
-    result = []
-
-
-    # header
-
-    result.append(
-        ["指标"] + dates
-    )
-
-
-    fields = [
-
-        ("登录用户","loginCount"),
-
-        ("新增注册","registerCount"),
-
-        ("投注用户","betCount"),
-
-        ("同时在线","onlineCount"),
-
-        ("首充用户","firstRechargeCount"),
-
-        ("裂变首充","subFirstRechargeCount"),
-
-        ("充值用户","rechargeCount"),
-
-        ("平台盈利","tenantProfitAmount"),
-
-        ("充值金额","rechargeAmount"),
-
-        ("充值订单","rechargeTimes"),
-
-        ("提现金额","withdrawAmount"),
-
-        ("提现订单","withdrawTimes"),
-
-        ("赠送金额","discountAmount")
-
-    ]
-
-
-
-    for name,key in fields:
-
-
-        row=[name]
-
-
-        for d in dates:
-
-
-            value=data[d][key]
-
-
-            # 金额除100
-
-            if key in [
-
-                "tenantProfitAmount",
-
-                "rechargeAmount",
-
-                "withdrawAmount",
-
-                "discountAmount"
-
-            ]:
-
-                value=value/100
-
-
-
-            row.append(
-                value
-            )
-
-
-        result.append(
-            row
         )
 
 
 
-    # 充提差
-
-    row=["充提差"]
-
-
-    for d in dates:
-
-
-        r=data[d]
-
-
-        diff=(
-
-            r["rechargeAmount"]
-
-            -
-
-            r["withdrawAmount"]
-
-        )/100
-
-
-        row.append(
-            diff
+        print(
+            "HTTP:",
+            r.status_code
         )
 
 
-    result.append(
-        row
-    )
+
+        data=r.json()
 
 
 
-    # 人工充值/订单数
-
-    row=["人工充值/订单数"]
-
-
-    for d in dates:
-
-        r=data[d]
-
-        row.append(
-
-            f'{r["manualRechargeAmount"]/100:.2f} / {r["manualRechargeTimes"]}'
-
+        print(
+            json.dumps(
+                data,
+                ensure_ascii=False
+            )[:1000]
         )
 
 
-    result.append(row)
 
 
+        result=(
 
-    # 订单充值/订单数
-
-    row=["订单充值/订单数"]
-
-
-    for d in dates:
-
-        r=data[d]
-
-        row.append(
-
-            f'{r["orderRechargeAmount"]/100:.2f} / {r["orderRechargeTimes"]}'
-
+            data
+            .get("result",{})
+            .get("data",{})
+            .get("json",{})
+            .get("data",{})
         )
 
 
-    result.append(row)
 
-
-
-    # 人工提现/订单数
-
-    row=["人工提现/订单数"]
-
-
-    for d in dates:
-
-        r=data[d]
-
-        row.append(
-
-            f'{r["manualWithdrawAmount"]/100:.2f} / {r["manualWithdrawTimes"]}'
-
+        print(
+            "\n返回key:"
         )
 
 
-    result.append(row)
-
-
-
-    # 订单提现/订单数
-
-    row=["订单提现/订单数"]
-
-
-    for d in dates:
-
-        r=data[d]
-
-        row.append(
-
-            f'{r["orderWithdrawAmount"]/100:.2f} / {r["orderWithdrawTimes"]}'
-
+        print(
+            result.keys()
+            if isinstance(result,dict)
+            else result
         )
 
 
-    result.append(row)
+
+
+        retention=result.get(
+            "retentionList",
+            []
+        )
 
 
 
-    return result
-
-# ==================================================
-# 上传 Google Sheet
-# ==================================================
-
-
-def upload(rows):
-
-
-    scope=[
-
-        "https://www.googleapis.com/auth/spreadsheets",
-
-        "https://www.googleapis.com/auth/drive"
-
-    ]
+        print(
+            "\nretention数量:",
+            len(retention)
+        )
 
 
 
-    creds=Credentials.from_service_account_file(
-
-        CREDENTIALS_FILE,
-
-        scopes=scope
-
-    )
+        return retention
 
 
 
-    client=gspread.authorize(
-        creds
-    )
+
+
+    except Exception as e:
+
+
+        print(
+            "错误:",
+            e
+        )
+
+
+        return []
 
 
 
-    sh=client.open_by_key(
-        SHEET_ID
-    )
-
-
-    ws=sh.worksheet(
-        SHEET_NAME
-    )
-
-
-    ws.clear()
-
-
-
-    ws.update(
-        rows
-    )
-
-
-
-    # 自动换行
-
-    ws.format(
-
-        "A1:E20",
-
-        {
-
-        "wrapStrategy":"WRAP",
-
-        "verticalAlignment":"TOP"
-
-        }
-
-    )
-
-
-
-    # 调整列宽
-
-    ws.columns_auto_resize(
-        0,
-        5
-    )
-
-
-
-    print(
-        "✅ 上传66aa完成"
-    )
 
 
 
@@ -593,39 +402,147 @@ def upload(rows):
 
 
 # ==================================================
-# MAIN
+# RUN TEST
 # ==================================================
-
 
 if __name__=="__main__":
 
 
+
+    # 测试50个channel
+
+    test_channels=[
+
+
+        7301,
+
+        7302,
+
+        7303,
+
+        7304,
+
+        7305,
+
+        7306,
+
+        7307,
+
+        7308,
+
+        7309,
+
+        7310,
+
+
+        7311,
+
+        7312,
+
+        7313,
+
+        7314,
+
+        7315,
+
+        7316,
+
+        7317,
+
+        7318,
+
+        7319,
+
+        7320,
+
+
+        7321,
+
+        7322,
+
+        7323,
+
+        7324,
+
+        7325,
+
+        7326,
+
+        7327,
+
+        7328,
+
+        7329,
+
+        7330,
+
+
+        7331,
+
+        7332,
+
+        7333,
+
+        7334,
+
+        7335,
+
+        7336,
+
+        7337,
+
+        7338,
+
+        7339,
+
+        7340,
+
+
+        7341,
+
+        7342,
+
+        7343,
+
+        7344,
+
+        7345,
+
+        7346,
+
+        7347,
+
+        7348,
+
+        7349,
+
+        7350
+
+    ]
+
+
+
+
+    data=get_retention_batch(
+
+        test_channels,
+
+        "none"
+
+    )
+
+
+
     print(
-        "开始运行"
-    )
 
+        "\n测试完成"
 
-    data=get_rows()
-
-
-
-    print(
-        "获取日期:",
-        list(data.keys())
-    )
-
-
-
-    rows=make_sheet_data(
-        data
-    )
-
-
-    upload(
-        rows
     )
 
 
     print(
-        "全部完成"
+
+        "返回数据长度:",
+        len(data)
+
     )

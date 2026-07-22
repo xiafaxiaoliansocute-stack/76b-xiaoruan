@@ -1,411 +1,1409 @@
-import asyncio
+import requests
+import json
 import gspread
-import pandas as pd
+import time
 
-from datetime import datetime
+
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+
+
 from google.oauth2.service_account import Credentials
-from playwright.async_api import async_playwright
 
 
-# ==========================================================
-# GOOGLE SHEET
-# ==========================================================
-
-CREDENTIALS_FILE = "/Users/xiaoruan/Documents/data_get/credentials.json"
-
-SHEET_ID = "1gfsTt_nL0wK2mepUAXkBgRqZHLYRY3xqWmbAxkzp0ao"
-
-SHEET_NAME = "测试链接"
 
 
-scope = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"
-]
 
-
-# ==========================================================
+# ==================================================
 # CONFIG
-# ==========================================================
+# ==================================================
 
-MAX_CONCURRENT = 15
+TENANT_ID = 2654039
+
+REGION_ID = 1
 
 
-# ==========================================================
-# CONNECT GOOGLE SHEET
-# ==========================================================
+ACCOUNT = "xiaoruan16021"
 
-def get_sheet():
 
-    creds = Credentials.from_service_account_file(
-        CREDENTIALS_FILE,
-        scopes=scope
-    )
+TOKEN = "40c2mcwk81wlcw6vs7unbh66f8qv98xa4pn2bhlv"
 
-    client = gspread.authorize(creds)
 
-    sh = client.open_by_key(SHEET_ID)
-
-    ws = sh.worksheet(SHEET_NAME)
-
-    return ws
+FINGERPRINT_ID = "6hUecf0K0ity09A0YcED"
 
 
 
-# ==========================================================
-# CHECK LINK
-# ==========================================================
-
-async def check_link(browser, row, semaphore):
-
-    async with semaphore:
-
-        site = row.get("站点", "")
-        media = str(row.get("媒体", "")).lower()
-        url = row.get("链接", "")
+HOST = (
+    "admin-16021-9fab47.c-9-m-1.com"
+)
 
 
-        result = {
+ORIGIN = (
+    "https://admin-16021-9fab47.c-9-m-1.com"
+)
 
-            "状态": "⚪ 没检测连接",
-            "HTTP": "",
-            "最终链接": "",
-            "检测时间": datetime.now().strftime(
-                "%Y-%m-%d %H:%M:%S"
-            ),
-            "原因": ""
+
+
+
+
+# ==================================================
+# API
+# ==================================================
+
+DAY_REPORT_URL = (
+
+    "https://api6.o-9-d-4.com/api/backend/trpc/channel.dayReportList"
+
+)
+
+
+
+RETENTION_URL = (
+
+    "https://api6.o-9-d-4.com/api/backend/trpc/channel.dayRetention"
+
+)
+
+
+
+# 每次 batch
+BATCH_SIZE = 50
+
+
+
+
+
+
+# ==================================================
+# GOOGLE SHEET
+# ==================================================
+
+CREDENTIALS_FILE = (
+
+    "/Users/xiaoruan/Documents/data_get/credentials.json"
+
+)
+
+
+
+SHEET_ID = (
+
+    "1gfsTt_nL0wK2mepUAXkBgRqZHLYRY3xqWmbAxkzp0ao"
+
+)
+
+
+
+SHEET_NAME = "留存1"
+
+
+
+
+
+
+
+# ==================================================
+# DATE
+# ==================================================
+
+BRAZIL_TZ = ZoneInfo(
+    "America/Sao_Paulo"
+)
+
+
+
+now_brazil = datetime.now(
+    BRAZIL_TZ
+)
+
+
+
+OPEN_DAY = datetime(
+    2026,
+    7,
+    7
+).date()
+
+
+
+END_DAY = (
+
+    now_brazil.date()
+
+    -
+
+    timedelta(days=1)
+
+)
+
+
+
+print(
+    "🇧🇷 Brazil:",
+    now_brazil
+)
+
+
+print(
+    "数据范围:",
+    OPEN_DAY,
+    "→",
+    END_DAY
+)
+
+
+
+
+
+
+# ==================================================
+# HEADERS
+# ==================================================
+
+HEADERS = {
+
+
+    "authorization":
+        f"Bearer {TOKEN}",
+
+
+    "account":
+        ACCOUNT,
+
+
+    "client-language":
+        "zh-CN",
+
+
+    "fingerprint-id":
+        FINGERPRINT_ID,
+
+
+    "x-admin-host":
+        HOST,
+
+
+    "origin":
+        ORIGIN,
+
+
+    "referer":
+        ORIGIN + "/",
+
+
+    "user-agent":
+        "Mozilla/5.0"
+
+}
+# ==================================================
+# 获取渠道列表
+# ==================================================
+
+def get_channels(day):
+
+
+    result = []
+
+    page = 1
+
+
+
+    while True:
+
+
+        payload = {
+
+
+            "json":{
+
+
+                "time": str(day),
+
+
+                "tenantId": TENANT_ID,
+
+
+                "regionId": REGION_ID,
+
+
+                "channelId": [],
+
+
+                "page": page,
+
+
+                "pageSize": 500,
+
+
+
+                "order":[
+
+
+                    {
+
+                        "key":"channelId",
+
+                        "type":"desc"
+
+                    },
+
+
+                    {
+
+                        "key":"isOfficial",
+
+                        "type":"desc"
+
+                    }
+
+
+                ]
+
+            }
 
         }
 
 
-        if not url:
-
-            return result
 
 
-
-        page = await browser.new_page(
-            user_agent=
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X)"
+        print(
+            "\n请求 PAGE:",
+            page
         )
+
 
 
         try:
 
-            response = await page.goto(
-                url,
-                timeout=20000,
-                wait_until="domcontentloaded"
+
+            r = requests.get(
+
+
+                DAY_REPORT_URL,
+
+
+                params={
+
+
+                    "input":
+
+                    json.dumps(
+
+                        payload,
+
+                        separators=(',',':')
+
+                    )
+
+                },
+
+
+                headers=HEADERS,
+
+
+                timeout=60
+
             )
 
 
-            html = (
-                await page.content()
-            ).lower()
-
-
-            status = response.status if response else 0
-
-
-            final_url = page.url
-
-
-            result["HTTP"] = status
-            result["最终链接"] = final_url
-
-
-
-            # =============================
-            # TELEGRAM
-            # =============================
-
-            if media == "telegram":
-
-
-                bad = [
-
-                    "this channel cannot be displayed",
-                    "this group cannot be displayed",
-                    "username is invalid",
-                    "not found"
-
-                ]
-
-
-                if any(x in html for x in bad):
-
-                    result["状态"] = "🔴 失败"
-                    result["原因"] = "Telegram not found"
-
-                else:
-
-                    result["状态"] = "🟢 正常"
-
-
-
-            # =============================
-            # FACEBOOK
-            # =============================
-
-            elif media == "facebook":
-
-
-                bad = [
-
-                    "content isn't available",
-                    "page isn't available",
-                    "this page isn't available"
-
-                ]
-
-
-                if any(x in html for x in bad):
-
-                    result["状态"] = "🔴 失败"
-                    result["原因"] = "Facebook page unavailable"
-
-                else:
-
-                    result["状态"] = "🟢 正常"
-
-
-
-            # =============================
-            # INSTAGRAM
-            # =============================
-
-            elif media == "instagram":
-
-
-                bad = [
-
-                    "sorry, this page isn't available",
-                    "page isn't available"
-
-                ]
-
-
-                if any(x in html for x in bad):
-
-                    result["状态"] = "🔴 失败"
-                    result["原因"] = "Instagram not found"
-
-                else:
-
-                    result["状态"] = "🟢 正常"
-
-
-
-            # =============================
-            # WHATSAPP
-            # =============================
-
-            elif media == "whatsapp":
-
-
-                bad = [
-
-                    "invalid invite",
-                    "invite link is invalid",
-                    "link has been reset"
-
-                ]
-
-
-                if any(x in html for x in bad):
-
-                    result["状态"] = "🔴 失败"
-                    result["原因"] = "WhatsApp expired"
-
-                else:
-
-                    result["状态"] = "🟢 正常"
-
-
-
-            # =============================
-            # WEBSITE / CS-BOS
-            # =============================
-
-            else:
-
-
-                if status >= 400:
-
-                    result["状态"] = "🔴 失败"
-                    result["原因"] = "链接无法访问"
-
-                else:
-
-                    result["状态"] = "🟢 正常"
+            data = r.json()
 
 
 
         except Exception as e:
 
 
-            result["状态"] = "🔴 失败"
-            result["原因"] = "链接无法访问"
+            print(
+                "API错误:",
+                e
+            )
 
-
-
-        finally:
-
-            await page.close()
-
-
-
-        return result
+            break
 
 
 
 
-# ==========================================================
-# MAIN
-# ==========================================================
-
-async def main():
 
 
-    ws = get_sheet()
+        js = (
 
+            data
 
-    print("\n读取 Google Sheet...")
+            .get("result",{})
 
+            .get("data",{})
 
-    records = ws.get_all_records()
+            .get("json",{})
 
-
-    print(
-        f"发现 {len(records)} 条数据\n"
-    )
-
-
-
-    semaphore = asyncio.Semaphore(
-        MAX_CONCURRENT
-    )
-
-
-    async with async_playwright() as p:
-
-
-        browser = await p.chromium.launch(
-            headless=True
         )
 
 
-        tasks = []
+
+        rows = js.get(
+            "reportList",
+            []
+        )
 
 
-        for row in records:
 
-            tasks.append(
-                check_link(
-                    browser,
-                    row,
-                    semaphore
-                )
+        total = js.get(
+            "total",
+            0
+        )
+
+
+
+
+
+        if not rows:
+
+            break
+
+
+
+
+
+        print(
+
+            "数量:",
+
+            len(rows),
+
+            "| FIRST:",
+
+            rows[0].get("channelId"),
+
+            "| LAST:",
+
+            rows[-1].get("channelId")
+
+        )
+
+
+
+
+        result.extend(rows)
+
+
+
+        if len(result) >= total:
+
+            break
+
+
+
+        page += 1
+
+
+
+
+
+    # 去重
+
+    unique = {}
+
+
+
+    for item in result:
+
+
+        cid = item.get(
+            "channelId"
+        )
+
+
+        if cid:
+
+            unique[cid] = item
+
+
+
+
+
+    channels = list(
+        unique.values()
+    )
+
+
+
+    print(
+        "唯一channel数量:",
+        len(channels)
+    )
+
+
+
+    return channels
+
+
+
+
+
+
+
+# ==================================================
+# Batch 获取 retention
+# ==================================================
+
+def get_retention_batch(
+
+        channel_ids,
+
+        start_day,
+
+        end_day,
+
+        parent_type
+
+):
+
+
+
+    payload = {
+
+
+        "json":{
+
+
+            "tenantId": TENANT_ID,
+
+
+            "regionId": REGION_ID,
+
+
+            "channelIds": channel_ids,
+
+
+            "startTime": str(start_day),
+
+
+            "endTime": str(end_day),
+
+
+            "type":"recharge",
+
+
+            "parentType":parent_type,
+
+
+            "page":1,
+
+
+            "pageSize":5000,
+
+
+            "order":[
+
+
+                {
+
+                    "key":"time",
+
+                    "type":"desc"
+
+                }
+
+            ],
+
+
+            "timeType":"days_90",
+
+
+            "retentionDays":[
+
+
+                0,
+
+                1,
+
+                2,
+
+                3,
+
+                4,
+
+                5,
+
+                6,
+
+                9,
+
+                13,
+
+                29,
+
+                59
+
+            ]
+
+        }
+
+    }
+
+
+
+
+    for retry in range(3):
+
+
+        try:
+
+
+            time.sleep(0.5)
+
+
+
+            r = requests.get(
+
+
+                RETENTION_URL,
+
+
+                params={
+
+
+                    "input":
+
+                    json.dumps(
+
+                        payload,
+
+                        separators=(',',':')
+
+                    )
+
+                },
+
+
+                headers=HEADERS,
+
+
+                timeout=180
+
             )
 
 
 
-        results = await asyncio.gather(
-            *tasks
-        )
 
-
-        await browser.close()
+            data = r.json()
 
 
 
-    # ======================================================
-    # MERGE RESULT
-    # ======================================================
+            result = (
 
-    output = []
+                data
 
+                .get("result",{})
 
-    for row, result in zip(
-        records,
-        results
-    ):
+                .get("data",{})
 
-        output.append([
+                .get("json",{})
 
-            row.get("站点",""),
-            row.get("媒体",""),
-            row.get("链接",""),
-            row.get("备注",""),
+                .get("data",{})
 
-            result["状态"],
-            result["HTTP"],
-            result["最终链接"],
-            result["检测时间"],
-            result["原因"]
+                .get("retentionList",[])
 
-        ])
+            )
 
 
 
 
-    headers = [
+            if result:
 
-        "站点",
-        "媒体",
-        "链接",
-        "备注",
 
-        "状态",
-        "HTTP",
-        "最终链接",
-        "检测时间",
-        "原因"
+                return result
+
+
+
+
+
+            print(
+
+                "返回为空 retry",
+
+                retry+1
+
+            )
+
+
+            time.sleep(3)
+
+
+
+        except Exception as e:
+
+
+            print(
+
+                "batch错误",
+
+                retry+1,
+
+                e
+
+            )
+
+
+            time.sleep(3)
+
+
+
+
+    return []
+# ==================================================
+# 批量获取 retention
+# ==================================================
+
+def batch_get_retention(
+
+        channels,
+
+        parent_type
+
+):
+
+
+    result = {}
+
+
+
+    channel_ids = [
+
+        x["channelId"]
+
+        for x in channels
 
     ]
 
 
 
-    ws.clear()
+    print(
+
+        "\n开始获取:",
+
+        parent_type,
+
+        "channel:",
+
+        len(channel_ids)
+
+    )
+
+
+
+
+    batches = [
+
+        channel_ids[i:i+BATCH_SIZE]
+
+        for i in range(
+
+            0,
+
+            len(channel_ids),
+
+            BATCH_SIZE
+
+        )
+
+    ]
+
+
+
+
+    for index, batch in enumerate(batches):
+
+
+        print(
+
+            parent_type,
+
+            "batch",
+
+            index + 1,
+
+            "/",
+
+            len(batches),
+
+            "数量:",
+
+            len(batch)
+
+        )
+
+
+
+
+        rows = get_retention_batch(
+
+            batch,
+
+            OPEN_DAY,
+
+            END_DAY,
+
+            parent_type
+
+        )
+
+
+
+        print(
+
+            "返回数量:",
+
+            len(rows)
+
+        )
+
+
+
+        # ==============================
+        # 单channel API 才 có channelId
+        # ==============================
+
+        for item in rows:
+
+
+            cid = item.get(
+
+                "channelId"
+
+            )
+
+
+
+            if cid:
+
+
+                result[cid] = item
+
+
+
+
+
+
+    print(
+
+        parent_type,
+
+        "完成:",
+
+        len(result)
+
+    )
+
+
+
+    return result
+
+
+
+
+
+
+
+
+# ==================================================
+# 找某一天数据
+# ==================================================
+
+def find_day_data(
+
+        data,
+
+        day
+
+):
+
+
+    if not data:
+
+        return {}
+
+
+
+    target = str(day)
+
+
+
+    for item in data:
+
+
+        if item.get("time") == target:
+
+
+            return item
+
+
+
+    return {}
+
+
+
+
+
+
+
+
+# ==================================================
+# 百分比
+# ==================================================
+
+def percent(
+
+        a,
+
+        b
+
+):
+
+
+    if not b:
+
+        return 0
+
+
+
+    return round(
+
+        a / b,
+
+        4
+
+    )
+# ==================================================
+# 生成全部数据
+# ==================================================
+
+def get_all_data():
+
+
+    print(
+        "🚀 开始获取渠道"
+    )
+
+
+
+    channels = get_channels(
+
+        END_DAY
+
+    )
+
+
+
+    print(
+
+        "最终渠道数量:",
+
+        len(channels)
+
+    )
+
+
+
+
+
+    # ===============================
+    # 获取三种类型
+    # ===============================
+
+
+    none_data = batch_get_retention(
+
+        channels,
+
+        "none"
+
+    )
+
+
+
+    direct_data = batch_get_retention(
+
+        channels,
+
+        "direct"
+
+    )
+
+
+
+    split_data = batch_get_retention(
+
+        channels,
+
+        "split"
+
+    )
+
+
+
+
+
+    print(
+
+        "开始生成数据"
+
+    )
+
+
+
+    rows=[]
+
+
+
+    day = OPEN_DAY
+
+
+
+
+    while day <= END_DAY:
+
+
+
+        for channel in channels:
+
+
+
+            cid = channel["channelId"]
+
+
+
+
+
+            total = find_day_data(
+
+                none_data.get(cid),
+
+                day
+
+            )
+
+
+
+            direct = find_day_data(
+
+                direct_data.get(cid),
+
+                day
+
+            )
+
+
+
+            split = find_day_data(
+
+                split_data.get(cid),
+
+                day
+
+            )
+
+
+
+
+
+            total_count = total.get(
+
+                "count",
+
+                0
+
+            )
+
+
+
+            direct_count = direct.get(
+
+                "count",
+
+                0
+
+            )
+
+
+
+            split_count = split.get(
+
+                "count",
+
+                0
+
+            )
+
+
+
+
+            recharge = round(
+
+                total.get(
+
+                    "recharge",
+
+                    0
+
+                )
+
+                /
+
+                100,
+
+                2
+
+            )
+
+
+
+
+
+
+            row=[
+
+
+                str(day),
+
+
+                channel.get(
+
+                    "channelName",
+
+                    ""
+
+                ),
+
+
+                total_count,
+
+
+                direct_count,
+
+
+                split_count,
+
+
+                recharge,
+
+
+
+                # 复充率
+
+                percent(
+
+                    total.get(
+
+                        "repeatCount",
+
+                        0
+
+                    ),
+
+                    total_count
+
+                ),
+
+
+
+                # 2日
+
+                percent(
+
+                    total.get(
+
+                        "count1",
+
+                        0
+
+                    ),
+
+                    total_count
+
+                ),
+
+
+
+                # 3日
+
+                percent(
+
+                    total.get(
+
+                        "count2",
+
+                        0
+
+                    ),
+
+                    total_count
+
+                ),
+
+
+
+                # 7日
+
+                percent(
+
+                    total.get(
+
+                        "count6",
+
+                        0
+
+                    ),
+
+                    total_count
+
+                ),
+
+
+
+                # 30日
+
+                percent(
+
+                    total.get(
+
+                        "count29",
+
+                        0
+
+                    ),
+
+                    total_count
+
+                )
+
+            ]
+
+
+
+
+            rows.append(row)
+
+
+
+
+
+
+        day += timedelta(days=1)
+
+
+
+
+
+    print(
+
+        "生成数据行:",
+
+        len(rows)
+
+    )
+
+
+
+    return rows
+
+
+
+
+
+
+
+# ==================================================
+# 上传 Google Sheet
+# ==================================================
+
+def upload_sheet(rows):
+
+
+    print(
+
+        "开始连接 Google Sheet"
+
+    )
+
+
+
+    scope=[
+
+
+        "https://www.googleapis.com/auth/spreadsheets",
+
+
+        "https://www.googleapis.com/auth/drive"
+
+    ]
+
+
+
+
+
+    creds = Credentials.from_service_account_file(
+
+        CREDENTIALS_FILE,
+
+        scopes=scope
+
+    )
+
+
+
+
+    client = gspread.authorize(
+
+        creds
+
+    )
+
+
+
+
+    ws = client.open_by_key(
+
+        SHEET_ID
+
+    ).worksheet(
+
+        SHEET_NAME
+
+    )
+
+
+
 
 
     ws.update(
-        "A1",
-        [headers] + output
+
+        range_name="A3",
+
+        values=rows,
+
+        value_input_option="USER_ENTERED"
+
     )
 
 
 
-    print("\n============================")
-
-    print("检测完成")
-
-    print(
-        "Alive:",
-        sum(
-            1 for x in results
-            if x["状态"]=="🟢 正常"
-        )
-    )
-
-    print(
-        "失败:",
-        sum(
-            1 for x in results
-            if x["状态"]=="🔴 失败"
-        )
-    )
 
 
     print(
-        "Google Sheet 已更新"
+
+        "✅ Google Sheet更新完成"
+
     )
 
-    print("============================")
 
 
 
+
+
+
+
+
+# ==================================================
+# RUN
+# ==================================================
 
 if __name__ == "__main__":
 
-    asyncio.run(main())
+
+
+    print(
+
+        "\n🚀 程序开始运行"
+
+    )
+
+
+
+    start=time.time()
+
+
+
+
+
+    rows=get_all_data()
+
+
+
+
+    print(
+
+        "\n准备上传行数:",
+
+        len(rows)
+
+    )
+
+
+
+
+
+    print(
+
+        "\n========== 数据预览 =========="
+
+    )
+
+
+
+    for r in rows[:5]:
+
+
+        print(r)
+
+
+
+
+    print(
+
+        "=============================="
+
+    )
+
+
+
+
+
+
+    upload_sheet(
+
+        rows
+
+    )
+
+
+
+
+
+
+    cost=round(
+
+        time.time()-start,
+
+        2
+
+    )
+
+
+
+    print(
+
+        "\n🎉 全部完成"
+
+    )
+
+
+
+    print(
+
+        "耗时:",
+
+        cost,
+
+        "秒"
+
+    )

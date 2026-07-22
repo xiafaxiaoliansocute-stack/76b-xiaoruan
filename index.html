@@ -4275,6 +4275,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                 ? (globalData.repeat_rate?.child ?? 0).toFixed(2) + "%"
                 : "";
 
+
     let allRate = item.show === "大盘"
         ? retentionRate("ALL", 1)
         : item.show === "FB-H5"
@@ -5747,77 +5748,7 @@ function renderRetentionButtons(){
     }
     
     // ========================================================================================================
-    //                                        23A
-    // ========================================================================================================
-
-     if(currentSite === "23E"){
-
-        html = `
-        <span>快捷筛选：</span>
-
-        <button class="retBtn active"
-            onclick="changeRetention('ALL',this)">
-            全部
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('fb-h5',this)">
-            FB-H5
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('fb-h5-a',this)">
-            FB-H5-A
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('fb-pwa',this)">
-            FB-PWA
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('fb-pwa-a',this)">
-            FB-PWA-A
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('fb-ios',this)">
-            FB-IOS
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('kwai-pwa',this)">
-            KWAI-PWA
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('tt-pwa',this)">
-            TT-PWA
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('dsp-h5',this)">
-            DSP-H5
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('ws-h5',this)">
-            WS-H5
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('其他',this)">
-            其他
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('回访',this)">
-            回访
-        </button>
-        `;
-    }
-        // ========================================================================================================
-    //                                        23A
+    //                                        23E
     // ========================================================================================================
 
      if(currentSite === "23E"){
@@ -5872,18 +5803,13 @@ function renderRetentionButtons(){
         </button>
 
         <button class="retBtn"
-            onclick="changeRetention(' 上架包',this)">
+            onclick="changeRetention('上架包',this)">
             上架包
         </button>
 
         <button class="retBtn"
             onclick="changeRetention('其他',this)">
             其他
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('回访',this)">
-            回访
         </button>
         `;
     }

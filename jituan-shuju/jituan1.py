@@ -8,92 +8,79 @@ from zoneinfo import ZoneInfo
 from google.oauth2.service_account import Credentials
 
 # ==========================
-# BRAZIL TIME
+# BRAZIL TIME CUSTOM
 # ==========================
 
 BRAZIL_TZ = ZoneInfo("America/Sao_Paulo")
-def get_brazil_time_range():
-    now = datetime.now(BRAZIL_TZ)
+
+
+def get_brazil_time_range(
+        date_str,
+        start_hour,
+        end_hour
+):
+
+    """
+    date_str:
+        日期
+        例如:
+        2026-07-20
+
+    start_hour:
+        开始小时
+        例如 0
+
+    end_hour:
+        结束小时
+        例如 17
+    """
+
     def utc_format(dt):
+
         return dt.astimezone(
             timezone.utc
         ).strftime(
             "%Y-%m-%dT%H:%M:%S.000Z"
         )
 
-    # =========================
-    # 00:00 - 00:59
-    # lấy nguyên ngày hôm qua
-    # ==========================
 
-    if now.hour == 0:
-        day_1 = now.date() - timedelta(days=1)
-        day_2 = now.date() - timedelta(days=2)
-
-        today_start = datetime(
-            day_1.year,
-            day_1.month,
-            day_1.day,
-            0,0,0,
-            tzinfo=BRAZIL_TZ
-        )
-
-        today_end = datetime(
-            day_1.year,
-            day_1.month,
-            day_1.day,
-            23,59,59,
-            tzinfo=BRAZIL_TZ
-        )
+    year, month, day = map(
+        int,
+        date_str.split("-")
+    )
 
 
+    start_time = datetime(
+        year,
+        month,
+        day,
+        start_hour,
+        0,
+        0,
+        tzinfo=BRAZIL_TZ
+    )
 
-        yesterday_start = datetime(
-            day_2.year,
-            day_2.month,
-            day_2.day,
-            0,0,0,
-            tzinfo=BRAZIL_TZ
-        )
 
-        yesterday_end = datetime(
-            day_2.year,
-            day_2.month,
-            day_2.day,
-            23,59,59,
-            tzinfo=BRAZIL_TZ
-        )
+    end_time = datetime(
+        year,
+        month,
+        day,
+        end_hour,
+        59,
+        59,
+        tzinfo=BRAZIL_TZ
+    )
 
-    # ==========================
-    # 01:00 trở đi
-    # lấy realtime
-    # ==========================
-
-    else:
-        today_start = now.replace(
-            hour=0,
-            minute=0,
-            second=0,
-            microsecond=0
-        )
-
-        today_end = now
-        yesterday_start = today_start - timedelta(days=1)
-        yesterday_end = now - timedelta(days=1)
 
     return {
-        "今日": {
-            "start":
-                utc_format(today_start),
-            "end":
-                utc_format(today_end)
-        },
 
-        "昨日": {
+        "自定义": {
+
             "start":
-                utc_format(yesterday_start),
+                utc_format(start_time),
+
             "end":
-                utc_format(yesterday_end)
+                utc_format(end_time)
 
         }
 
@@ -114,11 +101,11 @@ CREDENTIAL_FILE = (
 # LOGIN CONFIG
 # ==========================
 
-TENANT_ID = 9910053
+TENANT_ID = 4505213
 REGION_ID = 1
-USERNAME = "16026tg1"
-PASSWORD = "16026tg1"
-OTP_SECRET = "FYDDMUQACRUVEWY2"
+USERNAME = "16027tg01"
+PASSWORD = "16027tg01"
+OTP_SECRET = "EZ3GIXA7C5DEA6ZP"
 LOGIN_URL = (
     "https://api6.o-9-d-4.com/api/backend/trpc/auth.login"
 )
@@ -259,7 +246,19 @@ headers = {
 
 all_data = []
 
-TIME_RANGES = get_brazil_time_range()
+# ==========================
+# 自定义查询时间
+# ==========================
+
+TIME_RANGES = get_brazil_time_range(
+
+    date_str="2026-07-9",
+
+    start_hour=0,
+
+    end_hour=19
+
+)
 
 for data_type, time_range in TIME_RANGES.items():
 
