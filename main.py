@@ -9,8 +9,8 @@ from zoneinfo import ZoneInfo
 # CONFIG
 # ======================
 
-ACCOUNT = "xiaoruan2300"
-TOKEN = "qn06iqlvmahfwe3sxf3klhjw3z6o34p5in4wsjo1"
+ACCOUNT = "xiaoruan2306"
+TOKEN = "eiwr0rp9e92xvjfwa9k07t0lkenlw79ls7qnt590"
 
 BASE_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.effect"
 HOUR_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.hourReportSum"

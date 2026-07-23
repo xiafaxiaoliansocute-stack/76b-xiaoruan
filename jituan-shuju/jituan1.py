@@ -1,17 +1,71 @@
+import warnings
+warnings.filterwarnings("ignore")
+
+
 import json
 import requests
 import pandas as pd
 import pyotp
 import gspread
+
+
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from google.oauth2.service_account import Credentials
 
-# ==========================
-# BRAZIL TIME CUSTOM
-# ==========================
 
-BRAZIL_TZ = ZoneInfo("America/Sao_Paulo")
+
+# ==================================================
+# GOOGLE SHEET CONFIG
+# ==================================================
+
+GOOGLE_SHEET_ID = (
+    "1qw3l5FVfEnHN1JsA-KWwo7cIpgXfy4vVUHcI5Reh_ww"
+)
+
+
+GOOGLE_JSON = (
+    "/Users/xiaoruan/Documents/76b-getdata/service_account.json"
+)
+
+
+
+# ==================================================
+# API CONFIG
+# ==================================================
+
+TENANT_ID = 4505213
+
+REGION_ID = 1
+
+
+USERNAME = "16027tg01"
+
+PASSWORD = "16027tg01"
+
+
+OTP_SECRET = "EZ3GIXA7C5DEA6ZP"
+
+
+LOGIN_URL = (
+    "https://api6.o-9-d-4.com/api/backend/trpc/auth.login"
+)
+
+
+DATA_URL = (
+    "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportList"
+)
+
+
+
+# ==================================================
+# BRAZIL TIME
+# ==================================================
+
+BRAZIL_TZ = ZoneInfo(
+    "America/Sao_Paulo"
+)
+
 
 
 def get_brazil_time_range(
@@ -20,20 +74,6 @@ def get_brazil_time_range(
         end_hour
 ):
 
-    """
-    date_str:
-        日期
-        例如:
-        2026-07-20
-
-    start_hour:
-        开始小时
-        例如 0
-
-    end_hour:
-        结束小时
-        例如 17
-    """
 
     def utc_format(dt):
 
@@ -44,16 +84,16 @@ def get_brazil_time_range(
         )
 
 
-    year, month, day = map(
+    y,m,d = map(
         int,
         date_str.split("-")
     )
 
 
-    start_time = datetime(
-        year,
-        month,
-        day,
+    start = datetime(
+        y,
+        m,
+        d,
         start_hour,
         0,
         0,
@@ -61,10 +101,10 @@ def get_brazil_time_range(
     )
 
 
-    end_time = datetime(
-        year,
-        month,
-        day,
+    end = datetime(
+        y,
+        m,
+        d,
         end_hour,
         59,
         59,
@@ -74,83 +114,77 @@ def get_brazil_time_range(
 
     return {
 
-        "自定义": {
+        "查询":
+
+        {
 
             "start":
-                utc_format(start_time),
+                utc_format(start),
 
             "end":
-                utc_format(end_time)
+                utc_format(end)
 
         }
 
     }
-# ==========================
-# GOOGLE SHEET CONFIG
-# ==========================
 
-GOOGLE_SHEET_ID = (
-    "1qw3l5FVfEnHN1JsA-KWwo7cIpgXfy4vVUHcI5Reh_ww"
-)
 
-CREDENTIAL_FILE = (
-    "/Users/xiaoruan/Documents/data_get/credentials.json"
-)
 
-# ==========================
-# LOGIN CONFIG
-# ==========================
+# ==================================================
+# LOGIN TOKEN
+# ==================================================
 
-TENANT_ID = 4505213
-REGION_ID = 1
-USERNAME = "16027tg01"
-PASSWORD = "16027tg01"
-OTP_SECRET = "EZ3GIXA7C5DEA6ZP"
-LOGIN_URL = (
-    "https://api6.o-9-d-4.com/api/backend/trpc/auth.login"
-)
-
-URL = (
-    "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportList"
-)
-
-# ==========================
-# LOGIN GET TOKEN
-# ==========================
-
-TOTP = pyotp.TOTP(
-    OTP_SECRET
-).now()
-
-print(
-    "当前OTP:",
-    TOTP
-)
 
 def get_token():
-    login_headers = {
-        "accept": "*/*",
+
+
+    if OTP_SECRET:
+
+        otp = pyotp.TOTP(
+            OTP_SECRET
+        ).now()
+
+    else:
+
+        otp = ""
+
+
+
+    headers = {
+
+
+        "accept":
+            "*/*",
+
         "content-type":
             "application/json",
+
         "client-language":
             "zh-CN",
+
         "account":
             USERNAME,
+
+
         "origin":
             "https://admin6-000-kd083bq.c-9-m-1.com",
 
+
         "referer":
             "https://admin6-000-kd083bq.c-9-m-1.com/",
+
 
         "user-agent":
             "Mozilla/5.0"
 
     }
 
+
+
     payload = {
 
 
-        "json": {
+        "json":{
 
 
             "username":
@@ -162,7 +196,7 @@ def get_token():
 
 
             "totp":
-                TOTP,
+                otp,
 
 
             "hToken":
@@ -174,12 +208,11 @@ def get_token():
 
 
 
-
-    r = requests.post(
+    r=requests.post(
 
         LOGIN_URL,
 
-        headers=login_headers,
+        headers=headers,
 
         json=payload,
 
@@ -187,355 +220,664 @@ def get_token():
 
     )
 
-    if r.status_code != 200:
-        print(
-            "❌ 登录失败"
-        )
 
-        print(
-            r.text
-        )
-        exit()
-    data = r.json()
-    token = (
+
+    data=r.json()
+
+
+
+    token=(
 
         data["result"]
+
         ["data"]
+
         ["json"]
+
         ["token"]
 
     )
 
+
+
     print(
         "✅ 登录成功"
     )
+
+
     return token
-TOKEN = get_token()
 
-# ==========================
-# API HEADERS
-# ==========================
 
-headers = {
+
+
+
+TOKEN=get_token()
+
+
+
+# ==================================================
+# API HEADER
+# ==================================================
+
+
+HEADERS={
+
+
     "accept":
         "*/*",
 
+
     "authorization":
         f"Bearer {TOKEN}",
+
+
     "account":
         USERNAME,
-    "cache-control":
-        "no-cache",
+
+
     "client-language":
         "zh-CN",
+
+
     "content-type":
         "application/json",
-    "fingerprint-id":
-        "3w08hakZFjz23WJBjwjx",
-    "origin":
-        "https://admin6-000-kd083bq.c-9-m-1.com",
-    "referer":
-        "https://admin6-000-kd083bq.c-9-m-1.com/",
+
+
     "user-agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+        "Mozilla/5.0"
+
 }
 
-# ==========================
-# GET 今日 + 昨日
-# ==========================
-
-all_data = []
-
-# ==========================
-# 自定义查询时间
-# ==========================
-
-TIME_RANGES = get_brazil_time_range(
-
-    date_str="2026-07-9",
-
-    start_hour=0,
-
-    end_hour=19
-
-)
-
-for data_type, time_range in TIME_RANGES.items():
 
 
-    print("======================")
-    print(
-        "正在获取:",
-        data_type
+
+
+# ==================================================
+# 获取渠道数据
+# ==================================================
+
+
+def get_channel_data(
+        date_str
+):
+
+
+    ranges=get_brazil_time_range(
+
+        date_str,
+
+        0,
+
+        23
+
     )
-    print("======================")
-    page = 1
-    PAGE_SIZE = 100
+
+
+    all_rows=[]
+
+
+    page=1
+
+
     while True:
-        payload = {
-            "json": {
+
+
+        payload={
+
+
+            "json":{
+
+
                 "tenantId":
                     TENANT_ID,
+
+
                 "regionId":
                     REGION_ID,
-                "channelId": [],
+
+
+                "channelId":
+                    [],
+
+
                 "page":
                     page,
+
+
                 "pageSize":
-                    PAGE_SIZE,
+                    100,
 
 
-
-                "order": [
-
-
-                    {
-
-                        "key":
-                            "channelId",
-                        "type":
-                            "desc"
-
-                    },
-
-                    {
-                        "key":
-                            "isOfficial",
-
-                        "type":
-                            "desc"
-                    }
-                ],
                 "startTime":
-                    time_range["start"],
+                    ranges["查询"]["start"],
+
+
                 "endTime":
-                    time_range["end"]
+                    ranges["查询"]["end"]
+
             }
+
         }
-        r = requests.get(
-            URL,
-            headers=headers,
+
+
+
+        r=requests.get(
+
+
+            DATA_URL,
+
+
+            headers=HEADERS,
+
+
             params={
 
                 "input":
-                    json.dumps(
-                        payload,
-                        separators=(
-                            ",",
-                            ":"
-                        )
+
+                json.dumps(
+
+                    payload,
+
+                    separators=(
+                        ",",
+                        ":"
                     )
+
+                )
+
             },
 
-            timeout=30
-        )
-        print(
-            data_type,
-            "page",
-            page,
-            "HTTP",
-            r.status_code
+
+            timeout=60
+
         )
 
-        if r.status_code != 200:
-            print(
-                r.text
-            )
-            break
-        result = r.json()
-        json_data = (
-            result["result"]
+
+
+        data=r.json()
+
+
+        rows=(
+
+            data["result"]
+
             ["data"]
+
             ["json"]
+
+            .get(
+
+                "list",
+
+                []
+
+            )
+
         )
-        rows = json_data.get(
-            "list",
-            []
-        )
+
+
+
         print(
-            data_type,
-            "数量:",
+            "page",
+            page,
+            "数量",
             len(rows)
         )
+
+
+
         if not rows:
 
             break
-        for row in rows:
-            row["data_type"] = data_type
-        all_data.extend(rows)
-        if len(rows) < PAGE_SIZE:
+
+
+
+        all_rows.extend(rows)
+
+
+
+        if len(rows)<100:
 
             break
 
-        page += 1
-# ==========================
-# SAVE EXCEL
-# ==========================
 
 
-print("======================")
-
-print(
-    "TOTAL DATA:",
-    len(all_data)
-)
-
-df = pd.DataFrame(
-    all_data
-)
-
-# ==========================
-# 金额字段 / Amount divide 100
-# ==========================
-MONEY_FIELDS = [
-
-    "firstRechargeAmount",
-    "rechargeAmount",
-    "withdrawAmount",
-    "betAmount",
-    "validBetAmount",
-    "reward",
-    "rechargeWithdrawDiff",
-
-    # 裂变
-
-    "splitFirstRechargeAmount",
-    "splitRechargeAmount",
-    "splitWithdrawAmount",
-    "splitBetAmount",
-    "splitValidBetAmount",
-    "splitReward"
-
-]
-
-for col in MONEY_FIELDS:
-
-    if col in df.columns:
-
-        df[col] = (
-            pd.to_numeric(
-                df[col],
-                errors="coerce"
-            )
-            .fillna(0)
-            / 100
-        )
-
-print("✅ 金额字段已除100")
+        page+=1
 
 
-print(
-    df.head()
-)
 
-df.to_excel(
-    "channel_hourReportList.xlsx",
-    index=False
-)
+    return all_rows
+# ==================================================
+# 金额处理
+# ==================================================
 
-print(
-    "✅ Excel 保存成功"
-)
+def format_money(df):
 
-# ==========================
-# GOOGLE SHEET UPLOAD
-# 今日 -> 推广渠道报表
-# 昨日 -> 昨日推广渠道报表
-# ==========================
 
-def upload_google_sheet(df):
-    scope = [
+    MONEY_FIELDS = [
 
-        "https://www.googleapis.com/auth/spreadsheets",
 
-        "https://www.googleapis.com/auth/drive"
+        "firstRechargeAmount",
+
+        "rechargeAmount",
+
+        "withdrawAmount",
+
+        "betAmount",
+
+        "validBetAmount",
+
+        "reward",
+
+        "rechargeWithdrawDiff",
+
+
+        "splitFirstRechargeAmount",
+
+        "splitRechargeAmount",
+
+        "splitWithdrawAmount",
+
+        "splitBetAmount",
+
+        "splitValidBetAmount",
+
+        "splitReward"
 
     ]
 
+
+
+    for col in MONEY_FIELDS:
+
+
+        if col in df.columns:
+
+
+            df[col] = (
+
+                pd.to_numeric(
+
+                    df[col],
+
+                    errors="coerce"
+
+                )
+
+                .fillna(0)
+
+                /100
+
+            )
+
+
+    print(
+        "✅ 金额字段处理完成"
+    )
+
+
+    return df
+
+
+
+
+
+# ==================================================
+# GOOGLE SHEET UPLOAD
+# ==================================================
+
+
+def upload_google_sheet(df):
+
+
+    scope=[
+
+
+        "https://www.googleapis.com/auth/spreadsheets",
+
+
+        "https://www.googleapis.com/auth/drive"
+
+
+    ]
+
+
+
     creds = Credentials.from_service_account_file(
-        CREDENTIAL_FILE,
+
+        GOOGLE_JSON,
+
         scopes=scope
 
     )
+
+
+
     client = gspread.authorize(
+
         creds
+
     )
+
+
+
     sheet = client.open_by_key(
 
         GOOGLE_SHEET_ID
 
     )
 
-    def update_sheet(sheet_name, data):
+
+
+    def write_sheet(
+            sheet_name,
+            data
+    ):
+
 
         try:
-            worksheet = sheet.worksheet(
+
+            ws = sheet.worksheet(
                 sheet_name
             )
+
         except:
-            worksheet = sheet.add_worksheet(
+
+
+            ws = sheet.add_worksheet(
+
                 title=sheet_name,
-                rows="2000",
+
+                rows="3000",
+
                 cols="100"
 
             )
 
+
+
+        ws.batch_clear(
+    ["A2:ZZ"]
+)
+
+
+
+        data=data.fillna("")
+
+        # không lấy tiêu đề
         data = data.fillna("")
-
         values = data.values.tolist()
+        ws.batch_clear(
+    ["A2:ZZ"]
+)
+        if values:
 
-        # 清除旧数据 A2以后
-        worksheet.batch_clear(
+         ws.update(
+        range_name="A2",
+        values=values
+    )
 
-            ["A2:ZZ"]
+
+
+
+        print(
+
+            "✅ 更新成功:",
+
+            sheet_name
 
         )
 
-        if values:
-            worksheet.update(
-                range_name="A2",
-                values=values
+
+
+
+    # =========================
+    # 今日
+    # =========================
+
+
+    if "data_type" in df.columns:
+
+
+        today=df[
+
+            df["data_type"]=="今日"
+
+        ].copy()
+
+
+
+        if len(today):
+
+            write_sheet(
+
+                "推广渠道报表",
+
+                today
 
             )
-        print(
-            "✅",
-            sheet_name,
 
-            "更新成功"
+
+
+        yesterday=df[
+
+            df["data_type"]=="昨日"
+
+        ].copy()
+
+
+
+        if len(yesterday):
+
+            write_sheet(
+
+                "昨日推广渠道报表",
+
+                yesterday
+
+            )
+
+
+
+    else:
+
+
+        write_sheet(
+
+            "推广渠道报表",
+
+            df
 
         )
-    # ======================
+
+
+
+
+
+# ==================================================
+# MAIN
+# ==================================================
+
+
+if __name__=="__main__":
+
+
+    print(
+        "🚀 开始获取渠道数据"
+    )
+
+
+
+    # ==========================
+    # 日期
+    # ==========================
+
+
+    today=datetime.now(
+
+        BRAZIL_TZ
+
+    ).date()
+
+
+
+    yesterday=today-timedelta(
+
+        days=1
+
+    )
+
+
+
+    all_data=[]
+
+
+
+    # ==========================
     # 今日
-    # ======================
+    # ==========================
 
-    today_df = df[
 
-        df["data_type"] == "今日"
+    print(
 
-    ].copy()
-    update_sheet(
-        "推广渠道报表",
-        today_df
+        "🇧🇷 今日:",
+
+        today
 
     )
 
-    # ======================
+
+    today_rows=get_channel_data(
+
+        str(today)
+
+    )
+
+
+    for row in today_rows:
+
+
+        row["data_type"]="今日"
+
+
+
+    all_data.extend(
+
+        today_rows
+
+    )
+
+
+
+    # ==========================
     # 昨日
-    # ======================
-    yesterday_df = df[
+    # ==========================
 
-        df["data_type"] == "昨日"
-    ].copy()
-    update_sheet(
-        "昨日推广渠道报表",
-        yesterday_df
+
+    print(
+
+        "🇧🇷 昨日:",
+
+        yesterday
+
     )
 
-# 执行上传
 
-upload_google_sheet(df)
-print("======================")
-print(
-    "🎉 全部完成"
-)
-print("======================")
+    yesterday_rows=get_channel_data(
+
+        str(yesterday)
+
+    )
+
+
+
+    for row in yesterday_rows:
+
+
+        row["data_type"]="昨日"
+
+
+
+    all_data.extend(
+
+        yesterday_rows
+
+    )
+
+
+
+    print(
+
+        "TOTAL:",
+
+        len(all_data)
+
+    )
+
+
+
+    # dataframe
+
+
+    df=pd.DataFrame(
+
+        all_data
+
+    )
+
+
+
+    if df.empty:
+
+
+        print(
+
+            "❌ 没有数据"
+
+        )
+
+        exit()
+
+
+
+    # 金额处理
+
+
+    df=format_money(
+
+        df
+
+    )
+
+
+
+    print(
+
+        df.head()
+
+    )
+
+
+
+    # 上传
+
+
+    upload_google_sheet(
+
+        df
+
+    )
+
+
+
+    print(
+        "======================"
+    )
+
+    print(
+        "🎉 全部完成"
+    )
+
+    print(
+        "======================"
+    )

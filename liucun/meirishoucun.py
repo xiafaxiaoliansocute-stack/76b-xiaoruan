@@ -19,7 +19,7 @@ from io import BytesIO
 # CONFIG
 # =============================
 
-TOKEN = "40c2mcwk81wlcw6vs7unbh66f8qv98xa4pn2bhlv"
+TOKEN = "tvpez8qpjvg67egwzxazak6u5j7crm7uvru2crwf"
 
 ACCOUNT = "xiaoruan16021"
 
@@ -38,7 +38,7 @@ FIRST_DATE = "2026-07-07"
 # Google Service Account
 
 GOOGLE_JSON = (
-    "/Users/xiaoruan/Documents/data_get/credentials.json"
+    "/Users/xiaoruan/Documents/76b-getdata/service_account.json"
 )
 
 

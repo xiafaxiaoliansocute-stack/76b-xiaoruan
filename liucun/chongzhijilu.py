@@ -4,7 +4,6 @@ import time
 import pandas as pd
 import gspread
 
-
 from io import StringIO
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -17,7 +16,7 @@ from google.oauth2.service_account import Credentials
 # API CONFIG
 # ==================================================
 
-TOKEN = "40c2mcwk81wlcw6vs7unbh66f8qv98xa4pn2bhlv"
+TOKEN = "tvpez8qpjvg67egwzxazak6u5j7crm7uvru2crwf"
 
 ACCOUNT = "xiaoruan16021"
 
@@ -66,7 +65,7 @@ HEADERS = {
 # ==================================================
 
 GOOGLE_JSON = (
-    "/Users/xiaoruan/Documents/data_get/credentials.json"
+    "/Users/xiaoruan/Documents/76b-getdata/service_account.json"
 )
 
 
