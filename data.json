@@ -1,5 +1,5 @@
 {
-    "update_time_brazil": "2026-07-23 11:00",
+    "update_time_brazil": "2026-07-23 12:00",
     "report_day": "2026-07-23",
     "realtime": {},
     "hour_report": {
@@ -11,7 +11,7 @@
                 "rechargeAmount": 0
             }
         },
-        "fb-pwa": {
+        "fb-h5": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -27,15 +27,7 @@
                 "rechargeAmount": 0
             }
         },
-        "kwai-pwa": {
-            "promotionList": {
-                "firstRechargeCount": 0,
-                "firstRechargeAmount": 0,
-                "rechargeCount": 0,
-                "rechargeAmount": 0
-            }
-        },
-        "回访": {
+        "fb-pwa": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -44,6 +36,14 @@
             }
         },
         "tt-pwa": {
+            "promotionList": {
+                "firstRechargeCount": 0,
+                "firstRechargeAmount": 0,
+                "rechargeCount": 0,
+                "rechargeAmount": 0
+            }
+        },
+        "kwai-pwa": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -67,7 +67,7 @@
                 "rechargeAmount": 0
             }
         },
-        "fb-h5": {
+        "回访": {
             "promotionList": {
                 "firstRechargeCount": 0,
                 "firstRechargeAmount": 0,
@@ -77,12 +77,6 @@
         }
     },
     "ALL_TOTAL": {
-        "normalList": {},
-        "parentList": {},
-        "childList": {},
-        "promotionList": {}
-    },
-    "fb-h5": {
         "normalList": {},
         "parentList": {},
         "childList": {},
@@ -106,6 +100,12 @@
         "childList": {},
         "promotionList": {}
     },
+    "fb-h5": {
+        "normalList": {},
+        "parentList": {},
+        "childList": {},
+        "promotionList": {}
+    },
     "tt-pwa": {
         "normalList": {},
         "parentList": {},
@@ -118,13 +118,13 @@
         "childList": {},
         "promotionList": {}
     },
-    "kwai-pwa": {
+    "其他": {
         "normalList": {},
         "parentList": {},
         "childList": {},
         "promotionList": {}
     },
-    "其他": {
+    "kwai-pwa": {
         "normalList": {},
         "parentList": {},
         "childList": {},
