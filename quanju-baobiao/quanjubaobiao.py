@@ -19,7 +19,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # GOOGLE SHEET
 # ==========================================================
 
-CREDENTIALS_FILE = "/Users/xiaoruan/Documents/data_get/credentials.json"
+CREDENTIALS_FILE =  "/Users/xiaoruan/Documents/service_account.json"
 
 SHEET_ID = "1gfsTt_nL0wK2mepUAXkBgRqZHLYRY3xqWmbAxkzp0ao"
 

@@ -65,7 +65,7 @@ HEADERS = {
 # ==================================================
 
 GOOGLE_JSON = (
-    "/Users/xiaoruan/Documents/76b-getdata/service_account.json"
+    "/Users/xiaoruan/Documents/service_account.json"
 )
 
 

@@ -11,7 +11,7 @@ from google.oauth2.service_account import Credentials
 # ==================================================
 
 GOOGLE_JSON = (
-    "/Users/xiaoruan/Documents/76b-getdata/service_account.json"
+    "/Users/xiaoruan/Documents/service_account.json"
 )
 
 SHEET_ID = (
