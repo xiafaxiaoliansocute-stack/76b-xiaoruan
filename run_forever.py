@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore")
 import subprocess
 import time
 from datetime import datetime, timedelta
@@ -43,5 +45,6 @@ while True:
     ).total_seconds()
 
     print("⏰ Next run:", next_hour)
+    print("✅ 推广汇总更新完成", flush=True)
 
     time.sleep(sleep_seconds)

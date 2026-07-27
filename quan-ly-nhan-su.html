@@ -1,0 +1,2450 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>人事管理系统</title>
+  <style>
+    :root {
+      --red: #c62828;
+      --dark-red: #a61919;
+      --navy: #17233f;
+      --bg: #f5f6f8;
+      --line: #e7e9ee;
+      --text: #1f2937;
+      --muted: #7b8494;
+      --green: #16803c;
+      --orange: #b45309;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.5 "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+    }
+  .detail-btn {
+  border: 1px solid #e7b1b1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  background: #fff5f5;
+  color: #c62828;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.detail-btn:hover {
+  background: #fde2e2;
+}
+.edit-btn {
+  margin-left: 6px;
+  border: 1px solid #c62828;
+  border-radius: 6px;
+  padding: 6px 10px;
+  background: #c62828;
+  color: white;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.edit-btn:hover {
+  background: #a61919;
+}
+
+#recordModal {
+  width: min(900px, calc(100% - 30px));
+}
+
+.record-tabs {
+  padding: 14px 20px 0;
+  border-bottom: 1px solid #e7e9ee;
+}
+
+.record-tab {
+  border: 0;
+  border-bottom: 3px solid #c62828;
+  padding: 10px 15px;
+  background: transparent;
+  color: #c62828;
+  font: 600 14px inherit;
+}
+
+.record-table-wrap {
+  padding: 18px;
+  overflow-x: auto;
+}
+
+.record-table th,
+.record-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e7e9ee;
+  text-align: left;
+}
+
+.record-action {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 4px 9px;
+  background: #fff0f0;
+  color: #c62828;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+#detailModal {
+  width: min(1400px, calc(100% - 30px));
+}
+
+.detail-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 19px 22px;
+  border-bottom: 1px solid #e7e9ee;
+}
+
+.detail-head h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.detail-head p {
+  margin: 4px 0 0;
+  color: #7b8494;
+  font-size: 12px;
+}
+
+.detail-table-wrap {
+  overflow-x: auto;
+  padding: 18px;
+}
+
+.salary-table {
+  min-width: 1550px;
+  border-collapse: collapse;
+}
+
+.salary-table th,
+.salary-table td {
+  padding: 10px 12px;
+  border: 1px solid #7d8794;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.salary-table th {
+  background: #f8fafc;
+  color: #202938;
+  font-weight: bold;
+}
+
+.salary-table th:nth-child(7),
+.salary-table th:nth-child(8),
+.salary-table th:nth-child(10),
+.salary-table th:nth-child(11),
+.salary-table th:nth-child(12),
+.salary-table th:nth-child(13) {
+  background: #dff0d8;
+}
+
+.salary-table th:nth-child(14) {
+  background: #f4a9ae;
+}
+
+.salary-table th:nth-child(15) {
+  background: #f8c9cc;
+}
+
+.salary-table th:last-child {
+  background: #f7ca2f;
+}
+
+.money-green {
+  color: #16803c;
+  font-weight: bold;
+}
+
+.money-red {
+  color: #e11d48;
+  font-weight: bold;
+}
+
+.total-salary {
+  background: #fff3c4;
+  color: #b45309;
+  font-weight: bold;
+}
+
+.login-screen {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #17233f, #a61919);
+}
+
+.login-card {
+  width: min(390px, 100%);
+  padding: 34px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 20px 60px #00000044;
+}
+
+.login-card h1 {
+  margin: 14px 0 4px;
+  text-align: center;
+  font-size: 22px;
+}
+
+.login-card p {
+  margin: 0 0 25px;
+  text-align: center;
+  color: #7b8494;
+}
+
+.login-logo {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin: auto;
+  border-radius: 13px;
+  background: #c62828;
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.login-card label {
+  display: block;
+  margin-top: 14px;
+}
+
+.login-card small {
+  display: block;
+  margin-top: 18px;
+  text-align: center;
+  color: #7b8494;
+}
+
+.login-btn {
+  width: 100%;
+  margin-top: 22px;
+}
+
+.login-error {
+  min-height: 20px;
+  margin: 10px 0 0 !important;
+  color: #dc2626 !important;
+  font-size: 12px;
+}
+
+.logout-btn {
+  margin-left: 12px;
+  border: 1px solid #e7b1b1;
+  border-radius: 7px;
+  padding: 8px 11px;
+  background: white;
+  color: #c62828;
+  cursor: pointer;
+}
+
+    .app {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+    }
+    #appContent[hidden],
+#loginScreen[hidden] {
+  display: none !important;
+}
+
+    aside {
+      background: var(--navy);
+      color: #c9d3e8;
+      padding: 24px 14px;
+    }
+
+    .brand {
+      color: white;
+      font-size: 19px;
+      font-weight: 800;
+      padding: 0 10px 28px;
+    }
+
+    .logo {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin-right: 10px;
+      border-radius: 9px;
+      background: var(--red);
+    }
+
+    .side-title {
+      padding: 16px 12px 7px;
+      color: #7e8ca8;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: .08em;
+    }
+
+    nav button {
+      display: block;
+      width: 100%;
+      padding: 11px 12px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #c9d3e8;
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    nav button:hover,
+    nav button.active {
+      color: white;
+      background: #2c3b5d;
+    }
+
+    nav span {
+      display: inline-block;
+      width: 26px;
+    }
+
+    .notice {
+      margin: 32px 8px;
+      padding: 14px;
+      border: 1px solid #3b4d73;
+      border-radius: 10px;
+      color: #aebbd5;
+      font-size: 12px;
+    }
+
+    .notice b {
+      display: block;
+      margin-bottom: 5px;
+      color: white;
+    }
+
+    main {
+      width: 100%;
+      max-width: 1450px;
+      margin: auto;
+      padding: 28px 34px 50px;
+    }
+
+    .topbar,
+    .section-head,
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .topbar { margin-bottom: 28px; }
+
+    h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .title p,
+    .section-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+    }
+
+    .shift-card {
+  width: 660px;
+  padding: 15px 18px;
+  border: 2px solid #e11d1d;
+  border-radius: 5px;
+  background: white;
+}
+
+.shift-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.shift-card-top b {
+  display: block;
+  font-size: 14px;
+}
+
+.shift-card-top small {
+  display: block;
+  margin-top: 3px;
+  color: #7b8494;
+  font-size: 12px;
+}
+
+.shift-card-top strong {
+  color: #c62828;
+  font-size: 24px;
+  letter-spacing: 1px;
+}
+
+.shift-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.shift-btn {
+  border: 0;
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: white;
+  font: 12px inherit;
+  cursor: pointer;
+}
+
+.work-btn { background: #16803c; }
+.end-btn { background: #64748b; }
+.break-btn { background: #c62828; }
+.return-btn { background: #2563eb; }
+
+.shift-btn:hover {
+  opacity: .85;
+}
+
+@media (max-width: 1050px) {
+  .shift-card {
+    width: 100%;
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+}
+
+    .profile,
+    .person {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile small {
+      display: block;
+      color: var(--muted);
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #fde7e7;
+      color: var(--red);
+      font-weight: bold;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+
+    .card,
+    .section {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 2px 5px #17203308;
+    }
+
+    .card { padding: 18px; }
+
+    .card .icon {
+      float: right;
+      padding: 8px;
+      border-radius: 8px;
+      background: #fff0f0;
+      color: var(--red);
+      font-size: 17px;
+    }
+
+    .card p {
+      margin: 0 0 7px;
+      color: var(--muted);
+    }
+
+    .card strong { font-size: 27px; }
+
+    .change {
+      margin-left: 7px;
+      color: var(--green);
+      font-size: 12px;
+    }
+
+    .warning { color: var(--orange); }
+
+    .section-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .section-head p { font-size: 12px; }
+
+    .btn {
+      border: 0;
+      border-radius: 7px;
+      padding: 10px 14px;
+      background: var(--red);
+      color: white;
+      font: 600 13px inherit;
+      cursor: pointer;
+    }
+
+    .btn:hover { background: var(--dark-red); }
+
+    .toolbar {
+      padding: 14px 20px;
+      gap: 12px;
+    }
+
+    .search {
+      flex: 1;
+      max-width: 340px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px 11px;
+      border: 1px solid #d8dce5;
+      border-radius: 7px;
+      background: white;
+      color: var(--text);
+      font: inherit;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #e46a6a;
+      box-shadow: 0 0 0 3px #ffe4e4;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+    }
+
+    .filter { width: 150px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      padding: 11px 20px;
+      background: #fafafa;
+      color: var(--muted);
+      text-align: left;
+      font-size: 11px;
+      letter-spacing: .04em;
+    }
+
+    td {
+      padding: 13px 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .working {
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    .leave {
+      color: #a16207;
+      background: #fef3c7;
+    }
+
+    .empty {
+      display: none;
+      padding: 45px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    dialog {
+      width: min(540px, calc(100% - 30px));
+      padding: 0;
+      border: 0;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px #0f172a44;
+    }
+
+    dialog::backdrop { background: #0f172a88; }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 19px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .close {
+      border: 0;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    form { padding: 21px 22px; }
+
+    label {
+      color: #475569;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    label input,
+    label select {
+      display: block;
+      margin-top: 6px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .edit-section {
+  margin: 22px 0 12px;
+  padding-left: 10px;
+  border-left: 4px solid #c62828;
+  color: #c62828;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.edit-note {
+  margin: 4px 0 0;
+  color: #7b8494;
+  font-size: 12px;
+}
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      margin-top: 22px;
+    }
+
+    .secondary {
+      border: 1px solid #d8dce5;
+      background: white;
+      color: #475569;
+    }
+
+    @media (max-width: 850px) {
+      .app { grid-template-columns: 1fr; }
+      aside { display: none; }
+      main { padding: 22px 16px; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .topbar, .toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .filters { width: 100%; }
+      .filter { flex: 1; }
+      .table-wrap { overflow: auto; }
+    }
+
+    @media (max-width: 480px) {
+      .cards, .grid { grid-template-columns: 1fr; }
+    }
+    .normal-tag{
+
+    color:#16a34a;
+    font-weight:bold;
+
+}
+
+.timeout-tag{
+
+    color:#dc2626;
+    font-weight:bold;
+
+}
+  </style>
+</head>
+
+<body>
+  <div class="login-screen" id="loginScreen">
+    <form class="login-card" id="loginForm">
+      <div class="login-logo">人</div>
+      <h1>人事管理系统</h1>
+      <p>请输入账号和密码登录系统</p>
+
+      <label>
+        账号
+        <input required name="username" placeholder="请输入账号">
+      </label>
+
+      <label>
+        密码
+        <input required type="password" name="password" placeholder="请输入密码">
+      </label>
+
+      <p class="login-error" id="loginError"></p>
+      <button class="btn login-btn">登录系统</button>
+
+      <small>管理员：admin / admin123</small>
+    </form>
+  </div>
+
+  <div class="app" id="appContent" hidden>
+
+    <aside>
+      <div class="brand"><span class="logo">人</span>人事管理系统</div>
+
+      <nav>
+        <div class="side-title">管理中心</div>
+        <button class="active"><span>▦</span>工作台</button>
+        <button id="employeeMenu"><span>♙</span>员工管理</button>
+        <button><span>▣</span>部门管理</button>
+        <button><span>◷</span>考勤管理</button>
+        <button><span>◫</span>请假管理</button>
+
+        <div class="side-title">系统设置</div>
+        <button><span>⚙</span>系统设置</button>
+      </nav>
+
+      <div class="notice">
+        <b>数据自动保存</b>
+        新增员工后，刷新页面也不会丢失。
+      </div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div class="title">
+          <h1 id="welcomeName">您好</h1>
+          <p>这是公司今天的人事情况。</p>
+        </div>
+        <div class="shift-card">
+  <div class="shift-card-top">
+    <div>
+      <b>今日考勤</b>
+      <small id="shiftStatus">已经下班</small>
+    </div>
+    <strong id="shiftTimer">00:00:00</strong>
+  </div>
+
+  <div class="shift-actions">
+    <button class="shift-btn work-btn" id="checkInButton">上班打卡</button>
+    <button class="shift-btn end-btn" id="checkOutButton">下班打卡</button>
+    <button class="shift-btn break-btn" data-minutes="10">休息 10 分钟</button>
+    <button class="shift-btn break-btn" data-minutes="25">休息 25 分钟</button>
+    <button class="shift-btn return-btn" id="returnWorkButton" hidden>返回上班</button>
+  </div>
+</div>
+
+        <div class="profile">
+          <div class="avatar" id="userAvatar">XR</div>
+
+<div>
+    <b id="userName"></b>
+    <small id="userRole"></small>
+            <button class="logout-btn" id="logoutButton">退出登录</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="icon">♙</div>
+          <p>员工总数</p>
+          <strong id="employeeCount">0</strong>
+          <span class="change">自动保存</span>
+        </div>
+
+        <div class="card">
+          <div class="icon">▣</div>
+          <p>部门数量</p>
+<strong id="departmentCount">0</strong>
+<span class="change">正常</span>
+        </div>
+
+        <div class="card">
+          <div class="icon">◷</div>
+          <p>今日出勤</p>
+<strong id="attendanceCount">0</strong>
+<span class="change" id="attendanceRate">0%</span>
+        </div>
+
+        <div class="card">
+          <div class="icon">◫</div>
+          <p>请假员工</p>
+<strong id="leaveEmployeeCount">0</strong>
+<span class="change warning">需要关注</span>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>员工列表</h2>
+            <p>最新更新的员工信息</p>
+          </div>
+          <button class="btn" id="openModal">+ 新增员工</button>
+        </div>
+
+        <div class="toolbar">
+          <div class="search">
+            <input id="search" placeholder="搜索员工姓名">
+          </div>
+
+          <div class="filters">
+            <select id="department" class="filter">
+              <option value="">全部部门</option>
+          <option>运营</option>
+          <option>领班</option>
+          <option>下发</option>
+          <option>出款</option>
+          <option>回访</option>
+          <option>推广</option>
+          <option>派彩</option>
+          <option>客服</option>
+          <option>财务</option>
+            </select>
+
+            <select id="status" class="filter">
+              <option value="">全部状态</option>
+              <option>在职</option>
+              <option>请假</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+  <tr>
+    <th>工号</th>
+    <th>员工</th>
+    <th>部门</th>
+    <th>地方</th>
+    <th>入职日期</th>
+    <th>状态</th>
+    <th>请假次数</th>
+    <th>考勤扣款</th>
+    <th>操作</th>
+</tr>
+</thead>
+            <tbody id="employeeRows"></tbody>
+          </table>
+        </div>
+
+        <div class="empty" id="empty">没有找到符合条件的员工。</div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="employeeModal">
+    <div class="modal-head">
+      <h2>新增员工</h2>
+      <button class="close" id="closeModal">×</button>
+    </div>
+
+    <form id="employeeForm">
+      <div class="grid">
+        <label>
+    账号
+    <input required name="username" placeholder="例如：te001">
+</label>
+
+<label>
+    姓名
+    <input required name="name" placeholder="例如：天恩">
+</label>
+          部门
+          <select required name="department">
+            <option value="">请选择部门</option>
+          <option>运营</option>
+          <option>领班</option>
+          <option>下发</option>
+          <option>出款</option>
+          <option>回访</option>
+          <option>推广</option>
+          <option>派彩</option>
+          <option>客服</option>
+          <option>财务</option>
+          </select>
+        </label>
+
+        <label>
+          地方
+          <input required name="position" placeholder="例如：菲律宾">
+        </label>
+
+        <label>
+          入职日期
+          <input required type="date" name="date">
+        </label>
+
+        <label>
+          状态
+          <select name="status">
+            <option>在职</option>
+            <option>请假</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn secondary" id="cancel">取消</button>
+        <button class="btn">保存员工</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="detailModal">
+  <div class="detail-head">
+    <div>
+      <h2 id="detailTitle">员工薪资明细</h2>
+      <p>工资、补贴与考勤扣款明细</p>
+    </div>
+    <button class="close" id="closeDetailModal">×</button>
+  </div>
+
+  <div class="detail-table-wrap">
+    <table class="salary-table">
+      <thead>
+        <tr>
+          <th>单位</th>
+          <th>代号</th>
+          <th>地方</th>
+          <th>部门</th>
+          <th>转正</th>
+          <th>入职时间</th>
+          <th>6月底薪</th>
+          <th>奖金</th>
+          <th>加班天数</th>
+          <th>加班费</th>
+          <th>未回国补贴</th>
+          <th>生活补助</th>
+          <th>特别补贴（263U）</th>
+          <th>考勤扣款</th>
+          <th>预支</th>
+          <th>备注</th>
+          <th>总奖赏薪资</th>
+        </tr>
+      </thead>
+      <tbody id="detailContent"></tbody>
+    </table>
+  </div>
+</dialog>
+<dialog id="editModal">
+  <div class="modal-head">
+    <div>
+      <h2>编辑员工信息</h2>
+      <p class="edit-note">可修改员工资料、考勤、工资及补贴项目</p>
+    </div>
+    <button class="close" id="closeEditModal">×</button>
+  </div>
+
+  <form id="editForm">
+    <input type="hidden" name="index">
+    <div class="edit-section">
+账号信息
+</div>
+
+<div class="grid">
+
+<label>
+工号
+<input
+name="employeeId"
+readonly
+style="
+background:#f5f5f5;
+font-weight:bold;
+">
+</label>
+
+<label>
+账号
+<input
+name="username_show"
+readonly
+style="
+background:#f5f5f5;
+font-weight:bold;
+">
+</label>
+
+</div>
+
+    <div class="edit-section">基本资料</div>
+
+    <div class="grid">
+      <label>
+    账号
+    <input required name="username">
+</label>
+
+<label>
+    姓名
+    <input required name="name">
+</label>
+
+      <label>
+        部门
+        <select required name="dept">
+          <option>运营</option>
+          <option>领班</option>
+          <option>下发</option>
+          <option>出款</option>
+          <option>回访</option>
+          <option>推广</option>
+          <option>派彩</option>
+          <option>客服</option>
+          <option>财务</option>
+
+        </select>
+      </label>
+
+      <label>
+        地方
+        <input required name="position">
+      </label>
+
+      <label>
+        入职日期
+        <input required name="date">
+      </label>
+
+      <label>
+        状态
+        <select name="status">
+          <option>在职</option>
+          <option>请假</option>
+        </select>
+      </label>
+
+      <label>
+        请假次数
+        <input type="number" min="0" name="leaveCount">
+      </label>
+    </div>
+
+    <div class="edit-section">工资与考勤</div>
+
+    <div class="grid">
+      <label>
+        考勤扣款（¥）
+        <input type="number" min="0" name="deduction">
+      </label>
+
+      <label>
+        6月底薪（¥）
+        <input type="number" min="0" name="baseSalary">
+      </label>
+
+      <label>
+        奖金（¥）
+        <input type="number" min="0" name="bonus">
+      </label>
+
+      <label>
+        加班天数
+        <input type="number" min="0" name="overtimeDays">
+      </label>
+
+      <label>
+        加班费（¥）
+        <input type="number" min="0" name="overtimePay">
+      </label>
+
+      <label>
+        未回国补贴（¥）
+        <input type="number" min="0" name="overseasAllowance">
+      </label>
+
+      <label>
+        生活补助（¥）
+        <input type="number" min="0" name="livingAllowance">
+      </label>
+
+      <label>
+        特别补贴（263U）（¥）
+        <input type="number" min="0" name="specialAllowance">
+      </label>
+
+      <label>
+        预支（¥）
+        <input type="number" min="0" name="advance">
+      </label>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn secondary" id="cancelEdit">取消</button>
+      <button class="btn">保存修改</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="recordModal">
+  <div class="modal-head">
+    <div>
+      <h2>员工管理</h2>
+      <p class="edit-note">打卡记录</p>
+    </div>
+    <button class="close" id="closeRecordModal">×</button>
+  </div>
+
+  <div class="record-tabs">
+    <div style="padding:15px">
+
+<button
+class="btn"
+id="exportExcelBtn">
+
+导出Excel
+
+</button>
+
+</div>
+    <button class="record-tab active">打卡记录</button>
+  </div>
+
+  <div class="record-table-wrap">
+    <table class="record-table">
+      <thead>
+      <tr>
+    <th>工号</th>
+    <th>员工</th>
+    <th>账号</th>
+    <th>操作</th>
+    <th>类型</th>
+    <th>打卡时间</th>
+</tr>
+</thead>
+      <tbody id="clockRecordRows"></tbody>
+    </table>
+
+    <div class="empty" id="clockRecordEmpty">暂无打卡记录。</div>
+  </div>
+</dialog>
+<dialog id="changePasswordModal">
+
+<div class="modal-head">
+
+<h2>首次登录修改密码</h2>
+
+</div>
+
+<form id="changePasswordForm">
+
+<label>
+
+新密码
+
+<input
+required
+type="password"
+name="password">
+
+</label>
+
+<label>
+
+确认密码
+
+<input
+required
+type="password"
+name="password2">
+
+</label>
+
+<div class="modal-actions">
+
+<button class="btn">
+
+保存密码
+
+</button>
+
+</div>
+
+</form>
+
+</dialog>
+
+  <script>
+  const defaultEmployees = [];
+
+    const storageKey = "hrm-china-employees-v3";
+    // ==========================
+// HRM V2
+// ==========================
+
+function generateEmployeeId(){
+
+    if(!Array.isArray(employees)){
+        return "EMP0001";
+    }
+
+    let max = 0;
+
+    employees.forEach(emp=>{
+
+        if(!emp.employeeId) return;
+
+        const num = Number(
+            String(emp.employeeId).replace("EMP","")
+        );
+
+        if(num > max) max = num;
+
+    });
+
+    return "EMP" + String(max + 1).padStart(4,"0");
+
+}
+function generateUsername(){
+
+    if(!Array.isArray(accounts)){
+        return "emp0001";
+    }
+
+    let max = 0;
+
+    accounts.forEach(acc=>{
+
+        const m = String(acc.username)
+            .match(/^emp(\d+)$/i);
+
+        if(!m) return;
+
+        const num = Number(m[1]);
+
+        if(num > max) max = num;
+
+    });
+
+    return "emp" + String(max + 1).padStart(4,"0");
+
+}
+    let employees;
+
+    const accountKey = "hrm-china-accounts-v1";
+
+const defaultAccounts = [
+{
+    username: "admin",
+    password: "admin123",
+    role: "admin",
+    employeeName: "",
+    mustChangePassword: false
+}
+];
+
+let accounts;
+
+const savedAccounts = JSON.parse(localStorage.getItem(accountKey) || "null");
+
+if (Array.isArray(savedAccounts)) {
+    accounts = savedAccounts;
+} else {
+    accounts = structuredClone(defaultAccounts);
+
+    localStorage.setItem(
+        accountKey,
+        JSON.stringify(accounts)
+    );
+}
+
+let currentUser = null;
+
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey));
+
+employees = Array.isArray(saved) ? saved : structuredClone(defaultEmployees);
+
+const records = getClockRecords();
+
+let changed = false;
+
+records.forEach(r=>{
+
+    if(!r.employeeId){
+
+        const emp =
+        employees.find(
+        e=>e.username===r.username
+        );
+
+        if(emp){
+
+            r.employeeId =
+            emp.employeeId;
+
+            changed = true;
+
+        }
+
+    }
+
+});
+
+if(changed){
+
+    localStorage.setItem(
+
+        clockRecordKey,
+
+        JSON.stringify(records)
+
+    );
+
+}
+      // =======================
+// migrate old data
+// =======================
+
+let needSave = false;
+
+employees.forEach(emp=>{
+
+    if(!emp.employeeId){
+
+        emp.employeeId = generateEmployeeId();
+
+        needSave = true;
+
+    }
+
+    if(!emp.username){
+
+        emp.username = generateUsername();
+
+        needSave = true;
+
+    }
+
+});
+
+if(needSave){
+
+    localStorage.setItem(
+        storageKey,
+        JSON.stringify(employees)
+    );
+
+}
+    } catch {
+      employees = defaultEmployees;
+    }
+
+    const rows = document.querySelector("#employeeRows");
+    const empty = document.querySelector("#empty");
+    const count = document.querySelector("#employeeCount");
+    const searchInput = document.querySelector("#search");
+    const departmentSelect = document.querySelector("#department");
+    const statusSelect = document.querySelector("#status");
+    const modal = document.querySelector("#employeeModal");
+    const employeeForm = document.querySelector("#employeeForm");
+    const detailModal = document.querySelector("#detailModal");
+const detailContent = document.querySelector("#detailContent");
+const detailTitle = document.querySelector("#detailTitle");
+
+document.querySelector("#closeDetailModal").onclick = () => {
+  detailModal.close();
+};
+const editModal = document.querySelector("#editModal");
+const editForm = document.querySelector("#editForm");
+let editingEmployee = null;
+let editingOldUsername = "";
+
+document.querySelector("#closeEditModal").onclick = () => {
+  editModal.close();
+};
+
+document.querySelector("#cancelEdit").onclick = () => {
+  editModal.close();
+};
+
+const loginScreen = document.querySelector("#loginScreen");
+const appContent = document.querySelector("#appContent");
+const loginForm = document.querySelector("#loginForm");
+const loginError = document.querySelector("#loginError");
+const logoutButton = document.querySelector("#logoutButton");
+const employeeMenu = document.querySelector("#employeeMenu");
+const recordModal = document.querySelector("#recordModal");
+
+document.querySelector("#closeRecordModal").onclick = () => {
+  recordModal.close();
+};
+
+employeeMenu.onclick = () => {
+  if (!currentUser) return;
+
+  renderClockRecords();
+  recordModal.showModal();
+};
+const clockRecordKey = "hrm-clock-records-v1";
+
+function getClockRecords() {
+  try {
+    return JSON.parse(localStorage.getItem(clockRecordKey)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function addClockRecord(action, type = "正常") {
+
+    if (!currentUser) return;
+
+    const employee = employees.find(
+        e => e.username === currentUser.username
+    );
+
+    if (!employee) return;
+
+    const records = getClockRecords();
+
+    records.unshift({
+
+        employeeId: employee.employeeId,
+
+        username: employee.username,
+
+        employeeName: employee.name,
+
+        action,
+
+        type,
+
+        time: new Date().toLocaleString("zh-CN")
+
+    });
+
+    localStorage.setItem(
+        clockRecordKey,
+        JSON.stringify(records)
+    );
+
+}
+
+function renderClockRecords() {
+  const employee = employees.find(
+e=>e.username===currentUser.username
+);
+if(
+!employee &&
+currentUser.role!=="admin"
+){
+
+document.querySelector("#clockRecordRows").innerHTML="";
+
+document.querySelector("#clockRecordEmpty").style.display="block";
+
+return;
+
+}
+
+const allRecords = getClockRecords();
+
+const visibleRecords =
+currentUser.role==="admin"
+? allRecords
+: allRecords.filter(
+    r=>r.employeeId===employee.employeeId
+);
+
+  const recordRows = document.querySelector("#clockRecordRows");
+  const recordEmpty = document.querySelector("#clockRecordEmpty");
+
+  recordRows.innerHTML = visibleRecords.map(record => `
+<tr>
+
+<td>
+
+<b style="color:#c62828">
+
+${record.employeeId}
+
+</b>
+
+</td>
+
+<td>
+
+${record.employeeName}
+
+</td>
+
+    <td>${record.username}</td>
+
+    <td>
+        <span class="record-action">
+            ${record.action}
+        </span>
+    </td>
+
+    <td>
+        <span class="${
+            record.type=="超时"
+            ? "timeout-tag"
+            : "normal-tag"
+        }">
+            ${record.type || "正常"}
+        </span>
+    </td>
+
+    <td>${record.time}</td>
+
+</tr>
+`).join("");
+
+  recordEmpty.style.display = visibleRecords.length ? "none" : "block";
+}
+const shiftStatus = document.querySelector("#shiftStatus");
+const shiftTimer = document.querySelector("#shiftTimer");
+const checkInButton = document.querySelector("#checkInButton");
+const checkOutButton = document.querySelector("#checkOutButton");
+const breakButtons = document.querySelectorAll(".break-btn");
+const returnWorkButton = document.querySelector("#returnWorkButton");
+
+function getShiftKey() {
+  return "hrm-shift-" + (currentUser ? currentUser.username : "guest");
+}
+
+function getShiftData() {
+  try {
+    return JSON.parse(localStorage.getItem(getShiftKey())) || {
+      checkedIn: false,
+      checkInTime: "",
+      breakEndTime: 0
+    };
+  } catch {
+    return {
+      checkedIn: false,
+      checkInTime: "",
+      breakEndTime: 0
+    };
+  }
+}
+
+function saveShiftData(data) {
+  localStorage.setItem(getShiftKey(), JSON.stringify(data));
+}
+
+function formatTime(seconds) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  return [
+    String(hours).padStart(2, "0"),
+    String(minutes).padStart(2, "0"),
+    String(secs).padStart(2, "0")
+  ].join(":");
+}
+
+function updateShiftPanel() {
+  if (!currentUser) {
+    shiftStatus.textContent = "未登录";
+    shiftTimer.textContent = "00:00:00";
+    return;
+  }
+
+  const data = getShiftData();
+  const now = Date.now();
+
+if (data.breakEndTime > now) {
+
+    const secondsLeft = Math.ceil((data.breakEndTime - now) / 1000);
+
+    shiftStatus.textContent = "休息中，倒计时";
+    shiftTimer.textContent = formatTime(secondsLeft);
+
+    checkInButton.hidden = true;
+    checkOutButton.hidden = true;
+
+    breakButtons.forEach(btn => btn.hidden = true);
+
+    returnWorkButton.hidden = false;
+
+    return;
+}
+
+if (
+    data.breakEndTime &&
+    data.breakEndTime <= now
+) {
+
+    shiftStatus.textContent = "请点击返回上班";
+    shiftTimer.textContent = "00:00:00";
+
+    checkInButton.hidden = true;
+    checkOutButton.hidden = true;
+
+    breakButtons.forEach(btn => btn.hidden = true);
+
+    returnWorkButton.hidden = false;
+
+    return;
+}
+
+returnWorkButton.hidden = true;
+checkInButton.hidden = false;
+checkOutButton.hidden = false;
+
+breakButtons.forEach(btn => btn.hidden = false);
+
+breakButtons.forEach(btn => btn.disabled = false);
+
+  if (data.checkedIn) {
+    shiftStatus.textContent = "上班时间：" + data.checkInTime;
+    shiftTimer.textContent = "上班中";
+  } else {
+    shiftStatus.textContent = "已经下班";
+    shiftTimer.textContent = "00:00:00";
+  }
+}
+
+checkInButton.onclick = () => {
+  if (!currentUser) return;
+
+  const data = getShiftData();
+  data.checkedIn = true;
+  data.checkInTime = new Date().toLocaleTimeString("zh-CN");
+  data.breakEndTime = 0;
+
+addClockRecord("上班打卡");
+saveShiftData(data);
+updateShiftPanel();
+};
+
+checkOutButton.onclick = () => {
+  if (!currentUser) return;
+
+  const data = getShiftData();
+
+  if (!data.checkedIn) {
+    alert("您还没有上班打卡。");
+    return;
+  }
+
+  data.checkedIn = false;
+  data.checkInTime = "";
+  data.breakEndTime = 0;
+
+  addClockRecord("下班打卡");
+  saveShiftData(data);
+  updateShiftPanel();
+
+  alert("下班打卡成功！");
+};
+
+breakButtons.forEach(button => {
+  button.onclick = () => {
+    if (!currentUser) return;
+
+    const data = getShiftData();
+
+    if (!data.checkedIn) {
+      alert("请先点击上班打卡。");
+      return;
+    }
+
+    const minutes = Number(button.dataset.minutes);
+    data.breakEndTime = Date.now() + minutes * 60 * 1000;
+
+addClockRecord("休息 " + minutes + " 分钟");
+saveShiftData(data);
+    updateShiftPanel();
+  };
+});
+
+returnWorkButton.onclick = () => {
+  if (!currentUser) return;
+
+  const data = getShiftData();
+  
+const overtime = Date.now() > data.breakEndTime;
+
+data.breakEndTime = 0;
+
+addClockRecord(
+    "返回上班",
+    overtime ? "超时" : "正常"
+);
+
+saveShiftData(data);
+updateShiftPanel();
+
+updateShiftPanel();
+alert("已返回上班！");
+};
+
+setInterval(updateShiftPanel, 1000);
+const sessionKey = "hrm-china-current-user";
+
+function openApp(account) {
+ currentUser=account;
+ const employee = employees.find(e => e.username === currentUser.username);
+
+document.getElementById("welcomeName").textContent =
+    "您好，" + (employee ? employee.name : "管理员");
+
+document.getElementById("userName").textContent =
+    employee ? employee.name : "ADMIN";
+
+document.getElementById("userRole").textContent =
+    currentUser.role === "admin" ? "系统管理员" : "员工";
+
+document.getElementById("userAvatar").textContent =
+    (employee ? employee.name : "A").substring(0, 2);
+ 
+
+loginScreen.hidden=true;
+
+appContent.hidden=false;
+
+if(
+currentUser.role==="staff"
+&&
+currentUser.mustChangePassword
+){
+
+document
+.querySelector("#changePasswordModal")
+.showModal();
+
+}
+
+  document.querySelector("#openModal").style.display =
+    currentUser.role === "admin" ? "block" : "none";
+
+  render();
+}
+
+loginForm.onsubmit = (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(loginForm);
+
+    const username = formData.get("username").trim();
+    const password = formData.get("password").trim();
+
+    const account = accounts.find(item =>
+        item.username.trim() === username &&
+        String(item.password).trim() === password
+    );
+
+    if (!account) {
+        loginError.textContent = "账号或密码错误，请重新输入。";
+        return;
+    }
+    if(account && account.locked){
+
+    loginError.textContent="账号已锁定";
+
+    return;
+
+}
+
+    loginError.textContent = "";
+
+    localStorage.setItem(sessionKey, account.username);
+
+    openApp(account);
+};
+
+logoutButton.onclick = () => {
+  shiftStatus.textContent="已经下班";
+shiftTimer.textContent="00:00:00";
+  localStorage.removeItem(sessionKey);
+
+  currentUser = null;
+  appContent.hidden = true;
+  loginScreen.hidden = false;
+  loginForm.reset();
+  loginError.textContent = "";
+};
+
+    function initials(name) {
+      return name.slice(0, 2).toUpperCase();
+    }
+
+    function render() {
+      const keyword = searchInput.value.toLowerCase();
+      const department = departmentSelect.value;
+      const status = statusSelect.value;
+
+      const accessibleEmployees =
+currentUser.role === "admin"
+? employees
+: employees.filter(
+employee=>employee.username===currentUser.username
+);
+
+const filtered = accessibleEmployees.filter(employee =>
+
+        employee.name.toLowerCase().includes(keyword) &&
+        (!department || employee.dept === department) &&
+        (!status || employee.status === status)
+      );
+
+      window.filtered = filtered;
+  rows.innerHTML = filtered.map((employee, index) => `
+  <tr>
+    <td>
+    <b style="color:#c62828">
+        ${employee.employeeId}
+    </b>
+</td>
+    <td>
+      <div class="person">
+        <div class="avatar">${initials(employee.name)}</div>
+        <b>${employee.name}</b>
+      </div>
+    </td>
+    <td>${employee.dept}</td>
+    <td>${employee.position}</td>
+    <td>${employee.date}</td>
+    <td>
+      <span class="badge ${employee.status === "请假" ? "leave" : "working"}">
+        ${employee.status}
+      </span>
+    </td>
+    <td>${employee.leaveCount || 0} 次</td>
+    <td>¥ ${Number(employee.deduction || 0).toLocaleString("zh-CN")}</td>
+
+<td>
+
+<button class="detail-btn"
+data-index="${index}">
+查看明细
+</button>
+
+${currentUser && currentUser.role==="admin"
+? `
+
+<button class="edit-btn"
+data-index="${index}">
+编辑
+</button>
+
+<button
+class="detail-btn delete-btn"
+data-delete="${index}">
+删除
+</button>
+
+<button
+class="detail-btn reset-btn"
+data-reset="${index}">
+重置密码
+</button>
+
+<button
+class="detail-btn lock-btn"
+data-lock="${index}">
+锁定账号
+</button>
+
+`
+: ""}
+
+</td>
+  </tr>
+`).join("");
+
+count.textContent = accessibleEmployees.length;
+
+const departments = new Set(
+    accessibleEmployees.map(employee => employee.dept)
+);
+
+const attendanceEmployees =
+    accessibleEmployees.filter(employee => employee.status === "在职");
+
+const leaveEmployees =
+    accessibleEmployees.filter(employee => employee.status === "请假");
+
+document.querySelector("#departmentCount").textContent = departments.size;
+document.querySelector("#attendanceCount").textContent = attendanceEmployees.length;
+document.querySelector("#leaveEmployeeCount").textContent = leaveEmployees.length;
+
+const attendanceRate =
+accessibleEmployees.length
+?
+((attendanceEmployees.length/accessibleEmployees.length)*100)
+:0;
+
+document.querySelector("#attendanceRate").textContent = attendanceRate + "%";
+
+empty.style.display = filtered.length ? "none" : "block";
+}
+
+rows.addEventListener("click", event => {
+
+  const detailButton = event.target.closest(".detail-btn");
+  const editButton = event.target.closest(".edit-btn");
+
+  const deleteButton =
+event.target.closest(".delete-btn");
+
+const resetButton =
+event.target.closest(".reset-btn");
+
+const lockButton =
+event.target.closest(".lock-btn");
+
+// 删除员工
+
+if(deleteButton){
+
+    const employee =
+        window.filtered[
+            deleteButton.dataset.delete
+        ];
+
+    if(employee.username==="admin"){
+
+        alert("不能删除管理员");
+
+        return;
+
+    }
+
+    if(
+        !confirm(
+            "确定删除 " +
+            employee.name +
+            " 吗？"
+        )
+    ){
+        return;
+    }
+
+    const empIndex =
+        employees.indexOf(employee);
+
+    employees.splice(empIndex,1);
+
+    const accIndex =
+        accounts.findIndex(
+            a=>a.username===employee.username
+        );
+
+    if(accIndex>=0){
+
+        accounts.splice(accIndex,1);
+
+    }
+
+    localStorage.setItem(
+        storageKey,
+        JSON.stringify(employees)
+    );
+
+    localStorage.setItem(
+        accountKey,
+        JSON.stringify(accounts)
+    );
+
+    render();
+
+    return;
+
+}
+// 重置密码
+
+if(resetButton){
+
+    const employee =
+        window.filtered[
+            resetButton.dataset.reset
+        ];
+
+    const account =
+accounts.find(
+    a => a.username === employee.username
+);
+
+if(!account) return;
+
+    if(!account) return;
+    if(account && account.locked){
+
+    loginError.textContent =
+    "账号已被管理员锁定";
+
+    return;
+
+}
+
+    account.password="123456";
+
+    account.mustChangePassword=true;
+
+    localStorage.setItem(
+        accountKey,
+        JSON.stringify(accounts)
+    );
+
+    alert("密码已重置为123456");
+
+    return;
+
+}
+// 锁定账号
+
+if(lockButton){
+
+    const employee =
+        window.filtered[
+            lockButton.dataset.lock
+        ];
+
+    const account =
+        accounts.find(
+            a=>a.username===employee.username
+        );
+
+    if(!account) return;
+
+    account.locked =
+        !account.locked;
+
+    localStorage.setItem(
+        accountKey,
+        JSON.stringify(accounts)
+    );
+
+    alert(
+        account.locked
+        ? "账号已锁定"
+        : "账号已解锁"
+    );
+
+    return;
+
+}
+
+  if (detailButton) {
+  const employee = window.filtered[detailButton.dataset.index];
+  editingEmployee = employee;
+editingOldUsername = employee.username;
+
+  const baseSalary = Number(employee.baseSalary || 2740);
+  const bonus = Number(employee.bonus || 304);
+  const overtimeDays = Number(employee.overtimeDays || 0);
+  const overtimePay = Number(employee.overtimePay || 0);
+  const overseasAllowance = Number(employee.overseasAllowance || 0);
+  const livingAllowance = Number(employee.livingAllowance || 100);
+  const specialAllowance = Number(employee.specialAllowance || 0);
+  const deduction = Number(employee.deduction || 0);
+  const advance = Number(employee.advance || 0);
+
+  const totalSalary =
+    baseSalary +
+    bonus +
+    overtimePay +
+    overseasAllowance +
+    livingAllowance +
+    specialAllowance -
+    deduction -
+    advance;
+
+  detailTitle.textContent = employee.name + " — 员工薪资明细";
+
+  detailContent.innerHTML = `
+<tr>
+  <td>巴西</td>
+  <td>
+
+${employee.employeeId}
+
+<br>
+
+<small>
+
+${employee.name}
+
+</small>
+
+</td>
+  <td>菲律宾</td>
+  <td>${employee.dept}</td>
+  <td><span class="money-red">正</span></td>
+      <td>${employee.date}</td>
+      <td class="money-green">¥ ${baseSalary.toLocaleString("zh-CN")}</td>
+      <td>${bonus}</td>
+      <td class="money-red">${overtimeDays} 天</td>
+      <td class="money-red">¥ ${overtimePay}</td>
+      <td>¥ ${overseasAllowance}</td>
+      <td>¥ ${livingAllowance}</td>
+      <td>¥ ${specialAllowance}</td>
+      <td class="money-red">¥ ${deduction}</td>
+      <td class="money-red">¥ ${advance}</td>
+      <td>请假 ${employee.leaveCount || 0} 次</td>
+      <td class="total-salary">¥ ${totalSalary.toLocaleString("zh-CN")}</td>
+    </tr>
+  `;
+
+  detailModal.showModal();
+}
+
+  if (editButton) {
+  const employee = window.filtered[editButton.dataset.index];
+  editingEmployee = employee;
+editingOldUsername = employee.username;
+
+  editForm.elements["index"].value = employees.indexOf(employee);
+  editForm.elements["employeeId"].value =
+employee.employeeId;
+editForm.elements["username_show"].value =
+employee.username;
+
+editForm.elements["username"].value =
+employee.username;
+  editForm.elements["name"].value = employee.name;
+  editForm.elements["dept"].value = employee.dept;
+  editForm.elements["position"].value = employee.position;
+  editForm.elements["date"].value = employee.date;
+  editForm.elements["status"].value = employee.status;
+
+  editForm.elements["leaveCount"].value = employee.leaveCount || 0;
+  editForm.elements["deduction"].value = employee.deduction || 0;
+  editForm.elements["baseSalary"].value = employee.baseSalary || 2740;
+  editForm.elements["bonus"].value = employee.bonus || 0;
+  editForm.elements["overtimeDays"].value = employee.overtimeDays || 0;
+  editForm.elements["overtimePay"].value = employee.overtimePay || 0;
+  editForm.elements["overseasAllowance"].value = employee.overseasAllowance || 0;
+  editForm.elements["livingAllowance"].value = employee.livingAllowance || 100;
+  editForm.elements["specialAllowance"].value = employee.specialAllowance || 0;
+  editForm.elements["advance"].value = employee.advance || 0;
+
+    editModal.showModal();
+  }
+});
+
+searchInput.addEventListener("input", render);
+    departmentSelect.addEventListener("change", render);
+    statusSelect.addEventListener("change", render);
+
+    document.querySelector("#openModal").onclick = () => modal.showModal();
+    document.querySelector("#closeModal").onclick = () => modal.close();
+    document.querySelector("#cancel").onclick = () => modal.close();
+
+    employeeForm.onsubmit = event => {
+      event.preventDefault();
+
+      const formData = new FormData(employeeForm);
+      const date = new Date(formData.get("date") + "T00:00:00")
+        .toLocaleDateString("zh-CN");
+
+        const username = formData.get("username").trim();
+        if(accounts.some(a=>a.username===username)){
+    alert("账号已存在");
+    return;
+}
+
+      employees.unshift({
+
+    employeeId: generateEmployeeId(),
+
+    username: username,
+
+    name: formData.get("name").trim(),
+
+    dept: formData.get("department"),
+
+    position: formData.get("position"),
+
+    date,
+
+    status: formData.get("status"),
+
+    leaveCount:0,
+
+    deduction:0,
+
+    baseSalary:2740,
+
+    bonus:0,
+
+    overtimeDays:0,
+
+    overtimePay:0,
+
+    overseasAllowance:0,
+
+    livingAllowance:100,
+
+    specialAllowance:0,
+
+    advance:0
+
+});
+
+accounts.push({
+
+    username: username,
+
+    password:"123456",
+
+    role:"staff",
+
+    employeeName: formData.get("name").trim(),
+
+    mustChangePassword:true
+
+});
+
+localStorage.setItem(
+    accountKey,
+    JSON.stringify(accounts)
+);
+
+      localStorage.setItem(storageKey, JSON.stringify(employees));
+
+      employeeForm.reset();
+      modal.close();
+      render();
+    };
+
+    editForm.onsubmit = event => {
+
+    event.preventDefault();
+
+    if(!editingEmployee) return;
+
+    const formData =
+        new FormData(editForm);
+        const newUsername =
+    formData.get("username").trim();
+
+editingEmployee.username = newUsername;
+
+    editingEmployee.name =
+        formData.get("name").trim();
+
+    editingEmployee.dept =
+        formData.get("dept");
+
+    editingEmployee.position =
+        formData.get("position");
+
+    editingEmployee.date =
+        formData.get("date");
+
+    editingEmployee.status =
+        formData.get("status");
+
+    editingEmployee.leaveCount =
+        Number(formData.get("leaveCount"))||0;
+
+    editingEmployee.deduction =
+        Number(formData.get("deduction"))||0;
+
+    editingEmployee.baseSalary =
+        Number(formData.get("baseSalary"))||0;
+
+    editingEmployee.bonus =
+        Number(formData.get("bonus"))||0;
+
+    editingEmployee.overtimeDays =
+        Number(formData.get("overtimeDays"))||0;
+
+    editingEmployee.overtimePay =
+        Number(formData.get("overtimePay"))||0;
+
+    editingEmployee.overseasAllowance =
+        Number(formData.get("overseasAllowance"))||0;
+
+    editingEmployee.livingAllowance =
+        Number(formData.get("livingAllowance"))||100;
+
+    editingEmployee.specialAllowance =
+        Number(formData.get("specialAllowance"))||0;
+
+    editingEmployee.advance =
+        Number(formData.get("advance"))||0;
+        const account = accounts.find(
+          
+    a => a.username === editingOldUsername
+);
+
+if(account){
+
+    account.employeeName =
+        editingEmployee.name;
+
+}
+
+        
+
+  localStorage.setItem(
+    storageKey,
+    JSON.stringify(employees)
+);
+
+localStorage.setItem(
+    accountKey,
+    JSON.stringify(accounts)
+);
+
+editModal.close();
+
+editingEmployee = null;
+editingOldUsername = "";
+
+render();
+
+alert("修改成功！");
+};
+function exportExcel(){
+  if(typeof XLSX==="undefined"){
+
+    alert("Excel库未加载");
+
+    return;
+
+}
+
+    const records =
+        currentUser.role === "admin"
+        ? getClockRecords()
+        : getClockRecords().filter(
+            r => r.username === currentUser.username
+        );
+
+    const data =
+records.map(item=>({
+
+工号:item.employeeId,
+
+员工:item.employeeName,
+
+账号:item.username,
+
+操作:item.action,
+
+类型:item.type,
+
+打卡时间:item.time
+
+}));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+
+    const wb = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+        wb,
+        ws,
+        "打卡记录"
+    );
+
+    XLSX.writeFile(
+        wb,
+        "打卡记录.xlsx"
+    );
+}
+
+document
+.getElementById("exportExcelBtn")
+.onclick = exportExcel;
+
+const changePasswordForm =
+document.querySelector("#changePasswordForm");
+
+changePasswordForm.onsubmit = e=>{
+
+e.preventDefault();
+
+const fd =
+new FormData(changePasswordForm);
+
+const p1=fd.get("password");
+
+const p2=fd.get("password2");
+
+if(p1!==p2){
+
+alert("两次密码不一致");
+
+return;
+
+}
+
+currentUser.password=p1;
+
+currentUser.mustChangePassword=false;
+
+const index=
+accounts.findIndex(a=>
+a.username===currentUser.username
+);
+
+accounts[index]=currentUser;
+
+localStorage.setItem(
+accountKey,
+JSON.stringify(accounts)
+);
+
+document
+.querySelector("#changePasswordModal")
+.close();
+
+alert("修改成功");
+
+};
+
+const savedUsername = localStorage.getItem(sessionKey);
+const savedAccount = accounts.find(
+    account => account.username === savedUsername
+);
+
+if (savedAccount) {
+
+    openApp(savedAccount);
+
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+</body>
+</html>

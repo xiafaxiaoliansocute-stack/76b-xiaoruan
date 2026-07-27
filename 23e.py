@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore")
 import requests
 import json
 import os

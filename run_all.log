@@ -1,0 +1,848 @@
+2026-07-27 05:00:00 [DASHBOARD] 🚀 Run: 2026-07-27 05:00:00.114262
+2026-07-27 05:00:25 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 05:00:25 [DASHBOARD] ✅ tt-h5 success
+2026-07-27 05:00:25 [DASHBOARD] ✅ DL success
+2026-07-27 05:00:25 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 05:00:25 [DASHBOARD] ✅ fb-ios success
+2026-07-27 05:00:25 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 05:00:25 [DASHBOARD] ✅ 上架包 success
+2026-07-27 05:00:25 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 05:00:25 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 05:00:25 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 05:00:25 [DASHBOARD] ✅ fb-pwa-b success
+2026-07-27 05:00:25 [DASHBOARD] ✅ 其他 success
+2026-07-27 05:00:25 [DASHBOARD] Brazil now : 2026-07-26 18:00:00.311187-03:00
+2026-07-27 05:00:25 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 05:00:25 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 05:00:25 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 05:00:25 [DASHBOARD] Hour end   : 2026-07-25 20:59:59+00:00
+2026-07-27 05:00:25 [DASHBOARD] Brazil now : 2026-07-26 18:00:00.311187-03:00
+2026-07-27 05:00:25 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 05:00:25 [DASHBOARD] Hour end   : 2026-07-25 20:59:59+00:00
+2026-07-27 05:00:25 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 05:00:25 [DASHBOARD] ❌ hour 上架包 'NoneType' object has no attribute 'get'
+2026-07-27 05:00:25 [DASHBOARD] ❌ hour fb-pwa-b 'NoneType' object has no attribute 'get'
+2026-07-27 05:00:25 [DASHBOARD] ❌ hour DL 'NoneType' object has no attribute 'get'
+2026-07-27 05:00:25 [DASHBOARD] ❌ hour fb-pwa 'NoneType' object has no attribute 'get'
+2026-07-27 05:00:25 [DASHBOARD] ❌ hour tt-pwa 'NoneType' object has no attribute 'get'
+2026-07-27 05:00:25 [DASHBOARD] ❌ hour fb-pwa-a 'NoneType' object has no attribute 'get'
+2026-07-27 05:00:25 [DASHBOARD] ❌ hour fb-ios 'NoneType' object has no attribute 'get'
+2026-07-27 05:00:25 [DASHBOARD] ❌ hour kwai-pwa 'NoneType' object has no attribute 'get'
+2026-07-27 05:00:25 [DASHBOARD] ❌ hour tt-h5 'NoneType' object has no attribute 'get'
+2026-07-27 05:00:25 [DASHBOARD] ❌ hour fb-h5 'NoneType' object has no attribute 'get'
+2026-07-27 05:00:25 [DASHBOARD] ❌ hour 其他 'NoneType' object has no attribute 'get'
+2026-07-27 05:00:25 [DASHBOARD] ✅ retention ALL
+2026-07-27 05:00:25 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 05:00:25 [DASHBOARD] ✅ retention tt-h5
+2026-07-27 05:00:25 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 05:00:25 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 05:00:25 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 05:00:25 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 05:00:25 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 05:00:25 [DASHBOARD] ✅ retention DL
+2026-07-27 05:00:25 [DASHBOARD] ✅ retention 上架包
+2026-07-27 05:00:25 [DASHBOARD] ✅ retention fb-pwa-b
+2026-07-27 05:00:25 [DASHBOARD] ✅ retention 其他
+2026-07-27 05:00:25 [DASHBOARD] Loading realtime data...
+2026-07-27 05:00:25 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 05:00:25 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 05:00:25 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 05:00:25 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 05:00:25 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/data.json
+2026-07-27 05:00:25 [DASHBOARD] ✅ Commit success
+2026-07-27 05:00:25 [DASHBOARD] ✅ GitHub updated
+2026-07-27 05:00:55 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 05:00:55 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 05:00:55 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 05:00:55 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 05:00:55 [DASHBOARD] ✅ 回访 success
+2026-07-27 05:00:55 [DASHBOARD] ✅ dsp-h5 success
+2026-07-27 05:00:55 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 05:00:55 [DASHBOARD] ✅ 其他 success
+2026-07-27 05:00:55 [DASHBOARD] ✅ fb-ios success
+2026-07-27 05:00:55 [DASHBOARD] ✅ fb-h5-a success
+2026-07-27 05:00:55 [DASHBOARD] ✅ ws-h5 success
+2026-07-27 05:00:55 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 05:00:55 [DASHBOARD] Brazil now : 2026-07-26 18:00:25.462699-03:00
+2026-07-27 05:00:55 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 05:00:55 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 05:00:55 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 05:00:55 [DASHBOARD] Hour end   : 2026-07-25 20:59:59+00:00
+2026-07-27 05:00:55 [DASHBOARD] Brazil now : 2026-07-26 18:00:25.462699-03:00
+2026-07-27 05:00:55 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 05:00:55 [DASHBOARD] Hour end   : 2026-07-25 20:59:59+00:00
+2026-07-27 05:00:55 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 05:00:55 [DASHBOARD] ✅ hour fb-pwa-a
+2026-07-27 05:00:55 [DASHBOARD] ✅ hour fb-h5-a
+2026-07-27 05:00:55 [DASHBOARD] ✅ hour tt-pwa
+2026-07-27 05:00:55 [DASHBOARD] ✅ hour fb-ios
+2026-07-27 05:00:55 [DASHBOARD] ✅ hour fb-pwa
+2026-07-27 05:00:55 [DASHBOARD] ✅ hour fb-h5
+2026-07-27 05:00:55 [DASHBOARD] ✅ hour 回访
+2026-07-27 05:00:55 [DASHBOARD] ✅ hour dsp-h5
+2026-07-27 05:00:55 [DASHBOARD] ✅ hour 其他
+2026-07-27 05:00:55 [DASHBOARD] ✅ hour kwai-pwa
+2026-07-27 05:00:55 [DASHBOARD] ✅ hour ws-h5
+2026-07-27 05:00:55 [DASHBOARD] ✅ retention ALL
+2026-07-27 05:00:55 [DASHBOARD] ✅ retention fb-h5-a
+2026-07-27 05:00:55 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 05:00:55 [DASHBOARD] ✅ retention dsp-h5
+2026-07-27 05:00:55 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 05:00:55 [DASHBOARD] ✅ retention 其他
+2026-07-27 05:00:55 [DASHBOARD] ✅ retention 回访
+2026-07-27 05:00:55 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 05:00:55 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 05:00:55 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 05:00:55 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 05:00:55 [DASHBOARD] ✅ retention ws-h5
+2026-07-27 05:00:55 [DASHBOARD] Loading realtime data...
+2026-07-27 05:00:55 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 05:00:55 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 05:00:55 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 05:00:55 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 05:00:55 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/nn22.json
+2026-07-27 05:00:55 [DASHBOARD] ✅ Commit success
+2026-07-27 05:00:55 [DASHBOARD] ✅ GitHub updated
+2026-07-27 05:01:23 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 05:01:23 [DASHBOARD] ✅ fb-ios success
+2026-07-27 05:01:23 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 05:01:23 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 05:01:23 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 05:01:23 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 05:01:23 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 05:01:23 [DASHBOARD] ✅ fb-h5-a success
+2026-07-27 05:01:23 [DASHBOARD] ✅ 上架包 success
+2026-07-27 05:01:23 [DASHBOARD] ✅ DL success
+2026-07-27 05:01:23 [DASHBOARD] ✅ fb-pwa-b success
+2026-07-27 05:01:23 [DASHBOARD] ✅ 其他 success
+2026-07-27 05:01:23 [DASHBOARD] ✅ ws-h5 success
+2026-07-27 05:01:23 [DASHBOARD] Brazil now : 2026-07-26 18:00:55.307398-03:00
+2026-07-27 05:01:23 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 05:01:23 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 05:01:23 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 05:01:23 [DASHBOARD] Hour end   : 2026-07-25 20:59:59+00:00
+2026-07-27 05:01:23 [DASHBOARD] Brazil now : 2026-07-26 18:00:55.307398-03:00
+2026-07-27 05:01:23 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 05:01:23 [DASHBOARD] Hour end   : 2026-07-25 20:59:59+00:00
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour fb-ios
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour 上架包
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour DL
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour kwai-pwa
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour fb-h5
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour tt-pwa
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour fb-pwa-a
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour fb-pwa
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour fb-h5-a
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour fb-pwa-b
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour 其他
+2026-07-27 05:01:23 [DASHBOARD] ✅ hour ws-h5
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention ALL
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention fb-h5-a
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention DL
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention 上架包
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention fb-pwa-b
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention 其他
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention ws-h5
+2026-07-27 05:01:23 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 05:01:23 [DASHBOARD] Loading realtime data...
+2026-07-27 05:01:23 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 05:01:23 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 05:01:23 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 05:01:23 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 05:01:23 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/23a.json
+2026-07-27 05:01:23 [DASHBOARD] ✅ Commit success
+2026-07-27 05:01:23 [DASHBOARD] ✅ GitHub updated
+2026-07-27 05:01:45 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 05:01:45 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 05:01:45 [DASHBOARD] ✅ 其他 success
+2026-07-27 05:01:45 [DASHBOARD] ✅ fb-pwa-b success
+2026-07-27 05:01:45 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 05:01:45 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 05:01:45 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 05:01:45 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 05:01:45 [DASHBOARD] ✅ fb-ios success
+2026-07-27 05:01:45 [DASHBOARD] ✅ 上架包 success
+2026-07-27 05:01:45 [DASHBOARD] ✅ DL success
+2026-07-27 05:01:45 [DASHBOARD] Brazil now : 2026-07-26 18:01:23.183617-03:00
+2026-07-27 05:01:45 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 05:01:45 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 05:01:45 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 05:01:45 [DASHBOARD] Hour end   : 2026-07-25 20:59:59+00:00
+2026-07-27 05:01:45 [DASHBOARD] Brazil now : 2026-07-26 18:01:23.183617-03:00
+2026-07-27 05:01:45 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 05:01:45 [DASHBOARD] Hour end   : 2026-07-25 20:59:59+00:00
+2026-07-27 05:01:45 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 05:01:45 [DASHBOARD] ✅ hour fb-pwa-b
+2026-07-27 05:01:45 [DASHBOARD] ✅ hour 上架包
+2026-07-27 05:01:45 [DASHBOARD] ✅ hour fb-pwa-a
+2026-07-27 05:01:45 [DASHBOARD] ✅ hour kwai-pwa
+2026-07-27 05:01:45 [DASHBOARD] ✅ hour fb-h5
+2026-07-27 05:01:45 [DASHBOARD] ✅ hour tt-pwa
+2026-07-27 05:01:45 [DASHBOARD] ✅ hour fb-pwa
+2026-07-27 05:01:45 [DASHBOARD] ✅ hour DL
+2026-07-27 05:01:45 [DASHBOARD] ✅ hour 其他
+2026-07-27 05:01:45 [DASHBOARD] ✅ hour fb-ios
+2026-07-27 05:01:45 [DASHBOARD] ✅ retention ALL
+2026-07-27 05:01:45 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 05:01:45 [DASHBOARD] ✅ retention 其他
+2026-07-27 05:01:45 [DASHBOARD] ✅ retention 上架包
+2026-07-27 05:01:45 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 05:01:45 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 05:01:45 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 05:01:45 [DASHBOARD] ✅ retention DL
+2026-07-27 05:01:45 [DASHBOARD] ✅ retention fb-pwa-b
+2026-07-27 05:01:45 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 05:01:45 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 05:01:45 [DASHBOARD] Loading realtime data...
+2026-07-27 05:01:45 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 05:01:45 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 05:01:45 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 05:01:45 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 05:01:45 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/23e.json
+2026-07-27 05:01:45 [DASHBOARD] ✅ Commit success
+2026-07-27 05:01:45 [DASHBOARD] ✅ GitHub updated
+2026-07-27 05:01:45 [DASHBOARD] ✅ Done
+2026-07-27 05:01:45 [DASHBOARD] ⏰ Next run: 2026-07-27 06:00:00
+2026-07-27 05:01:45 [DASHBOARD] ✅ 推广汇总更新完成
+2026-07-27 05:59:59 [DASHBOARD] 🚀 Run: 2026-07-27 05:59:59.982295
+2026-07-27 06:00:27 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 06:00:27 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 06:00:27 [DASHBOARD] ✅ fb-pwa-b success
+2026-07-27 06:00:27 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 06:00:27 [DASHBOARD] ✅ DL success
+2026-07-27 06:00:27 [DASHBOARD] ✅ fb-ios success
+2026-07-27 06:00:27 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 06:00:27 [DASHBOARD] ✅ tt-h5 success
+2026-07-27 06:00:27 [DASHBOARD] ✅ 上架包 success
+2026-07-27 06:00:27 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 06:00:27 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 06:00:27 [DASHBOARD] ✅ 其他 success
+2026-07-27 06:00:27 [DASHBOARD] Brazil now : 2026-07-26 19:00:00.267581-03:00
+2026-07-27 06:00:27 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 06:00:27 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 06:00:27 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 06:00:27 [DASHBOARD] Hour end   : 2026-07-25 21:59:59+00:00
+2026-07-27 06:00:27 [DASHBOARD] Brazil now : 2026-07-26 19:00:00.267581-03:00
+2026-07-27 06:00:27 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 06:00:27 [DASHBOARD] Hour end   : 2026-07-25 21:59:59+00:00
+2026-07-27 06:00:27 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 06:00:27 [DASHBOARD] ❌ hour tt-pwa 'NoneType' object has no attribute 'get'
+2026-07-27 06:00:27 [DASHBOARD] ❌ hour fb-pwa-a 'NoneType' object has no attribute 'get'
+2026-07-27 06:00:27 [DASHBOARD] ❌ hour fb-pwa-b 'NoneType' object has no attribute 'get'
+2026-07-27 06:00:27 [DASHBOARD] ❌ hour tt-h5 'NoneType' object has no attribute 'get'
+2026-07-27 06:00:27 [DASHBOARD] ❌ hour kwai-pwa 'NoneType' object has no attribute 'get'
+2026-07-27 06:00:27 [DASHBOARD] ❌ hour fb-ios 'NoneType' object has no attribute 'get'
+2026-07-27 06:00:27 [DASHBOARD] ❌ hour DL 'NoneType' object has no attribute 'get'
+2026-07-27 06:00:27 [DASHBOARD] ❌ hour fb-pwa 'NoneType' object has no attribute 'get'
+2026-07-27 06:00:27 [DASHBOARD] ❌ hour 上架包 'NoneType' object has no attribute 'get'
+2026-07-27 06:00:27 [DASHBOARD] ❌ hour fb-h5 'NoneType' object has no attribute 'get'
+2026-07-27 06:00:27 [DASHBOARD] ❌ hour 其他 'NoneType' object has no attribute 'get'
+2026-07-27 06:00:27 [DASHBOARD] ✅ retention ALL
+2026-07-27 06:00:27 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 06:00:27 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 06:00:27 [DASHBOARD] ✅ retention DL
+2026-07-27 06:00:27 [DASHBOARD] ✅ retention fb-pwa-b
+2026-07-27 06:00:27 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 06:00:27 [DASHBOARD] ✅ retention 上架包
+2026-07-27 06:00:27 [DASHBOARD] ✅ retention tt-h5
+2026-07-27 06:00:27 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 06:00:27 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 06:00:27 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 06:00:27 [DASHBOARD] ✅ retention 其他
+2026-07-27 06:00:27 [DASHBOARD] Loading realtime data...
+2026-07-27 06:00:27 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 06:00:27 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 06:00:27 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 06:00:27 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 06:00:27 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/data.json
+2026-07-27 06:00:27 [DASHBOARD] ✅ Commit success
+2026-07-27 06:00:27 [DASHBOARD] ✅ GitHub updated
+2026-07-27 06:01:00 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 06:01:00 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 06:01:00 [DASHBOARD] ✅ 其他 success
+2026-07-27 06:01:00 [DASHBOARD] ✅ dsp-h5 success
+2026-07-27 06:01:00 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 06:01:00 [DASHBOARD] ✅ fb-ios success
+2026-07-27 06:01:00 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 06:01:00 [DASHBOARD] ✅ fb-h5-a success
+2026-07-27 06:01:00 [DASHBOARD] ✅ 回访 success
+2026-07-27 06:01:00 [DASHBOARD] ✅ ws-h5 success
+2026-07-27 06:01:00 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 06:01:00 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 06:01:00 [DASHBOARD] Brazil now : 2026-07-26 19:00:27.459234-03:00
+2026-07-27 06:01:00 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 06:01:00 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 06:01:00 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 06:01:00 [DASHBOARD] Hour end   : 2026-07-25 21:59:59+00:00
+2026-07-27 06:01:00 [DASHBOARD] Brazil now : 2026-07-26 19:00:27.459234-03:00
+2026-07-27 06:01:00 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 06:01:00 [DASHBOARD] Hour end   : 2026-07-25 21:59:59+00:00
+2026-07-27 06:01:00 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 06:01:00 [DASHBOARD] ✅ hour kwai-pwa
+2026-07-27 06:01:00 [DASHBOARD] ✅ hour dsp-h5
+2026-07-27 06:01:00 [DASHBOARD] ✅ hour fb-pwa
+2026-07-27 06:01:00 [DASHBOARD] ✅ hour fb-pwa-a
+2026-07-27 06:01:00 [DASHBOARD] ✅ hour fb-h5
+2026-07-27 06:01:00 [DASHBOARD] ✅ hour tt-pwa
+2026-07-27 06:01:00 [DASHBOARD] ✅ hour fb-h5-a
+2026-07-27 06:01:00 [DASHBOARD] ✅ hour fb-ios
+2026-07-27 06:01:00 [DASHBOARD] ✅ hour ws-h5
+2026-07-27 06:01:00 [DASHBOARD] ✅ hour 回访
+2026-07-27 06:01:00 [DASHBOARD] ✅ hour 其他
+2026-07-27 06:01:00 [DASHBOARD] ✅ retention ALL
+2026-07-27 06:01:00 [DASHBOARD] ✅ retention 回访
+2026-07-27 06:01:00 [DASHBOARD] ✅ retention dsp-h5
+2026-07-27 06:01:00 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 06:01:00 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 06:01:00 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 06:01:00 [DASHBOARD] ✅ retention fb-h5-a
+2026-07-27 06:01:00 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 06:01:00 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 06:01:00 [DASHBOARD] ✅ retention 其他
+2026-07-27 06:01:00 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 06:01:00 [DASHBOARD] ✅ retention ws-h5
+2026-07-27 06:01:00 [DASHBOARD] Loading realtime data...
+2026-07-27 06:01:00 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 06:01:00 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 06:01:00 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 06:01:00 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 06:01:00 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/nn22.json
+2026-07-27 06:01:00 [DASHBOARD] ✅ Commit success
+2026-07-27 06:01:00 [DASHBOARD] ✅ GitHub updated
+2026-07-27 06:01:25 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 06:01:25 [DASHBOARD] ✅ fb-h5-a success
+2026-07-27 06:01:25 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 06:01:25 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 06:01:25 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 06:01:25 [DASHBOARD] ✅ fb-pwa-b success
+2026-07-27 06:01:25 [DASHBOARD] ✅ 上架包 success
+2026-07-27 06:01:25 [DASHBOARD] ✅ fb-ios success
+2026-07-27 06:01:25 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 06:01:25 [DASHBOARD] ✅ DL success
+2026-07-27 06:01:25 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 06:01:25 [DASHBOARD] ✅ 其他 success
+2026-07-27 06:01:25 [DASHBOARD] ✅ ws-h5 success
+2026-07-27 06:01:25 [DASHBOARD] Brazil now : 2026-07-26 19:01:00.355635-03:00
+2026-07-27 06:01:25 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 06:01:25 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 06:01:25 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 06:01:25 [DASHBOARD] Hour end   : 2026-07-25 21:59:59+00:00
+2026-07-27 06:01:25 [DASHBOARD] Brazil now : 2026-07-26 19:01:00.355635-03:00
+2026-07-27 06:01:25 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 06:01:25 [DASHBOARD] Hour end   : 2026-07-25 21:59:59+00:00
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour 上架包
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour fb-pwa
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour fb-ios
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour fb-h5
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour fb-pwa-b
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour tt-pwa
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour fb-pwa-a
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour kwai-pwa
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour DL
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour fb-h5-a
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour ws-h5
+2026-07-27 06:01:25 [DASHBOARD] ✅ hour 其他
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention ALL
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention 上架包
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention fb-h5-a
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention fb-pwa-b
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention DL
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention ws-h5
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 06:01:25 [DASHBOARD] ✅ retention 其他
+2026-07-27 06:01:25 [DASHBOARD] Loading realtime data...
+2026-07-27 06:01:25 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 06:01:25 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 06:01:25 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 06:01:25 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 06:01:25 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/23a.json
+2026-07-27 06:01:25 [DASHBOARD] ✅ Commit success
+2026-07-27 06:01:25 [DASHBOARD] ✅ GitHub updated
+2026-07-27 06:01:57 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 06:01:57 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 06:01:57 [DASHBOARD] ✅ fb-pwa-b success
+2026-07-27 06:01:57 [DASHBOARD] ✅ DL success
+2026-07-27 06:01:57 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 06:01:57 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 06:01:57 [DASHBOARD] ✅ 其他 success
+2026-07-27 06:01:57 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 06:01:57 [DASHBOARD] ✅ fb-ios success
+2026-07-27 06:01:57 [DASHBOARD] ✅ 上架包 success
+2026-07-27 06:01:57 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 06:01:57 [DASHBOARD] Brazil now : 2026-07-26 19:01:25.887480-03:00
+2026-07-27 06:01:57 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 06:01:57 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 06:01:57 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 06:01:57 [DASHBOARD] Hour end   : 2026-07-25 21:59:59+00:00
+2026-07-27 06:01:57 [DASHBOARD] Brazil now : 2026-07-26 19:01:25.887480-03:00
+2026-07-27 06:01:57 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 06:01:57 [DASHBOARD] Hour end   : 2026-07-25 21:59:59+00:00
+2026-07-27 06:01:57 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 06:01:57 [DASHBOARD] ✅ hour fb-h5
+2026-07-27 06:01:57 [DASHBOARD] ✅ hour fb-pwa-a
+2026-07-27 06:01:57 [DASHBOARD] ✅ hour kwai-pwa
+2026-07-27 06:01:57 [DASHBOARD] ✅ hour fb-ios
+2026-07-27 06:01:57 [DASHBOARD] ✅ hour 上架包
+2026-07-27 06:01:57 [DASHBOARD] ✅ hour tt-pwa
+2026-07-27 06:01:57 [DASHBOARD] ✅ hour fb-pwa
+2026-07-27 06:01:57 [DASHBOARD] ✅ hour 其他
+2026-07-27 06:01:57 [DASHBOARD] ✅ hour DL
+2026-07-27 06:01:57 [DASHBOARD] ✅ hour fb-pwa-b
+2026-07-27 06:01:57 [DASHBOARD] ✅ retention ALL
+2026-07-27 06:01:57 [DASHBOARD] ✅ retention DL
+2026-07-27 06:01:57 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 06:01:57 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 06:01:57 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 06:01:57 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 06:01:57 [DASHBOARD] ✅ retention 其他
+2026-07-27 06:01:57 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 06:01:57 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 06:01:57 [DASHBOARD] ✅ retention fb-pwa-b
+2026-07-27 06:01:57 [DASHBOARD] ✅ retention 上架包
+2026-07-27 06:01:57 [DASHBOARD] Loading realtime data...
+2026-07-27 06:01:58 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 06:01:58 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 06:01:58 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 06:01:58 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 06:01:58 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/23e.json
+2026-07-27 06:01:58 [DASHBOARD] ✅ Commit success
+2026-07-27 06:01:58 [DASHBOARD] ✅ GitHub updated
+2026-07-27 06:01:58 [DASHBOARD] ✅ Done
+2026-07-27 06:01:58 [DASHBOARD] ⏰ Next run: 2026-07-27 07:00:00
+2026-07-27 06:01:58 [DASHBOARD] ✅ 推广汇总更新完成
+2026-07-27 07:00:00 [DASHBOARD] 🚀 Run: 2026-07-27 07:00:00.022312
+2026-07-27 07:00:27 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 07:00:27 [DASHBOARD] ✅ fb-ios success
+2026-07-27 07:00:27 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 07:00:27 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 07:00:27 [DASHBOARD] ✅ tt-h5 success
+2026-07-27 07:00:27 [DASHBOARD] ✅ fb-pwa-b success
+2026-07-27 07:00:27 [DASHBOARD] ✅ 上架包 success
+2026-07-27 07:00:27 [DASHBOARD] ✅ DL success
+2026-07-27 07:00:27 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 07:00:27 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 07:00:27 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 07:00:27 [DASHBOARD] ✅ 其他 success
+2026-07-27 07:00:27 [DASHBOARD] Brazil now : 2026-07-26 20:00:00.215688-03:00
+2026-07-27 07:00:27 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 07:00:27 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 07:00:27 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 07:00:27 [DASHBOARD] Hour end   : 2026-07-25 22:59:59+00:00
+2026-07-27 07:00:27 [DASHBOARD] Brazil now : 2026-07-26 20:00:00.215688-03:00
+2026-07-27 07:00:27 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 07:00:27 [DASHBOARD] Hour end   : 2026-07-25 22:59:59+00:00
+2026-07-27 07:00:27 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 07:00:27 [DASHBOARD] ❌ hour fb-pwa-b 'NoneType' object has no attribute 'get'
+2026-07-27 07:00:27 [DASHBOARD] ❌ hour fb-h5 'NoneType' object has no attribute 'get'
+2026-07-27 07:00:27 [DASHBOARD] ❌ hour kwai-pwa 'NoneType' object has no attribute 'get'
+2026-07-27 07:00:27 [DASHBOARD] ❌ hour DL 'NoneType' object has no attribute 'get'
+2026-07-27 07:00:27 [DASHBOARD] ❌ hour tt-pwa 'NoneType' object has no attribute 'get'
+2026-07-27 07:00:27 [DASHBOARD] ❌ hour fb-pwa-a 'NoneType' object has no attribute 'get'
+2026-07-27 07:00:27 [DASHBOARD] ❌ hour fb-ios 'NoneType' object has no attribute 'get'
+2026-07-27 07:00:27 [DASHBOARD] ❌ hour 上架包 'NoneType' object has no attribute 'get'
+2026-07-27 07:00:27 [DASHBOARD] ❌ hour tt-h5 'NoneType' object has no attribute 'get'
+2026-07-27 07:00:27 [DASHBOARD] ❌ hour fb-pwa 'NoneType' object has no attribute 'get'
+2026-07-27 07:00:27 [DASHBOARD] ❌ hour 其他 'NoneType' object has no attribute 'get'
+2026-07-27 07:00:27 [DASHBOARD] ✅ retention ALL
+2026-07-27 07:00:27 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 07:00:27 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 07:00:27 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 07:00:27 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 07:00:27 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 07:00:27 [DASHBOARD] ✅ retention DL
+2026-07-27 07:00:27 [DASHBOARD] ✅ retention tt-h5
+2026-07-27 07:00:27 [DASHBOARD] ✅ retention 上架包
+2026-07-27 07:00:27 [DASHBOARD] ✅ retention fb-pwa-b
+2026-07-27 07:00:27 [DASHBOARD] ✅ retention 其他
+2026-07-27 07:00:27 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 07:00:27 [DASHBOARD] Loading realtime data...
+2026-07-27 07:00:27 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 07:00:27 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 07:00:27 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 07:00:27 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 07:00:27 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/data.json
+2026-07-27 07:00:27 [DASHBOARD] ✅ Commit success
+2026-07-27 07:00:27 [DASHBOARD] ✅ GitHub updated
+2026-07-27 07:00:56 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 07:00:56 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 07:00:56 [DASHBOARD] ✅ fb-h5-a success
+2026-07-27 07:00:56 [DASHBOARD] ✅ 其他 success
+2026-07-27 07:00:56 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 07:00:56 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 07:00:56 [DASHBOARD] ✅ dsp-h5 success
+2026-07-27 07:00:56 [DASHBOARD] ✅ 回访 success
+2026-07-27 07:00:56 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 07:00:56 [DASHBOARD] ✅ fb-ios success
+2026-07-27 07:00:56 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 07:00:56 [DASHBOARD] ✅ ws-h5 success
+2026-07-27 07:00:56 [DASHBOARD] Brazil now : 2026-07-26 20:00:27.821585-03:00
+2026-07-27 07:00:56 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 07:00:56 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 07:00:56 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 07:00:56 [DASHBOARD] Hour end   : 2026-07-25 22:59:59+00:00
+2026-07-27 07:00:56 [DASHBOARD] Brazil now : 2026-07-26 20:00:27.821585-03:00
+2026-07-27 07:00:56 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 07:00:56 [DASHBOARD] Hour end   : 2026-07-25 22:59:59+00:00
+2026-07-27 07:00:56 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 07:00:56 [DASHBOARD] ✅ hour fb-ios
+2026-07-27 07:00:56 [DASHBOARD] ✅ hour fb-h5
+2026-07-27 07:00:56 [DASHBOARD] ✅ hour dsp-h5
+2026-07-27 07:00:56 [DASHBOARD] ✅ hour tt-pwa
+2026-07-27 07:00:56 [DASHBOARD] ✅ hour kwai-pwa
+2026-07-27 07:00:56 [DASHBOARD] ✅ hour fb-h5-a
+2026-07-27 07:00:56 [DASHBOARD] ✅ hour fb-pwa-a
+2026-07-27 07:00:56 [DASHBOARD] ✅ hour 其他
+2026-07-27 07:00:56 [DASHBOARD] ✅ hour 回访
+2026-07-27 07:00:56 [DASHBOARD] ✅ hour fb-pwa
+2026-07-27 07:00:56 [DASHBOARD] ✅ hour ws-h5
+2026-07-27 07:00:56 [DASHBOARD] ✅ retention ALL
+2026-07-27 07:00:56 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 07:00:56 [DASHBOARD] ✅ retention fb-h5-a
+2026-07-27 07:00:56 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 07:00:56 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 07:00:56 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 07:00:56 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 07:00:56 [DASHBOARD] ✅ retention 回访
+2026-07-27 07:00:56 [DASHBOARD] ✅ retention dsp-h5
+2026-07-27 07:00:56 [DASHBOARD] ✅ retention 其他
+2026-07-27 07:00:56 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 07:00:56 [DASHBOARD] ✅ retention ws-h5
+2026-07-27 07:00:56 [DASHBOARD] Loading realtime data...
+2026-07-27 07:00:56 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 07:00:56 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 07:00:56 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 07:00:56 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 07:00:56 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/nn22.json
+2026-07-27 07:00:56 [DASHBOARD] ✅ Commit success
+2026-07-27 07:00:56 [DASHBOARD] ✅ GitHub updated
+2026-07-27 07:01:21 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 07:01:21 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 07:01:21 [DASHBOARD] ✅ fb-h5-a success
+2026-07-27 07:01:21 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 07:01:21 [DASHBOARD] ✅ 上架包 success
+2026-07-27 07:01:21 [DASHBOARD] ✅ fb-ios success
+2026-07-27 07:01:21 [DASHBOARD] ✅ fb-pwa-b success
+2026-07-27 07:01:21 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 07:01:21 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 07:01:21 [DASHBOARD] ✅ ws-h5 success
+2026-07-27 07:01:21 [DASHBOARD] ✅ 其他 success
+2026-07-27 07:01:21 [DASHBOARD] ✅ DL success
+2026-07-27 07:01:21 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 07:01:21 [DASHBOARD] Brazil now : 2026-07-26 20:00:56.304156-03:00
+2026-07-27 07:01:21 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 07:01:21 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 07:01:21 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 07:01:21 [DASHBOARD] Hour end   : 2026-07-25 22:59:59+00:00
+2026-07-27 07:01:21 [DASHBOARD] Brazil now : 2026-07-26 20:00:56.304156-03:00
+2026-07-27 07:01:21 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 07:01:21 [DASHBOARD] Hour end   : 2026-07-25 22:59:59+00:00
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour DL
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour fb-pwa-a
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour fb-ios
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour fb-pwa
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour fb-h5
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour fb-h5-a
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour 上架包
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour kwai-pwa
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour tt-pwa
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour fb-pwa-b
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour 其他
+2026-07-27 07:01:21 [DASHBOARD] ✅ hour ws-h5
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention ALL
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention fb-h5-a
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention fb-pwa-b
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention 上架包
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention DL
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention 其他
+2026-07-27 07:01:21 [DASHBOARD] ✅ retention ws-h5
+2026-07-27 07:01:21 [DASHBOARD] Loading realtime data...
+2026-07-27 07:01:21 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 07:01:21 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 07:01:21 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 07:01:21 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 07:01:21 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/23a.json
+2026-07-27 07:01:21 [DASHBOARD] ✅ Commit success
+2026-07-27 07:01:21 [DASHBOARD] ✅ GitHub updated
+2026-07-27 07:01:43 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 07:01:43 [DASHBOARD] ✅ fb-ios success
+2026-07-27 07:01:43 [DASHBOARD] ✅ DL success
+2026-07-27 07:01:43 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 07:01:43 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 07:01:43 [DASHBOARD] ✅ 其他 success
+2026-07-27 07:01:43 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 07:01:43 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 07:01:43 [DASHBOARD] ✅ fb-pwa-b success
+2026-07-27 07:01:43 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 07:01:43 [DASHBOARD] ✅ 上架包 success
+2026-07-27 07:01:43 [DASHBOARD] Brazil now : 2026-07-26 20:01:21.569859-03:00
+2026-07-27 07:01:43 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 07:01:43 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 07:01:43 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 07:01:43 [DASHBOARD] Hour end   : 2026-07-25 22:59:59+00:00
+2026-07-27 07:01:43 [DASHBOARD] Brazil now : 2026-07-26 20:01:21.569859-03:00
+2026-07-27 07:01:43 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 07:01:43 [DASHBOARD] Hour end   : 2026-07-25 22:59:59+00:00
+2026-07-27 07:01:43 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 07:01:43 [DASHBOARD] ✅ hour fb-ios
+2026-07-27 07:01:43 [DASHBOARD] ✅ hour fb-pwa
+2026-07-27 07:01:43 [DASHBOARD] ✅ hour 上架包
+2026-07-27 07:01:43 [DASHBOARD] ✅ hour fb-pwa-b
+2026-07-27 07:01:43 [DASHBOARD] ✅ hour tt-pwa
+2026-07-27 07:01:43 [DASHBOARD] ✅ hour fb-pwa-a
+2026-07-27 07:01:43 [DASHBOARD] ✅ hour kwai-pwa
+2026-07-27 07:01:43 [DASHBOARD] ✅ hour DL
+2026-07-27 07:01:43 [DASHBOARD] ✅ hour fb-h5
+2026-07-27 07:01:43 [DASHBOARD] ✅ hour 其他
+2026-07-27 07:01:43 [DASHBOARD] ✅ retention ALL
+2026-07-27 07:01:43 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 07:01:43 [DASHBOARD] ✅ retention fb-pwa-b
+2026-07-27 07:01:43 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 07:01:43 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 07:01:43 [DASHBOARD] ✅ retention 其他
+2026-07-27 07:01:43 [DASHBOARD] ✅ retention 上架包
+2026-07-27 07:01:43 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 07:01:43 [DASHBOARD] ✅ retention DL
+2026-07-27 07:01:43 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 07:01:43 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 07:01:43 [DASHBOARD] Loading realtime data...
+2026-07-27 07:01:43 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 07:01:43 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 07:01:43 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 07:01:43 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 07:01:43 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/23e.json
+2026-07-27 07:01:43 [DASHBOARD] ✅ Commit success
+2026-07-27 07:01:43 [DASHBOARD] ✅ GitHub updated
+2026-07-27 07:01:43 [DASHBOARD] ✅ Done
+2026-07-27 07:01:43 [DASHBOARD] ⏰ Next run: 2026-07-27 08:00:00
+2026-07-27 07:01:43 [DASHBOARD] ✅ 推广汇总更新完成
+2026-07-27 07:59:59 [DASHBOARD] 🚀 Run: 2026-07-27 07:59:59.956546
+2026-07-27 08:00:26 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 08:00:26 [DASHBOARD] ✅ fb-ios success
+2026-07-27 08:00:26 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 08:00:26 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 08:00:26 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 08:00:26 [DASHBOARD] ✅ DL success
+2026-07-27 08:00:26 [DASHBOARD] ✅ 上架包 success
+2026-07-27 08:00:26 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 08:00:26 [DASHBOARD] ✅ fb-pwa-b success
+2026-07-27 08:00:26 [DASHBOARD] ✅ tt-h5 success
+2026-07-27 08:00:26 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 08:00:26 [DASHBOARD] ✅ 其他 success
+2026-07-27 08:00:26 [DASHBOARD] Brazil now : 2026-07-26 21:00:00.195396-03:00
+2026-07-27 08:00:26 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 08:00:26 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 08:00:26 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 08:00:26 [DASHBOARD] Hour end   : 2026-07-25 23:59:59+00:00
+2026-07-27 08:00:26 [DASHBOARD] Brazil now : 2026-07-26 21:00:00.195396-03:00
+2026-07-27 08:00:26 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 08:00:26 [DASHBOARD] Hour end   : 2026-07-25 23:59:59+00:00
+2026-07-27 08:00:26 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 08:00:26 [DASHBOARD] ❌ hour kwai-pwa 'NoneType' object has no attribute 'get'
+2026-07-27 08:00:26 [DASHBOARD] ❌ hour fb-pwa-b 'NoneType' object has no attribute 'get'
+2026-07-27 08:00:26 [DASHBOARD] ❌ hour tt-pwa 'NoneType' object has no attribute 'get'
+2026-07-27 08:00:26 [DASHBOARD] ❌ hour fb-h5 'NoneType' object has no attribute 'get'
+2026-07-27 08:00:26 [DASHBOARD] ❌ hour 上架包 'NoneType' object has no attribute 'get'
+2026-07-27 08:00:26 [DASHBOARD] ❌ hour fb-ios 'NoneType' object has no attribute 'get'
+2026-07-27 08:00:26 [DASHBOARD] ❌ hour tt-h5 'NoneType' object has no attribute 'get'
+2026-07-27 08:00:26 [DASHBOARD] ❌ hour fb-pwa 'NoneType' object has no attribute 'get'
+2026-07-27 08:00:26 [DASHBOARD] ❌ hour DL 'NoneType' object has no attribute 'get'
+2026-07-27 08:00:26 [DASHBOARD] ❌ hour fb-pwa-a 'NoneType' object has no attribute 'get'
+2026-07-27 08:00:26 [DASHBOARD] ❌ hour 其他 'NoneType' object has no attribute 'get'
+2026-07-27 08:00:26 [DASHBOARD] ✅ retention ALL
+2026-07-27 08:00:26 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 08:00:26 [DASHBOARD] ✅ retention fb-pwa-b
+2026-07-27 08:00:26 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 08:00:26 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 08:00:26 [DASHBOARD] ✅ retention tt-h5
+2026-07-27 08:00:26 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 08:00:26 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 08:00:26 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 08:00:26 [DASHBOARD] ✅ retention 上架包
+2026-07-27 08:00:26 [DASHBOARD] ✅ retention DL
+2026-07-27 08:00:26 [DASHBOARD] ✅ retention 其他
+2026-07-27 08:00:26 [DASHBOARD] Loading realtime data...
+2026-07-27 08:00:26 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 08:00:26 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 08:00:26 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 08:00:26 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 08:00:26 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/data.json
+2026-07-27 08:00:26 [DASHBOARD] ✅ Commit success
+2026-07-27 08:00:26 [DASHBOARD] ✅ GitHub updated
+2026-07-27 08:00:56 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 08:00:56 [DASHBOARD] ✅ 其他 success
+2026-07-27 08:00:56 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 08:00:56 [DASHBOARD] ✅ 回访 success
+2026-07-27 08:00:56 [DASHBOARD] ✅ fb-h5-a success
+2026-07-27 08:00:56 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 08:00:56 [DASHBOARD] ✅ fb-ios success
+2026-07-27 08:00:56 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 08:00:56 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 08:00:56 [DASHBOARD] ✅ dsp-h5 success
+2026-07-27 08:00:56 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 08:00:56 [DASHBOARD] ✅ ws-h5 success
+2026-07-27 08:00:56 [DASHBOARD] Brazil now : 2026-07-26 21:00:26.666841-03:00
+2026-07-27 08:00:56 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 08:00:56 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 08:00:56 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 08:00:56 [DASHBOARD] Hour end   : 2026-07-25 23:59:59+00:00
+2026-07-27 08:00:56 [DASHBOARD] Brazil now : 2026-07-26 21:00:26.666841-03:00
+2026-07-27 08:00:56 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 08:00:56 [DASHBOARD] Hour end   : 2026-07-25 23:59:59+00:00
+2026-07-27 08:00:56 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 08:00:56 [DASHBOARD] ✅ hour fb-h5-a
+2026-07-27 08:00:56 [DASHBOARD] ✅ hour fb-ios
+2026-07-27 08:00:56 [DASHBOARD] ✅ hour 其他
+2026-07-27 08:00:56 [DASHBOARD] ✅ hour tt-pwa
+2026-07-27 08:00:56 [DASHBOARD] ✅ hour dsp-h5
+2026-07-27 08:00:56 [DASHBOARD] ✅ hour fb-pwa-a
+2026-07-27 08:00:56 [DASHBOARD] ✅ hour fb-pwa
+2026-07-27 08:00:56 [DASHBOARD] ✅ hour kwai-pwa
+2026-07-27 08:00:56 [DASHBOARD] ✅ hour fb-h5
+2026-07-27 08:00:56 [DASHBOARD] ✅ hour 回访
+2026-07-27 08:00:56 [DASHBOARD] ✅ hour ws-h5
+2026-07-27 08:00:56 [DASHBOARD] ✅ retention ALL
+2026-07-27 08:00:56 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 08:00:56 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 08:00:56 [DASHBOARD] ✅ retention 回访
+2026-07-27 08:00:56 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 08:00:56 [DASHBOARD] ✅ retention dsp-h5
+2026-07-27 08:00:56 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 08:00:56 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 08:00:56 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 08:00:56 [DASHBOARD] ✅ retention 其他
+2026-07-27 08:00:56 [DASHBOARD] ✅ retention fb-h5-a
+2026-07-27 08:00:56 [DASHBOARD] ✅ retention ws-h5
+2026-07-27 08:00:56 [DASHBOARD] Loading realtime data...
+2026-07-27 08:00:56 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 08:00:56 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 08:00:56 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 08:00:56 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 08:00:56 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/nn22.json
+2026-07-27 08:00:56 [DASHBOARD] ✅ Commit success
+2026-07-27 08:00:56 [DASHBOARD] ✅ GitHub updated
+2026-07-27 08:01:23 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 08:01:23 [DASHBOARD] ✅ fb-h5-a success
+2026-07-27 08:01:23 [DASHBOARD] ✅ DL success
+2026-07-27 08:01:23 [DASHBOARD] ✅ 上架包 success
+2026-07-27 08:01:23 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 08:01:23 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 08:01:23 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 08:01:23 [DASHBOARD] ✅ fb-pwa-b success
+2026-07-27 08:01:23 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 08:01:23 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 08:01:23 [DASHBOARD] ✅ 其他 success
+2026-07-27 08:01:23 [DASHBOARD] ✅ ws-h5 success
+2026-07-27 08:01:23 [DASHBOARD] ✅ fb-ios success
+2026-07-27 08:01:23 [DASHBOARD] Brazil now : 2026-07-26 21:00:56.445169-03:00
+2026-07-27 08:01:23 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 08:01:23 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 08:01:24 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 08:01:24 [DASHBOARD] Hour end   : 2026-07-25 23:59:59+00:00
+2026-07-27 08:01:24 [DASHBOARD] Brazil now : 2026-07-26 21:00:56.445169-03:00
+2026-07-27 08:01:24 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 08:01:24 [DASHBOARD] Hour end   : 2026-07-25 23:59:59+00:00
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour kwai-pwa
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour fb-h5
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour tt-pwa
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour 上架包
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour fb-pwa
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour fb-pwa-b
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour fb-ios
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour fb-pwa-a
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour DL
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour 其他
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour ws-h5
+2026-07-27 08:01:24 [DASHBOARD] ✅ hour fb-h5-a
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention ALL
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention DL
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention 上架包
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention fb-pwa-b
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention fb-h5-a
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention 其他
+2026-07-27 08:01:24 [DASHBOARD] ✅ retention ws-h5
+2026-07-27 08:01:24 [DASHBOARD] Loading realtime data...
+2026-07-27 08:01:24 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 08:01:24 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 08:01:24 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 08:01:24 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 08:01:24 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/23a.json
+2026-07-27 08:01:24 [DASHBOARD] ✅ Commit success
+2026-07-27 08:01:24 [DASHBOARD] ✅ GitHub updated
+2026-07-27 08:01:46 [DASHBOARD] ✅ ALL_TOTAL success
+2026-07-27 08:01:46 [DASHBOARD] ✅ fb-pwa-b success
+2026-07-27 08:01:46 [DASHBOARD] ✅ fb-h5 success
+2026-07-27 08:01:46 [DASHBOARD] ✅ 上架包 success
+2026-07-27 08:01:46 [DASHBOARD] ✅ fb-pwa success
+2026-07-27 08:01:46 [DASHBOARD] ✅ fb-ios success
+2026-07-27 08:01:46 [DASHBOARD] ✅ tt-pwa success
+2026-07-27 08:01:46 [DASHBOARD] ✅ DL success
+2026-07-27 08:01:46 [DASHBOARD] ✅ 其他 success
+2026-07-27 08:01:46 [DASHBOARD] ✅ fb-pwa-a success
+2026-07-27 08:01:46 [DASHBOARD] ✅ kwai-pwa success
+2026-07-27 08:01:46 [DASHBOARD] Brazil now : 2026-07-26 21:01:24.151283-03:00
+2026-07-27 08:01:46 [DASHBOARD] Report day : 2026-07-26
+2026-07-27 08:01:46 [DASHBOARD] Yesterday  : 2026-07-25
+2026-07-27 08:01:46 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 08:01:46 [DASHBOARD] Hour end   : 2026-07-25 23:59:59+00:00
+2026-07-27 08:01:46 [DASHBOARD] Brazil now : 2026-07-26 21:01:24.151283-03:00
+2026-07-27 08:01:46 [DASHBOARD] Hour start : 2026-07-25 03:00:00+00:00
+2026-07-27 08:01:46 [DASHBOARD] Hour end   : 2026-07-25 23:59:59+00:00
+2026-07-27 08:01:46 [DASHBOARD] ✅ hour ALL_TOTAL
+2026-07-27 08:01:46 [DASHBOARD] ✅ hour DL
+2026-07-27 08:01:46 [DASHBOARD] ✅ hour 上架包
+2026-07-27 08:01:46 [DASHBOARD] ✅ hour fb-pwa-b
+2026-07-27 08:01:46 [DASHBOARD] ✅ hour 其他
+2026-07-27 08:01:46 [DASHBOARD] ✅ hour tt-pwa
+2026-07-27 08:01:46 [DASHBOARD] ✅ hour fb-h5
+2026-07-27 08:01:46 [DASHBOARD] ✅ hour kwai-pwa
+2026-07-27 08:01:46 [DASHBOARD] ✅ hour fb-pwa-a
+2026-07-27 08:01:46 [DASHBOARD] ✅ hour fb-ios
+2026-07-27 08:01:46 [DASHBOARD] ✅ hour fb-pwa
+2026-07-27 08:01:46 [DASHBOARD] ✅ retention ALL
+2026-07-27 08:01:46 [DASHBOARD] ✅ retention fb-pwa-a
+2026-07-27 08:01:46 [DASHBOARD] ✅ retention fb-ios
+2026-07-27 08:01:46 [DASHBOARD] ✅ retention 上架包
+2026-07-27 08:01:46 [DASHBOARD] ✅ retention 其他
+2026-07-27 08:01:46 [DASHBOARD] ✅ retention fb-h5
+2026-07-27 08:01:46 [DASHBOARD] ✅ retention kwai-pwa
+2026-07-27 08:01:46 [DASHBOARD] ✅ retention fb-pwa-b
+2026-07-27 08:01:46 [DASHBOARD] ✅ retention fb-pwa
+2026-07-27 08:01:46 [DASHBOARD] ✅ retention tt-pwa
+2026-07-27 08:01:46 [DASHBOARD] ✅ retention DL
+2026-07-27 08:01:46 [DASHBOARD] Loading realtime data...
+2026-07-27 08:01:46 [DASHBOARD] ✅ realtime 2026-07-26
+2026-07-27 08:01:46 [DASHBOARD] ✅ realtime 2026-07-25
+2026-07-27 08:01:46 [DASHBOARD] ✅ realtime 2026-07-24
+2026-07-27 08:01:46 [DASHBOARD] ✅ realtime 2026-07-23
+2026-07-27 08:01:46 [DASHBOARD] ✅ Saved: /Users/xiaoruan/Documents/76b-getdata/23e.json
+2026-07-27 08:01:46 [DASHBOARD] ✅ Commit success
+2026-07-27 08:01:46 [DASHBOARD] ✅ GitHub updated
+2026-07-27 08:01:46 [DASHBOARD] ✅ Done
+2026-07-27 08:01:46 [DASHBOARD] ⏰ Next run: 2026-07-27 09:00:00
+2026-07-27 08:01:46 [DASHBOARD] ✅ 推广汇总更新完成

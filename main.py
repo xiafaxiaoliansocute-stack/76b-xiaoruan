@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore")
 import requests
 import json
 import os
@@ -9,25 +11,28 @@ from zoneinfo import ZoneInfo
 # CONFIG
 # ======================
 
-ACCOUNT = "xiaoruan2306"
-TOKEN = "eiwr0rp9e92xvjfwa9k07t0lkenlw79ls7qnt590"
+ACCOUNT = "jqr73j"
+TOKEN = "zj62gcom0g1muuv5220hkj3iftcwrzdxlkvb51s6"
 
-BASE_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.effect"
-HOUR_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.hourReportSum"
-REALTIME_URL = "https://api3.a-b-c-5.com/api/backend/trpc/realTimeData.list"
+BASE_URL = "https://api5.v-n-r-1.com/api/backend/trpc/channel.effect"
+HOUR_URL = "https://api5.v-n-r-1.com/api/backend/trpc/channel.hourReportSum"
+REALTIME_URL = "https://api5.v-n-r-1.com/api/backend/trpc/realTimeData.list"
 
-TENANT_ID = 5317688
+TENANT_ID = 1634560
 REGION_ID = 1
 
 CHANNELS = {
-    "fb-h5": 5554,
-    "fb-pwa": 5552,
-    "fb-ios": 5553,
-    "tt-pwa": 5551,
-    "kwai-pwa": 5555,
-    "回访": 5585,
-    "其他": 5540, 
-    "ws-h5": 5586
+    "fb-h5": 2786,
+    "fb-pwa": 2787,
+    "fb-pwa-a": 2788,
+    "fb-pwa-b": 2789,
+    "fb-ios": 2790,
+    "kwai-pwa": 2791,
+    "tt-h5": 2793,
+    "tt-pwa": 2792,
+    "上架包": 2795,
+    "DL": 2794,
+    "其他": 2796
 
 }
 
@@ -41,8 +46,8 @@ headers = {
     "authorization": f"Bearer {TOKEN}",
     "client-language": "zh-CN",
     "content-type": "application/json",
-    "origin": "https://admin-2306-66b1c5.m-b-d-1.com",
-    "referer": "https://admin-2306-66b1c5.m-b-d-1.com/",
+    "origin": "https://admin-15016-e3adb6.y-7-l-x.com",
+    "referer": "https://admin-15016-e3adb6.y-7-l-x.com/",
 }
 from requests.adapters import HTTPAdapter
 

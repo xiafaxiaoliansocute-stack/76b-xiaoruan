@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import subprocess
@@ -5,14 +8,20 @@ import time
 
 BRAZIL = ZoneInfo("America/Sao_Paulo")
 
-SCRIPT = "/Users/xiaoruan/Desktop/76b-getdata/quanju-baobiao/quanjubaobiao.py"
+SCRIPT = "/Users/xiaoruan/Documents/76b-getdata/quanju-baobiao/quanjubaobiao.py"
 
 
 def run_job():
     print("=" * 60)
     print("🚀", datetime.now(BRAZIL))
-    subprocess.run(["/usr/local/bin/python3", SCRIPT])
+
+    subprocess.run(
+        ["/usr/bin/python3", SCRIPT]
+    )
+
     print("✅ Finish")
+    print("✅ 全站汇总更新完成", flush=True)   # <-- thêm dòng này
+
     print("=" * 60)
 
 
@@ -41,15 +50,12 @@ while True:
     ).replace(hour=1, minute=5)
 
     if now < run1:
-
         target = run1
 
     elif now < run2:
-
         target = run2
 
     else:
-
         target = run1 + timedelta(days=1)
 
     wait = (target - now).total_seconds()

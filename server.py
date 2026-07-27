@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore")
 from flask import Flask, jsonify, send_from_directory
 import subprocess
 import os
