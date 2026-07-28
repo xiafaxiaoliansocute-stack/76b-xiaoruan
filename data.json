@@ -1,5 +1,5 @@
 {
-    "update_time_brazil": "2026-07-28 11:00",
+    "update_time_brazil": "2026-07-28 12:00",
     "report_day": "2026-07-28",
     "realtime": {
         "00:00": {
@@ -8765,6 +8765,22 @@
             }
         },
         "11:05": {
+            "2026-07-28": {
+                "loginCount": 2,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 2,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-07-27": {
                 "loginCount": 3,
                 "registerCount": 1,
@@ -8815,6 +8831,22 @@
             }
         },
         "11:10": {
+            "2026-07-28": {
+                "loginCount": 2,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 2,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-07-27": {
                 "loginCount": 3,
                 "registerCount": 1,
@@ -8865,6 +8897,22 @@
             }
         },
         "11:15": {
+            "2026-07-28": {
+                "loginCount": 2,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 2,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-07-27": {
                 "loginCount": 3,
                 "registerCount": 1,
@@ -8915,6 +8963,22 @@
             }
         },
         "11:20": {
+            "2026-07-28": {
+                "loginCount": 2,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 2,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-07-27": {
                 "loginCount": 3,
                 "registerCount": 1,
@@ -8965,6 +9029,22 @@
             }
         },
         "11:25": {
+            "2026-07-28": {
+                "loginCount": 2,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 1,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-07-27": {
                 "loginCount": 3,
                 "registerCount": 1,
@@ -9015,6 +9095,22 @@
             }
         },
         "11:30": {
+            "2026-07-28": {
+                "loginCount": 2,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 1,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-07-27": {
                 "loginCount": 3,
                 "registerCount": 1,
@@ -9065,6 +9161,22 @@
             }
         },
         "11:35": {
+            "2026-07-28": {
+                "loginCount": 2,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 1,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-07-27": {
                 "loginCount": 3,
                 "registerCount": 1,
@@ -9115,6 +9227,22 @@
             }
         },
         "11:40": {
+            "2026-07-28": {
+                "loginCount": 2,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 2,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-07-27": {
                 "loginCount": 3,
                 "registerCount": 1,
@@ -9165,6 +9293,22 @@
             }
         },
         "11:45": {
+            "2026-07-28": {
+                "loginCount": 2,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 2,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-07-27": {
                 "loginCount": 3,
                 "registerCount": 1,
@@ -9215,6 +9359,22 @@
             }
         },
         "11:50": {
+            "2026-07-28": {
+                "loginCount": 2,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 2,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-07-27": {
                 "loginCount": 3,
                 "registerCount": 1,
@@ -9265,6 +9425,22 @@
             }
         },
         "11:55": {
+            "2026-07-28": {
+                "loginCount": 2,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 2,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-07-27": {
                 "loginCount": 3,
                 "registerCount": 1,
@@ -9315,6 +9491,22 @@
             }
         },
         "12:00": {
+            "2026-07-28": {
+                "loginCount": 2,
+                "registerCount": 1,
+                "betCount": 0,
+                "onlineCount": 2,
+                "firstRechargeCount": 0,
+                "subFirstRechargeCount": 0,
+                "rechargeCount": 0,
+                "tenantProfit": 0.0,
+                "manualRecharge": "0 / 0",
+                "orderRecharge": "0 / 0",
+                "manualWithdraw": "0 / 0",
+                "orderWithdraw": "0 / 0",
+                "diff": 0,
+                "discount": 0.0
+            },
             "2026-07-27": {
                 "loginCount": 3,
                 "registerCount": 1,
@@ -16644,52 +16836,7 @@
         },
         "promotionList": {}
     },
-    "DL": {
-        "normalList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "parentList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "childList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "promotionList": {}
-    },
-    "fb-h5": {
+    "fb-pwa-a": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -16824,7 +16971,7 @@
         },
         "promotionList": {}
     },
-    "fb-pwa-a": {
+    "DL": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -16914,7 +17061,7 @@
         },
         "promotionList": {}
     },
-    "fb-pwa": {
+    "fb-h5": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -16959,7 +17106,52 @@
         },
         "promotionList": {}
     },
-    "kwai-pwa": {
+    "fb-pwa-b": {
+        "normalList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "parentList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "childList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "promotionList": {}
+    },
+    "fb-pwa": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -17049,7 +17241,7 @@
         },
         "promotionList": {}
     },
-    "fb-pwa-b": {
+    "kwai-pwa": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
