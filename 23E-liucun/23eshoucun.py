@@ -891,6 +891,8 @@ if __name__ == "__main__":
 
             create_export(day)
 
+            time.sleep(5)
+
 
 
             # 等待完成

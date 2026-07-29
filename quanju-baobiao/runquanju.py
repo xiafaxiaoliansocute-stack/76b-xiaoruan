@@ -20,9 +20,8 @@ def run_job():
     )
 
     print("✅ Finish")
-    print("✅ 全站汇总更新完成", flush=True)   # <-- thêm dòng này
+    print("✅ 全站汇总更新完成", flush=True)
 
-    print("=" * 60)
 
 
 # -------------------
@@ -59,9 +58,8 @@ while True:
         target = run1 + timedelta(days=1)
 
     wait = (target - now).total_seconds()
-
-    print(f"⏳ Waiting until {target}")
-
+    print("⏳ 下次运行:", flush=True)
+    print(target.strftime("%Y-%m-%d %H:%M:%S"), flush=True)
+    print(f"等待: {round(wait / 3600, 2)} 小时", flush=True)
     time.sleep(wait)
-
     run_job()

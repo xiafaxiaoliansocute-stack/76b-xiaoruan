@@ -1387,8 +1387,6 @@ placeholder="请输入密码">
 <th style="width:90px">TT-PWA</th>
 <th style="width:90px">KW-PWA</th>
 <th style="width:90px">WS-H5</th>
-
-
 <th id="avgExtraHeader" style="width:90px;display:none;">上架包</th>
 <th style="width:250px">类型</th>
 <th style="width:90px">比例</th>
@@ -1481,7 +1479,7 @@ const tableMainTitle =
 
 // ===== SỬA TỪ ĐÂY CÓ ĐÀI MỚI CHỈ VIÊC THÊM TÊN  =====
 
-if(site === "23A" || site === "23E"){
+if(site === "73J" || site === "23A" || site === "23E"){
 
     // 人均 +1 cột
     extraHeader.style.display = "";
@@ -1701,11 +1699,13 @@ const sections=[
 {key:"ALL_TOTAL",name:"全部"},
 {key:"fb-h5",name:"FB-H5"},
 {key:"fb-pwa",name:"FB-PWA"},
+{key:"fb-pwa-a",name:"FB-PWA-A"},
+{key:"fb-pwa-b",name:"FB-PWA-B"},
 {key:"fb-ios",name:"FB-IOS"},
 {key:"tt-pwa",name:"TT-PWA"},
 {key:"kwai-pwa",name:"KWAI-PWA"},
-{key:"ws-h5",name:"WS-H5"},
-{key:"回访",name:"回访"}
+{key:"上架包",name:"上架包"},
+{key:"ws-h5",name:"WS-H5"}
 ];
 const blocks=[
 {key:"normalList",name:"综合效果"},
@@ -1992,11 +1992,13 @@ const list=[
 {show:"大盘",key:"ALL_TOTAL"},
 {show:"FB-H5",key:"fb-h5"},
 {show:"FB-PWA",key:"fb-pwa"},
+{show:"FB-PWA-A",key:"fb-pwa-a"},
+{show:"FB-PWA-B",key:"fb-pwa-b"},
 {show:"FB-IOS",key:"fb-ios"},
 {show:"TT-PWA",key:"tt-pwa"},
 {show:"KW-PWA",key:"kwai-pwa"},
-{show:"回访",key:"回访"},
-{show:"ws-h5",key:"ws-h5"},
+{show:"上架包",key:"上架包"},
+{show:"DL",key:"DL"},
 {show:"官方渠道",key:"官方渠道"},
 {show:"其他",key:"其他"},
 ];
@@ -2018,12 +2020,14 @@ list.forEach(item=>{
         const channels = [
             "fb-h5",
             "fb-pwa",
+            "fb-pwa-a",
+            "fb-pwa-b",
             "fb-ios",
             "tt-pwa",
             "kwai-pwa",
-            "ws-h5",
-            "其他",
-            "回访"
+            "上架包",
+            "DL",
+            "其他"
         ];
 
         d = {
@@ -2097,89 +2101,204 @@ Object.keys(allHour).forEach(key=>{
                 ? (globalData.next_avg?.child ?? 0)
                 : "";
 
-    if(item.key==="ALL_TOTAL"){avg=normal.rechargeCount?(normal.rechargeAmount/normal.rechargeCount).toFixed(2):0;}
-    else if(item.key==="fb-h5"){avg=parent.rechargeCount?(parent.rechargeAmount/parent.rechargeCount).toFixed(2):0;}
-    else if(item.key==="fb-pwa"){avg=child.rechargeCount?(child.rechargeAmount/child.rechargeCount).toFixed(2):0;}
-    else if(item.key==="fb-ios"){avg=Number(normal.firstRechargeCount)>0?(Number(normal.firstRechargeAmount)/Number(normal.firstRechargeCount)).toFixed(2):"0.00";nextAvg="";}
-    let h5=globalData["fb-h5"]?.normalList||{};
-    let pwa=globalData["fb-pwa"]?.normalList||{};
-    let ios=globalData["fb-ios"]?.normalList||{};
-    let tt=globalData["tt-pwa"]?.normalList||{};
-    let ttParent=globalData["tt-pwa"]?.parentList||{};
-    let ttChild=globalData["tt-pwa"]?.childList||{};
-    let kw=globalData["kwai-pwa"]?.normalList||{};
-    let kwParent=globalData["kwai-pwa"]?.parentList||{};
-    let kwChild=globalData["kwai-pwa"]?.childList||{};
-    let ws=globalData["ws-h5"]?.normalList||{};
-    let wsParent=globalData["ws-h5"]?.parentList||{};
-    let wsChild=globalData["ws-h5"]?.childList||{};
-    let h5Avg=h5.rechargeCount?(h5.rechargeAmount/h5.rechargeCount).toFixed(2):0;
-    let pwaAvg=pwa.rechargeCount?(pwa.rechargeAmount/pwa.rechargeCount).toFixed(2):0;
-    let iosAvg=ios.rechargeCount?(ios.rechargeAmount/ios.rechargeCount).toFixed(2):0;
-    let ttAvg=tt.rechargeCount?(tt.rechargeAmount/tt.rechargeCount).toFixed(2):0;
-    let kwAvg=kw.rechargeCount?(kw.rechargeAmount/kw.rechargeCount).toFixed(2):0;
-    let wsAvg=ws.rechargeCount?(ws.rechargeAmount/ws.rechargeCount).toFixed(2):0;
-    let fbNormalAvg = (
-        Number(h5.rechargeAmount || 0) +
-        Number(pwa.rechargeAmount || 0) +
-        Number(ios.rechargeAmount || 0)
-    ) / (
-        Number(h5.rechargeCount || 0) +
-        Number(pwa.rechargeCount || 0) +
-        Number(ios.rechargeCount || 0)
-    );
-    fbNormalAvg=isFinite(fbNormalAvg)?fbNormalAvg.toFixed(2):0;
-    let h5Parent=globalData["fb-h5"]?.parentList||{};
-    let pwaParent=globalData["fb-pwa"]?.parentList||{};
-    let iosParent=globalData["fb-ios"]?.parentList||{};
-    let h5Child=globalData["fb-h5"]?.childList||{};
-    let pwaChild=globalData["fb-pwa"]?.childList||{};
-    let iosChild=globalData["fb-ios"]?.childList||{};
-    let fbParentAvg = (
-        Number(h5Parent.rechargeAmount || 0) +
-        Number(pwaParent.rechargeAmount || 0) +
-        Number(iosParent.rechargeAmount || 0)
-    ) / (
-        Number(h5Parent.rechargeCount || 0) +
-        Number(pwaParent.rechargeCount || 0) +
-        Number(iosParent.rechargeCount || 0)
-    );
-    fbParentAvg=isFinite(fbParentAvg)?fbParentAvg.toFixed(2):0;
-    let fbChildAvg = (
-        Number(h5Child.rechargeAmount || 0) +
-        Number(pwaChild.rechargeAmount || 0) +
-        Number(iosChild.rechargeAmount || 0)
-    ) / (
-        Number(h5Child.rechargeCount || 0) +
-        Number(pwaChild.rechargeCount || 0) +
-        Number(iosChild.rechargeCount || 0)
-    );
-    fbChildAvg=isFinite(fbChildAvg)?fbChildAvg.toFixed(2):0;
-    let fbFirstAvg = (
-        Number(h5.firstRechargeAmount || 0) +
-        Number(pwa.firstRechargeAmount || 0) +
-        Number(ios.firstRechargeAmount || 0)
-    ) / (
-        Number(h5.firstRechargeCount || 0) +
-        Number(pwa.firstRechargeCount || 0) +
-        Number(ios.firstRechargeCount || 0)
-    );
-    fbFirstAvg=isFinite(fbFirstAvg)?fbFirstAvg.toFixed(2):0;
-    // 注册充值比 = 今日首充人数 / 今日注册人数
+    if(item.key==="ALL_TOTAL"){
+avg = normal.rechargeCount
+        ? (normal.rechargeAmount/normal.rechargeCount).toFixed(2)
+        : 0;
+}
+   else if(item.key==="fb-h5"){
+    // 直推
+    avg = parent.rechargeCount
+        ? (parent.rechargeAmount/parent.rechargeCount).toFixed(2)
+        : 0;
+}
+    else if(item.key==="fb-pwa"){
+    // 裂变
+    avg = child.rechargeCount
+        ? (child.rechargeAmount/child.rechargeCount).toFixed(2)
+        : 0;
+}
+    else if(item.key==="fb-pwa-a"){
+    // 首充
+    avg = Number(normal.firstRechargeCount)>0
+        ? (Number(normal.firstRechargeAmount)/Number(normal.firstRechargeCount)).toFixed(2)
+        : "0.00";
+
+    nextAvg="";
+}
+// TÍNH SỐ LIỆU TỪNG KÊNH 
+
+// ===== FB =====
+let h5   = globalData["fb-h5"]?.normalList || {};
+let h5a  = globalData["fb-h5-a"]?.normalList || {};
+let pwa  = globalData["fb-pwa"]?.normalList || {};
+let pwaa = globalData["fb-pwa-a"]?.normalList || {};
+let pwab = globalData["fb-pwa-b"]?.normalList || {};
+let ios  = globalData["fb-ios"]?.normalList || {};
+
+// ===== TT =====
+let tt = globalData["tt-pwa"]?.normalList || {};
+let ttParent = globalData["tt-pwa"]?.parentList || {};
+let ttChild = globalData["tt-pwa"]?.childList || {};
+
+// ===== KW =====
+let kw = globalData["kwai-pwa"]?.normalList || {};
+let kwParent = globalData["kwai-pwa"]?.parentList || {};
+let kwChild = globalData["kwai-pwa"]?.childList || {};
+
+// ===== 上架包 =====
+let dsp = globalData["上架包"]?.normalList || {};
+let dspParent = globalData["上架包"]?.parentList || {};
+let dspChild = globalData["上架包"]?.childList || {};
+
+// ===== WS =====
+let ws = globalData["ws-h5"]?.normalList || {};
+let wsParent = globalData["ws-h5"]?.parentList || {};
+let wsChild = globalData["ws-h5"]?.childList || {};
+
+// ===== 上架包 =====
+let sjb = globalData["上架包"]?.normalList || {};
+let sjbParent = globalData["上架包"]?.parentList || {};
+let sjbChild = globalData["上架包"]?.childList || {};
+
+let h5Amount = Number(h5.rechargeAmount || 0) + Number(h5a.rechargeAmount || 0);
+let h5Count  = Number(h5.rechargeCount || 0) + Number(h5a.rechargeCount || 0);
+let h5Avg = h5Count ? (h5Amount / h5Count).toFixed(2) : "0.00";
+let pwaAmount = Number(pwa.rechargeAmount || 0) + Number(pwaa.rechargeAmount || 0);
+let pwaCount  = Number(pwa.rechargeCount || 0) + Number(pwaa.rechargeCount || 0);
+let pwaAvg = pwaCount ? (pwaAmount / pwaCount).toFixed(2) : "0.00";
+let iosAvg=ios.rechargeCount?(ios.rechargeAmount/ios.rechargeCount).toFixed(2):0;
+let ttAvg=tt.rechargeCount?(tt.rechargeAmount/tt.rechargeCount).toFixed(2):0;
+let kwAvg=kw.rechargeCount?(kw.rechargeAmount/kw.rechargeCount).toFixed(2):0;
+let wsAvg=ws.rechargeCount?(ws.rechargeAmount/ws.rechargeCount).toFixed(2):0;
+let sjbAvg=sjb.rechargeCount?(sjb.rechargeAmount/sjb.rechargeCount).toFixed(2):0;
+
+// ===== TÍNH GỘP FB RENJUN =====
+
+let fbNormalAvg = (
+Number(h5.rechargeAmount || 0) +
+Number(h5a.rechargeAmount || 0) +
+Number(pwa.rechargeAmount || 0) +
+Number(pwaa.rechargeAmount || 0) +
+Number(pwab.rechargeAmount || 0) +
+Number(ios.rechargeAmount || 0)
+) / (
+Number(h5.rechargeCount || 0) +
+Number(h5a.rechargeCount || 0) +
+Number(pwa.rechargeCount || 0) +
+Number(pwaa.rechargeCount || 0) +
+Number(pwab.rechargeCount || 0) +
+Number(ios.rechargeCount || 0)
+);
+
+
+fbNormalAvg = isFinite(fbNormalAvg)
+    ? fbNormalAvg.toFixed(2)
+    : 0;
+
+let h5Parent = globalData["fb-h5"]?.parentList || {};
+let h5aParent = globalData["fb-h5-a"]?.parentList || {};
+
+let pwaParent = globalData["fb-pwa"]?.parentList || {};
+let pwaaParent = globalData["fb-pwa-a"]?.parentList || {};
+let pwabParent = globalData["fb-pwa-b"]?.parentList || {};
+
+let iosParent = globalData["fb-ios"]?.parentList || {};
+
+let h5Child = globalData["fb-h5"]?.childList || {};
+let h5aChild = globalData["fb-h5-a"]?.childList || {};
+
+let pwaChild = globalData["fb-pwa"]?.childList || {};
+let pwaaChild = globalData["fb-pwa-a"]?.childList || {};
+let pwabChild = globalData["fb-pwa-b"]?.childList || {};
+
+let iosChild = globalData["fb-ios"]?.childList || {};
+
+
+let fbParentAvg = (
+Number(h5Parent.rechargeAmount || 0) +
+Number(h5aParent.rechargeAmount || 0) +
+Number(pwaParent.rechargeAmount || 0) +
+Number(pwaaParent.rechargeAmount || 0) +
+Number(pwabParent.rechargeAmount || 0) +
+Number(iosParent.rechargeAmount || 0)
+
+) / (
+
+Number(h5Parent.rechargeCount || 0) +
+Number(h5aParent.rechargeCount || 0) +
+Number(pwaParent.rechargeCount || 0) +
+Number(pwaaParent.rechargeCount || 0) +
+Number(pwabParent.rechargeCount || 0) +
+Number(iosParent.rechargeCount || 0)
+);
+
+fbParentAvg = isFinite(fbParentAvg)
+    ? fbParentAvg.toFixed(2)
+    : 0;
+
+
+let fbChildAvg = (
+Number(h5Child.rechargeAmount || 0) +
+Number(h5aChild.rechargeAmount || 0) +
+Number(pwaChild.rechargeAmount || 0) +
+Number(pwaaChild.rechargeAmount || 0) +
+Number(pwabChild.rechargeAmount || 0) +
+Number(iosChild.rechargeAmount || 0)
+) / (
+Number(h5Child.rechargeCount || 0) +
+Number(h5aChild.rechargeCount || 0) +
+Number(pwaChild.rechargeCount || 0) +
+Number(pwaaChild.rechargeCount || 0) +
+Number(pwabChild.rechargeCount || 0) +
+Number(iosChild.rechargeCount || 0)
+);
+fbChildAvg = isFinite(fbChildAvg)
+    ? fbChildAvg.toFixed(2)
+    : 0;
+
+
+let fbFirstAvg = (
+Number(h5.firstRechargeAmount || 0) +
+Number(h5a.firstRechargeAmount || 0) +
+Number(pwa.firstRechargeAmount || 0) +
+Number(pwaa.firstRechargeAmount || 0) +
+Number(pwab.firstRechargeAmount || 0) +
+Number(ios.firstRechargeAmount || 0)
+) / (
+Number(h5.firstRechargeCount || 0) +
+Number(h5a.firstRechargeCount || 0) +
+Number(pwa.firstRechargeCount || 0) +
+Number(pwaa.firstRechargeCount || 0) +
+Number(pwab.firstRechargeCount || 0) +
+Number(ios.firstRechargeCount || 0)
+);
+fbFirstAvg = isFinite(fbFirstAvg)
+    ? fbFirstAvg.toFixed(2)
+    : 0;
+
+// ===== KẾT THÚC MỤC GỘP RENJUN =====
+
+// 注册充值比 = 今日首充人数 / 今日注册人数
+
 let regRechargeRate = Number(n.registerCount || 0) > 0
     ? (
         Number(n.firstRechargeCount || 0) /
         Number(n.registerCount || 0) * 100
       ).toFixed(2) + "%"
     : "0%";
+
     let todayDiffClass = (Number(n.firstRechargeCount || 0) - Number(hour.promotionList?.firstRechargeCount || 0)) > 0
         ? "green"
         : (Number(n.firstRechargeCount || 0) - Number(hour.promotionList?.firstRechargeCount || 0)) < 0
             ? "red"
             : "";
+
     let todayDiffText = Number(hour.promotionList?.firstRechargeCount || 0) > 0
         ? ((Number(n.firstRechargeCount || 0) - Number(hour.promotionList?.firstRechargeCount || 0)) / Number(hour.promotionList?.firstRechargeCount || 0) * 100).toFixed(2) + "%"
         : "0.00%";
+
+                                        // ===== MỤC TÍNH 首充 =====
 
     let labelType = item.key === "ALL_TOTAL"
         ? "大盘"
@@ -2187,12 +2306,14 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
             ? "直推"
             : item.key === "fb-pwa"
                 ? "裂变"
-                : item.key === "fb-ios"
+                : item.key === "fb-pwa-a"
                     ? "首充"
                     : "&nbsp;";
 
+                                         // ===== MỤC TÍNH 🔄复充率  =====
 
-    let showLabel = item.show === "大盘"
+    let showLabel =
+    item.show === "大盘"
         ? "大盘"
         : item.show === "FB-H5"
             ? "直推"
@@ -2200,28 +2321,30 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                 ? "裂变"
                 : "";
 
+                                         // ===== MỤC TÍNH 🔄留存率  =====
+                                         
 
     let repeatLabel = item.show?.trim() === "大盘"
-        ? "2日留存"
-        : item.show?.trim() === "FB-H5"
-            ? "3日留存"
-            : item.show?.trim() === "FB-PWA"
-                ? "4日留存"
-                : item.show?.trim() === "FB-IOS"
-                    ? "5日留存"
-                    : item.show?.trim() === "TT-PWA"
-                        ? "6日留存"
-                        : item.show?.trim() === "KW-PWA"
-                            ? "7日留存"
-                            : item.show?.trim() === "回访"
-                                ? "10日留存"
-                                : item.show === "ws-h5"
-                                    ? "14日留存"
-                                    : item.show === "官方渠道"
-                                        ? "30日留存"
-                                        : item.show === "其他"
-                                            ? "60日留存"
-                                                         : "-";
+    ? "2日留存"
+    : item.show?.trim() === "FB-H5"
+        ? "3日留存"
+        : item.show?.trim() === "FB-PWA"
+            ? "4日留存"
+            : item.show?.trim() === "FB-PWA-A"
+                ? "5日留存"
+                : item.show?.trim() === "FB-PWA-B"
+                    ? "6日留存"
+                    : item.show?.trim() === "FB-IOS"
+                        ? "7日留存"
+                        : item.show?.trim() === "TT-PWA"
+                            ? "10日留存"
+                            : item.show === "KW-PWA"
+                                ? "14日留存"
+                                : item.show === "上架包"
+                                    ? "30日留存"
+                                    : item.show === "DL"
+                                        ? "60日留存"
+                                        : "-";
 
 
     let repeatRateValue = item.show === "大盘"
@@ -2232,26 +2355,28 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                 ? (globalData.repeat_rate?.child ?? 0).toFixed(2) + "%"
                 : "";
 
+
     let allRate = item.show === "大盘"
         ? retentionRate("ALL", 1)
         : item.show === "FB-H5"
             ? retentionRate("ALL", 2)
             : item.show === "FB-PWA"
                 ? retentionRate("ALL", 3)
-                : item.show === "FB-IOS"
+                : item.show === "FB-PWA-A"
                     ? retentionRate("ALL", 4)
-                    : item.show === "TT-PWA"
+                    : item.show === "FB-PWA-B"
                         ? retentionRate("ALL", 5)
-                        : item.show === "KW-PWA"
-                            ? retentionRate("ALL", 6)
-                            : item.show === "回访"
-                                ? retentionRate("ALL", 9)
-                                : item.show === "ws-h5"
-                                    ? retentionRate("ALL", 13)
-                                    : item.show === "官方渠道"
-                                        ? retentionRate("ALL", 29)
-                                        : item.show === "其他"
-                                            ? retentionRate("ALL", 59)
+                    : item.show === "FB-IOS"
+                        ? retentionRate("ALL", 6)
+                        : item.show === "TT-PWA"
+                            ? retentionRate("ALL", 9)
+                            : item.show === "KW-PWA"
+                                ? retentionRate("ALL", 13)
+                                : item.show === "上架包"
+                                    ? retentionRate("ALL", 29)
+                                    : item.show === "DL"
+                                        ? retentionRate("ALL", 59)
+                                            
                                                                         : "";
 
     let fbRate = item.show === "大盘"
@@ -2260,20 +2385,20 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
             ? retentionRateFB(2)
             : item.show === "FB-PWA"
                 ? retentionRateFB(3)
-                : item.show === "FB-IOS"
+                : item.show === "FB-PWA-A"
                     ? retentionRateFB(4)
-                    : item.show === "TT-PWA"
+                    : item.show === "FB-PWA-B"
                         ? retentionRateFB(5)
-                        : item.show === "KW-PWA"
+                        : item.show === "FB-IOS"
                             ? retentionRateFB(6)
-                            : item.show === "回访"
-                                ? retentionRateFB(9)
-                                : item.show === "ws-h5"
-                                    ? retentionRateFB(13)
-                                    : item.show === "官方渠道"
-                                        ? retentionRateFB(29)
-                                        : item.show === "其他"
-                                            ? retentionRateFB(59)
+                        : item.show === "TT-PWA"
+                            ? retentionRateFB(9)
+                            : item.show === "KW-PWA"
+                                ? retentionRateFB(13)
+                                : item.show === "上架包"
+                                    ? retentionRateFB(29)
+                                    : item.show === "DL"
+                                        ? retentionRateFB(59)
                                                                     : "";
 
     let ttRate = item.show === "大盘"
@@ -2282,20 +2407,20 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
             ? retentionRate("tt-pwa", 2)
             : item.show === "FB-PWA"
                 ? retentionRate("tt-pwa", 3)
-                : item.show === "FB-IOS"
+                : item.show === "FB-PWA-A"
                     ? retentionRate("tt-pwa", 4)
-                    : item.show === "TT-PWA"
+                    : item.show === "FB-PWA-B"
                         ? retentionRate("tt-pwa", 5)
-                        : item.show === "KW-PWA"
+                        : item.show === "FB-IOS"
                             ? retentionRate("tt-pwa", 6)
-                            : item.show === "回访"
+                            : item.show === "TT-PWA"
                                 ? retentionRate("tt-pwa", 9)
-                                : item.show === "ws-h5"
-                                    ? retentionRate("tt-pwa", 13)
-                                    : item.show === "官方渠道"
-                                        ? retentionRate("tt-pwa", 29)
-                                     : item.show === "其他"
-                                            ? retentionRate("tt-pwa", 59)
+                            : item.show === "KW-PWA"
+                                ? retentionRate("tt-pwa", 13)
+                                : item.show === "上架包"
+                                    ? retentionRate("tt-pwa", 29)
+                                    : item.show === "DL"
+                                        ? retentionRate("tt-pwa", 59)
                                                                           : "";
 
     let kwRate = item.show === "大盘"
@@ -2304,20 +2429,20 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
             ? retentionRate("kwai-pwa", 2)
             : item.show === "FB-PWA"
                 ? retentionRate("kwai-pwa", 3)
-                : item.show === "FB-IOS"
+                : item.show === "FB-PWA-A"
                     ? retentionRate("kwai-pwa", 4)
-                    : item.show === "TT-PWA"
+                    : item.show === "FB-PWA-B"
                         ? retentionRate("kwai-pwa", 5)
-                        : item.show === "KW-PWA"
+                        : item.show === "FB-IOS"
                             ? retentionRate("kwai-pwa", 6)
-                            : item.show === "回访"
+                            : item.show === "TT-PWA"
                                 ? retentionRate("kwai-pwa", 9)
-                                : item.show === "ws-h5"
+                                : item.show === "KW-PWA"
                                     ? retentionRate("kwai-pwa", 13)
-                                    : item.show === "官方渠道"
-                                        ? retentionRate("kwai-pwa", 29)
-                                        : item.show === "其他"
-                                            ? retentionRate("kwai-pwa", 59)
+                                    : item.show === "上架包"
+                                       ? retentionRate("kwai-pwa", 29)
+                                        : item.show === "DL"
+                                          ? retentionRate("kwai-pwa", 59)                                       
                                                                           : "";
 
     let wsRate = item.show === "大盘"
@@ -2326,65 +2451,160 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
             ? retentionRate("ws-h5", 2)
             : item.show === "FB-PWA"
                 ? retentionRate("ws-h5", 3)
-                : item.show === "FB-IOS"
+                : item.show === "FB-PWA-A"
                     ? retentionRate("ws-h5", 4)
-                    : item.show === "TT-PWA"
+                    : item.show === "FB-PWA-B"
                         ? retentionRate("ws-h5", 5)
-                        : item.show === "KW-PWA"
+                        : item.show === "FB-IOS"
                             ? retentionRate("ws-h5", 6)
-                            : item.show === "回访"
+                            : item.show === "TT-PWA"
                                 ? retentionRate("ws-h5", 9)
-                                : item.show === "ws-h5"
+                                : item.show === "KW-PWA"
                                     ? retentionRate("ws-h5", 13)
-                                    : item.show === "官方渠道"
-                                        ? retentionRate("ws-h5", 29)
-                                        : item.show === "其他"
-                                            ? retentionRate("ws-h5", 59)
+                                    : item.show === "上架包"
+                                      ? retentionRate("ws-h5", 29)
+                                      : item.show === "DL"
+                                          ? retentionRate("ws-h5", 59)                                      
                                                                           : "";
+
+    let sjbRate = item.show === "大盘"
+    ? retentionRate("上架包", 1)
+    : item.show === "FB-H5"
+        ? retentionRate("上架包", 2)
+      : item.show === "FB-PWA"
+          ? retentionRate("上架包", 3)
+        : item.show === "FB-PWA-A"
+             ? retentionRate("上架包", 4)
+         : item.show === "FB-PWA-B"
+               ? retentionRate("上架包", 5)
+           : item.show === "FB-IOS"
+                  ? retentionRate("上架包", 6)
+               : item.show === "TT-PWA"
+                    ? retentionRate("上架包", 9)
+                   : item.show === "KW-PWA"
+                      ? retentionRate("上架包", 13)
+                     : item.show === "上架包"
+                          ? retentionRate("上架包", 29)
+                            : item.show === "DL"
+                              ? retentionRate("上架包", 59)
+
+                                                       : "";
                                     
     let avgText =
-        item.key === "ALL_TOTAL" || item.key === "fb-h5" || item.key === "fb-pwa" || item.key === "fb-ios"
+        item.key === "ALL_TOTAL" || item.key === "fb-h5" || item.key === "fb-pwa" || item.key === "fb-pwa-a"
             ? avg
             : "";
     let nextAvgText =
         item.key === "ALL_TOTAL" || item.key === "fb-h5" || item.key === "fb-pwa"
             ? nextAvg
             : "";
+
+ // ===== MỤC TÍNH THỨ TỰ 人均 大盘 直推 裂变 首充 =====   
+
     let fbNormalText =
-        item.key === "ALL_TOTAL"
-            ? fbNormalAvg
-            : item.key === "fb-h5"
-                ? fbParentAvg
-                : item.key === "fb-pwa"
-                    ? fbChildAvg
-                    : item.key === "fb-ios"
-                        ? fbFirstAvg
-                        : "";
+    item.key === "ALL_TOTAL"
+        ? fbNormalAvg
+        : item.key === "fb-h5"
+            ? fbParentAvg
+            : item.key === "fb-pwa"
+                ? fbChildAvg
+                : item.key === "fb-pwa-a"
+                    ? fbFirstAvg
+                    : "";
     let h5AvgText = item.key === "ALL_TOTAL"
         ? h5Avg
+
+
+        // ===== MỤC TÍNH 人均 fb 直推  =====
         : item.key === "fb-h5"
-            ? (h5Parent.rechargeCount ? (h5Parent.rechargeAmount / h5Parent.rechargeCount).toFixed(2) : 0)
+    ? (
+        (
+            Number(h5Parent.rechargeAmount||0) +
+            Number(h5aParent.rechargeAmount||0)
+        ) /
+        (
+            Number(h5Parent.rechargeCount||0) +
+            Number(h5aParent.rechargeCount||0)
+        )
+      ).toFixed(2)
+
+        // ===== MỤC TÍNH 人均 fb 裂变  =====
+
             : item.key === "fb-pwa"
-                ? (h5Child.rechargeCount ? (h5Child.rechargeAmount / h5Child.rechargeCount).toFixed(2) : 0)
-                : item.key === "fb-ios"
-                    ? (h5.firstRechargeCount ? (h5.firstRechargeAmount / h5.firstRechargeCount).toFixed(2) : 0)
+    ? (
+        (
+            Number(h5Child.rechargeAmount||0) +
+            Number(h5aChild.rechargeAmount||0)
+        ) /
+        (
+            Number(h5Child.rechargeCount||0) +
+            Number(h5aChild.rechargeCount||0)
+        )
+      ).toFixed(2)
+
+      // ===== MỤC TÍNH 人均 fb 首充  =====
+
+                : item.key === "fb-pwa-a"
+    ? (
+        (
+            Number(h5.firstRechargeAmount||0) +
+            Number(h5a.firstRechargeAmount||0)
+        ) /
+        (
+            Number(h5.firstRechargeCount||0) +
+            Number(h5a.firstRechargeCount||0)
+        )
+      ).toFixed(2)
+
                     : "";
-    let pwaAvgText = item.key === "ALL_TOTAL"
+    let pwaAvgText =
+    item.key === "ALL_TOTAL"
         ? pwaAvg
+
         : item.key === "fb-h5"
-            ? (pwaParent.rechargeCount ? (pwaParent.rechargeAmount / pwaParent.rechargeCount).toFixed(2) : 0)
-            : item.key === "fb-pwa"
-                ? (pwaChild.rechargeCount ? (pwaChild.rechargeAmount / pwaChild.rechargeCount).toFixed(2) : 0)
-                : item.key === "fb-ios"
-                    ? (pwa.firstRechargeCount ? (pwa.firstRechargeAmount / pwa.firstRechargeCount).toFixed(2) : 0)
-                    : "";
+            ? (
+                (
+                    Number(pwaParent.rechargeAmount || 0) +
+                    Number(pwaaParent.rechargeAmount || 0)
+                ) /
+                (
+                    Number(pwaParent.rechargeCount || 0) +
+                    Number(pwaaParent.rechargeCount || 0)
+                )
+            ).toFixed(2)
+
+        : item.key === "fb-pwa"
+            ? (
+                (
+                    Number(pwaChild.rechargeAmount || 0) +
+                    Number(pwaaChild.rechargeAmount || 0)
+                ) /
+                (
+                    Number(pwaChild.rechargeCount || 0) +
+                    Number(pwaaChild.rechargeCount || 0)
+                )
+            ).toFixed(2)
+
+        : item.key === "fb-pwa-a"
+            ? (
+                (
+                    Number(pwa.firstRechargeAmount || 0) +
+                    Number(pwaa.firstRechargeAmount || 0)
+                ) /
+                (
+                    Number(pwa.firstRechargeCount || 0) +
+                    Number(pwaa.firstRechargeCount || 0)
+                )
+            ).toFixed(2)
+
+        : "";
     let iosAvgText = item.key === "ALL_TOTAL"
         ? iosAvg
         : item.key === "fb-h5"
             ? (iosParent.rechargeCount ? (iosParent.rechargeAmount / iosParent.rechargeCount).toFixed(2) : 0)
             : item.key === "fb-pwa"
                 ? (iosChild.rechargeCount ? (iosChild.rechargeAmount / iosChild.rechargeCount).toFixed(2) : 0)
-                : item.key === "fb-ios"
+                : item.key === "fb-pwa-a"
                     ? (ios.firstRechargeCount ? (ios.firstRechargeAmount / ios.firstRechargeCount).toFixed(2) : 0)
                     : "";
     let ttAvgText = item.key === "ALL_TOTAL"
@@ -2393,7 +2613,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
             ? (ttParent.rechargeCount ? (ttParent.rechargeAmount / ttParent.rechargeCount).toFixed(2) : 0)
             : item.key === "fb-pwa"
                 ? (ttChild.rechargeCount ? (ttChild.rechargeAmount / ttChild.rechargeCount).toFixed(2) : 0)
-                : item.key === "fb-ios"
+                : item.key === "fb-pwa-a"
                     ? (tt.firstRechargeCount ? (tt.firstRechargeAmount / tt.firstRechargeCount).toFixed(2) : 0)
                     : "";
     let kwAvgText = item.key === "ALL_TOTAL"
@@ -2402,7 +2622,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
             ? (kwParent.rechargeCount ? (kwParent.rechargeAmount / kwParent.rechargeCount).toFixed(2) : 0)
             : item.key === "fb-pwa"
                 ? (kwChild.rechargeCount ? (kwChild.rechargeAmount / kwChild.rechargeCount).toFixed(2) : 0)
-                : item.key === "fb-ios"
+                : item.key === "fb-pwa-a"
                     ? (kw.firstRechargeCount ? (kw.firstRechargeAmount / kw.firstRechargeCount).toFixed(2) : 0)
                     : "";
     let wsAvgText = item.key === "ALL_TOTAL"
@@ -2411,9 +2631,52 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
             ? (wsParent.rechargeCount ? (wsParent.rechargeAmount / wsParent.rechargeCount).toFixed(2) : 0)
             : item.key === "fb-pwa"
                 ? (wsChild.rechargeCount ? (wsChild.rechargeAmount / wsChild.rechargeCount).toFixed(2) : 0)
-                : item.key === "fb-ios"
+                : item.key === "fb-pwa-a"
                     ? (ws.firstRechargeCount ? (ws.firstRechargeAmount / ws.firstRechargeCount).toFixed(2) : 0)
                     : "";
+     let sjbAvgText = item.key === "ALL_TOTAL"
+    ? (
+        sjb.rechargeCount
+            ? (
+                Number(sjb.rechargeAmount || 0) /
+                Number(sjb.rechargeCount || 0)
+            ).toFixed(2)
+            : 0
+      )
+
+    : item.key === "fb-h5"
+        ? (
+            sjbParent.rechargeCount
+                ? (
+                    Number(sjbParent.rechargeAmount || 0) /
+                    Number(sjbParent.rechargeCount || 0)
+                ).toFixed(2)
+                : 0
+          )
+
+    : item.key === "fb-pwa"
+        ? (
+            sjbChild.rechargeCount
+                ? (
+                    Number(sjbChild.rechargeAmount || 0) /
+                    Number(sjbChild.rechargeCount || 0)
+                ).toFixed(2)
+                : 0
+          )
+
+    : item.key === "fb-pwa-a"
+        ? (
+            sjb.firstRechargeCount
+                ? (
+                    Number(sjb.firstRechargeAmount || 0) /
+                    Number(sjb.firstRechargeCount || 0)
+                ).toFixed(2)
+                : 0
+          )
+
+    : "";               
+
+
     let firstRechargeRatioText = n.rechargeCount > c.firstRechargeCount
         ? (c.firstRechargeCount / (n.rechargeCount - c.firstRechargeCount) * 100).toFixed(2) + "%"
         : "0%";
@@ -2427,7 +2690,6 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
     let rateClassDiff = rateClass(parseFloat(diffRate));
     let diffClass = diff > 0 ? "green" : diff < 0 ? "red" : "";
     html+=`<tr>
-        
       <td class="gray" style="font-weight:700;">${item.show}</td>
       <td class="${rateClassReg}">${regRechargeRate}</td>
       <td>${hour.promotionList?.firstRechargeCount||0}</td>
@@ -2454,6 +2716,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
       <td>${ttAvgText}</td>
       <td>${kwAvgText}</td>
       <td>${wsAvgText}</td>
+      <td>${sjbAvgText}</td>
       <td class="label-col">${item.show}</td>
       <td class="${firstRechargeRatioClass}">${firstRechargeRatioText}</td>
       <td class="label-col">${showLabel}</td>
@@ -2464,14 +2727,13 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
       <td>${ttRate}</td>
       <td>${kwRate}</td>
       <td>${wsRate}</td>
+      <td>${sjbRate}</td>
       </tr>`;
     
     document.getElementById("body").innerHTML = html;
     applyHideZero();
 }); 
 }
-
-
 
     //==== TAB NN22  实时数据分析 ====
 
@@ -4022,7 +4284,7 @@ Object.keys(allHour).forEach(key=>{
             : "";
 
     if(item.key==="ALL_TOTAL"){
-    avg = normal.rechargeCount
+avg = normal.rechargeCount
         ? (normal.rechargeAmount/normal.rechargeCount).toFixed(2)
         : 0;
 }
@@ -5712,14 +5974,25 @@ function renderRetentionButtons(){
             FB-H5
         </button>
 
-        <button class="retBtn"
-            onclick="changeRetention('fb-ios',this)">
-            FB-IOS
-        </button>
 
         <button class="retBtn"
             onclick="changeRetention('fb-pwa',this)">
             FB-PWA
+        </button>
+
+        <button class="retBtn"
+            onclick="changeRetention('fb-pwa-a',this)">
+            FB-PWA-A
+        </button>
+
+                <button class="retBtn"
+            onclick="changeRetention('fb-pwa-b',this)">
+            FB-PWA-B
+        </button>
+
+        <button class="retBtn"
+            onclick="changeRetention('fb-ios',this)">
+            FB-IOS
         </button>
 
         <button class="retBtn"
@@ -5733,18 +6006,18 @@ function renderRetentionButtons(){
         </button>
 
         <button class="retBtn"
-            onclick="changeRetention('ws-h5',this)">
-            WS-H5
+            onclick="changeRetention('DL',this)">
+            DL
+        </button>
+
+        <button class="retBtn"
+            onclick="changeRetention('上架包',this)">
+            上架包
         </button>
 
         <button class="retBtn"
             onclick="changeRetention('其他',this)">
             其他
-        </button>
-
-        <button class="retBtn"
-            onclick="changeRetention('回访',this)">
-            回访
         </button>
         `;
     }

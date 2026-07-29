@@ -823,30 +823,17 @@ if __name__ == "__main__":
 
     # 创建导出
 
-    create_time=create_export(
+    create_time=create_export(day)
 
-        day
+    # 等待系统写入exportData.list
+    
+    print("⏳ 等待5秒，让导出任务写入列表...")
 
-    )
+    time.sleep(5)
 
+    print("等待导出...")
 
-
-
-
-
-    print(
-
-        "等待导出..."
-
-    )
-
-
-
-    export_id=wait_export(
-
-        create_time
-
-    )
+    export_id=wait_export(create_time)
 
 
 
@@ -888,6 +875,10 @@ if __name__ == "__main__":
         csv_url
 
     )
+    print(
+    "保存日期:",
+    df["完成时间"].unique()
+)
 
     # 保存CSV
     db = Path(__file__).parent / "23E.db"
@@ -895,21 +886,26 @@ if __name__ == "__main__":
     conn.execute("""CREATE TABLE IF NOT EXISTS recharge (
     完成时间 TEXT,
     会员id TEXT,
-    支付金额 REAL,
+    支付金额 INTEGER,
     会员渠道 TEXT,
     支付次数 INTEGER,
     PRIMARY KEY (完成时间, 会员id)
 )
 """)
+    conn.execute("DELETE FROM recharge"
+)
+    df["支付金额"] = df["支付金额"].astype(int)
+
     rows = df[
-    ["完成时间",
+    [
+        "完成时间",
         "会员id",
         "支付金额",
         "会员渠道",
         "支付次数"
-    ]
-].values.tolist()
-    conn.executemany("""INSERT OR IGNORE INTO recharge
+    ]].values.tolist()
+    conn.executemany("""
+INSERT INTO recharge
 (
     完成时间,
     会员id,
@@ -920,7 +916,8 @@ if __name__ == "__main__":
 VALUES (?, ?, ?, ?, ?)
 """, rows)
     
-    added = conn.total_changes
+    
+    added = len(rows)
 
     conn.commit()
     conn.close()

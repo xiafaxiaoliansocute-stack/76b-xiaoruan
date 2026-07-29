@@ -44,7 +44,10 @@ while True:
         next_hour - now
     ).total_seconds()
 
-    print("⏰ Next run:", next_hour)
     print("✅ 推广汇总更新完成", flush=True)
+    print("⏳ 下次运行:", flush=True)
+    print(next_hour.strftime("%Y-%m-%d %H:%M:%S"), flush=True)
+    print(f"等待: {round(sleep_seconds / 3600, 2)} 小时", flush=True)
+    
 
     time.sleep(sleep_seconds)

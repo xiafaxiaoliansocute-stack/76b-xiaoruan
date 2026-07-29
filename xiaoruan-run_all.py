@@ -360,34 +360,53 @@ class Worker:
 
         # 23E
         if self.type == "23E":
-
             if line == "✅ 23E留存计算完成":
 
                 self.finished = True
-                telegram("🟢 23E留存计算完成")
+                next_title = self.process.stdout.readline().strip()
+                next_time = self.process.stdout.readline().strip()
+                wait_time = self.process.stdout.readline().strip()
 
-            return
+                telegram(
+                    "🟢 23E留存计算完成\n\n"
+                    f"{next_title}\n"
+                    f"{next_time}\n"
+                    f"{wait_time}")               
+                return
+       
 
         # QUANJU
         if self.type == "QUANJU":
-
             if line == "✅ 全站汇总更新完成":
 
                 self.finished = True
-                telegram("🟢 全站汇总更新完成")
+                next_title = self.process.stdout.readline().strip()
+                next_time = self.process.stdout.readline().strip()
+                wait_time = self.process.stdout.readline().strip()
 
-            return
+                telegram(
+                    "🟢 全站汇总更新完成\n\n"
+                    f"{next_title}\n"
+                    f"{next_time}\n"
+                    f"{wait_time}")
+                return
+
 
         # DASHBOARD
         if self.type == "DASHBOARD":
-
             if line == "✅ 推广汇总更新完成":
 
                 self.finished = True
-                telegram("🟢 推广汇总更新完成")
+                next_title = self.process.stdout.readline().strip()
+                next_time = self.process.stdout.readline().strip()
+                wait_time = self.process.stdout.readline().strip()
 
-            return
-
+                telegram(
+                    "🟢 推广汇总更新完成\n\n"
+                    f"{next_title}\n"
+                    f"{next_time}\n"
+                    f"{wait_time}")
+                return
 
 # ============================================================
 # START ALL
@@ -465,58 +484,27 @@ def watchdog():
                 )
 
         time.sleep(5)
-
 # ============================================================
-# STATUS
-# ============================================================
-
-def print_status():
-
-    print("\n" + "=" * 70)
-
-    print("Worker Status")
-
-    print("=" * 70)
-
-    for w in workers:
-
-        if w.running:
-
-            state = "RUNNING"
-
-        else:
-
-            state = "STOPPED"
-
-        print(
-
-            f"{w.name:<12}"
-
-            f"{state:<10}"
-
-            f"Restart:{w.restart_count}"
-
-        )
-
-    print("=" * 70)
-
-# ============================================================
-# HEARTBEAT
+# TELEGRAM HEARTBEAT (30 phút)
 # ============================================================
 
-def heartbeat():
+def telegram_heartbeat():
 
     while True:
 
         try:
 
-            print_status()
+            run = format_seconds(time.time() - START_TIME)
+
+            telegram(
+                f"🤖 机器人正在运行中\n"
+                f"⏱ Uptime: {run}"
+            )
 
         except:
-
             pass
 
-        time.sleep(300)   # mỗi 5 phút in trạng thái một lần
+        time.sleep(1800)   # 30 phút
 
 # ============================================================
 # START BACKGROUND THREADS
@@ -533,16 +521,14 @@ def start_background():
         name="WATCHDOG"
 
     ).start()
-
     threading.Thread(
-
-        target=heartbeat,
-
+        target=telegram_heartbeat,
         daemon=True,
+        name="TG_HEARTBEAT"
+        ).start()
 
-        name="HEARTBEAT"
 
-    ).start()
+   
 # ============================================================
 # MAIN
 # ============================================================

@@ -78,23 +78,29 @@ def run_all():
     start = time.time()
 
     try:
-
         for file in FILES:
-
             run_file(file)
 
-            # ----------------------------------
-            # 首充、充值都完成后
-            # 等30秒再计算留存
-            # ----------------------------------
-            if file == "23echongzhi.py":
+            # 首充完成后
+            # 等10秒再跑充值
 
+            if file == "23eshoucun.py":
+                print()
+                print("⏳ 等待10秒...")
+                print("10秒后开始执行充值")
+                print()
+                time.sleep(10)
+
+            # 充值完成后
+            # 等30秒计算留存
+
+            elif file == "23echongzhi.py":
                 print()
                 print("⏳ 等待30秒...")
                 print("确保SQLite数据全部写入后开始计算留存")
                 print()
-
                 time.sleep(30)
+     
 
         print("\n🎉 23E全部完成")
 
@@ -142,17 +148,12 @@ def wait_next_run():
                 target - now
             ).total_seconds()
 
-            print()
-            print("⏳ 下次运行:")
-            print(
-                target.strftime("%Y-%m-%d %H:%M:%S")
-            )
-            print(
-                "等待:",
-                round(seconds / 3600, 2),
-                "小时"
-            )
-            print()
+            print("⏳ 下次运行:", flush=True)
+
+            print(target.strftime("%Y-%m-%d %H:%M:%S"),flush=True)
+
+            print(f"等待: {round(seconds / 3600, 2)} 小时",flush=True)
+
 
             time.sleep(seconds)
 

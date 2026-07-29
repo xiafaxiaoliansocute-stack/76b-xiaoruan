@@ -24,9 +24,7 @@ GOOGLE_SHEET_ID = (
 )
 
 
-GOOGLE_JSON = (
-    "/Users/xiaoruan/Documents/76b-getdata/service_account.json"
-)
+GOOGLE_JSON = "/Users/xiaoruan/Documents/service_account.json"
 
 
 
@@ -34,17 +32,17 @@ GOOGLE_JSON = (
 # API CONFIG
 # ==================================================
 
-TENANT_ID = 4505213
+TENANT_ID = 2285733
 
 REGION_ID = 1
 
 
-USERNAME = "16027tg01"
+USERNAME = "qzry16013"
 
-PASSWORD = "16027tg01"
+PASSWORD = "qzry16013"
 
 
-OTP_SECRET = "EZ3GIXA7C5DEA6ZP"
+OTP_SECRET = "PJWB6BJ4JFYHKHZT"
 
 
 LOGIN_URL = (
@@ -62,10 +60,25 @@ DATA_URL = (
 # BRAZIL TIME
 # ==================================================
 
-BRAZIL_TZ = ZoneInfo(
-    "America/Sao_Paulo"
-)
+BRAZIL_TZ = ZoneInfo("America/Sao_Paulo")
 
+# ==================================================
+# 查询设置
+# ==================================================
+
+# True = tự động lấy hôm nay và hôm qua
+# False = dùng ngày tự nhập
+AUTO_DATE = True
+
+# Khi AUTO_DATE=False
+START_DATE = "2026-07-28"
+END_DATE   = "2026-07-29"
+
+# ==================================================
+#                  #SỬA NGÀY Ở ĐÂY #
+# ==================================================
+START_HOUR = 0
+END_HOUR   = 17
 
 
 def get_brazil_time_range(
@@ -167,11 +180,11 @@ def get_token():
 
 
         "origin":
-            "https://admin6-000-kd083bq.c-9-m-1.com",
+            "https://admin-16013-97deff.c-9-m-1.com",
 
 
         "referer":
-            "https://admin6-000-kd083bq.c-9-m-1.com/",
+            "https://admin-16013-97deff.c-9-m-1.com/",
 
 
         "user-agent":
@@ -304,13 +317,13 @@ def get_channel_data(
 
     ranges=get_brazil_time_range(
 
-        date_str,
+    date_str,
 
-        0,
+    START_HOUR,
 
-        23
+    END_HOUR
 
-    )
+)
 
 
     all_rows=[]
@@ -712,22 +725,18 @@ if __name__=="__main__":
     # 日期
     # ==========================
 
-
-    today=datetime.now(
-
-        BRAZIL_TZ
-
+    if AUTO_DATE:
+        today = datetime.now(BRAZIL_TZ).date()
+        yesterday = today - timedelta(days=1)
+    else:
+        yesterday = datetime.strptime(
+            START_DATE,
+        "%Y-%m-%d"
     ).date()
-
-
-
-    yesterday=today-timedelta(
-
-        days=1
-
-    )
-
-
+        today = datetime.strptime(
+        END_DATE,
+        "%Y-%m-%d"
+    ).date()
 
     all_data=[]
 
