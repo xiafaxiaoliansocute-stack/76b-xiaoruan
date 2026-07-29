@@ -1,5 +1,5 @@
 {
-    "update_time_brazil": "2026-07-29 17:55",
+    "update_time_brazil": "2026-07-29 17:58",
     "report_day": "2026-07-29",
     "realtime": {
         "00:00": {
@@ -17972,7 +17972,7 @@
         },
         "promotionList": {}
     },
-    "kwai-pwa": {
+    "fb-pwa-a": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -18062,52 +18062,7 @@
         },
         "promotionList": {}
     },
-    "fb-ios": {
-        "normalList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "parentList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "childList": {
-            "registerCount": null,
-            "firstRechargeCount": null,
-            "firstRechargeAmount": null,
-            "rechargeCount": null,
-            "rechargeAmount": null,
-            "withdrawCount": null,
-            "withdrawAmount": null,
-            "withdrawFee": null,
-            "betCount": null,
-            "betAmount": null,
-            "validBetAmount": null,
-            "reward": null
-        },
-        "promotionList": {}
-    },
-    "上架包": {
+    "tt-pwa": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -18242,7 +18197,7 @@
         },
         "promotionList": {}
     },
-    "fb-pwa-a": {
+    "上架包": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -18332,7 +18287,7 @@
         },
         "promotionList": {}
     },
-    "tt-pwa": {
+    "kwai-pwa": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -18377,7 +18332,7 @@
         },
         "promotionList": {}
     },
-    "fb-h5": {
+    "fb-ios": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
@@ -18423,6 +18378,51 @@
         "promotionList": {}
     },
     "其他": {
+        "normalList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "parentList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "childList": {
+            "registerCount": null,
+            "firstRechargeCount": null,
+            "firstRechargeAmount": null,
+            "rechargeCount": null,
+            "rechargeAmount": null,
+            "withdrawCount": null,
+            "withdrawAmount": null,
+            "withdrawFee": null,
+            "betCount": null,
+            "betAmount": null,
+            "validBetAmount": null,
+            "reward": null
+        },
+        "promotionList": {}
+    },
+    "fb-h5": {
         "normalList": {
             "registerCount": null,
             "firstRechargeCount": null,
