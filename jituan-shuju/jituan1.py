@@ -60,86 +60,48 @@ DATA_URL = (
 # BRAZIL TIME
 # ==================================================
 
-BRAZIL_TZ = ZoneInfo("America/Sao_Paulo")
+BRAZIL_TZ = ZoneInfo(
+    "Etc/GMT+3"
+)
 
-# ==================================================
-# 查询设置
-# ==================================================
-
-# True = tự động lấy hôm nay và hôm qua
-# False = dùng ngày tự nhập
-AUTO_DATE = True
-
-# Khi AUTO_DATE=False
-START_DATE = "2026-07-28"
-END_DATE   = "2026-07-29"
-
-# ==================================================
-#                  #SỬA NGÀY Ở ĐÂY #
-# ==================================================
-START_HOUR = 0
-END_HOUR   = 17
-
-
-def get_brazil_time_range(
-        date_str,
-        start_hour,
-        end_hour
-):
-
-
+def get_brazil_time_range(date_str):
     def utc_format(dt):
-
         return dt.astimezone(
             timezone.utc
         ).strftime(
             "%Y-%m-%dT%H:%M:%S.000Z"
         )
-
-
     y,m,d = map(
         int,
         date_str.split("-")
     )
-
-
+    now = datetime.now(BRAZIL_TZ)
     start = datetime(
         y,
         m,
         d,
-        start_hour,
+        0,
         0,
         0,
         tzinfo=BRAZIL_TZ
     )
 
+    # hôm nay lấy tới thời gian hiện tại
 
-    end = datetime(
-        y,
-        m,
-        d,
-        end_hour,
-        59,
-        59,
-        tzinfo=BRAZIL_TZ
-    )
-
-
+    end = now
     return {
 
-        "查询":
+        "查询":{
 
-        {
+            "start": utc_format(start),
 
-            "start":
-                utc_format(start),
-
-            "end":
-                utc_format(end)
+            "end": utc_format(end)
 
         }
 
     }
+
+
 
 
 
@@ -317,11 +279,7 @@ def get_channel_data(
 
     ranges=get_brazil_time_range(
 
-    date_str,
-
-    START_HOUR,
-
-    END_HOUR
+    date_str
 
 )
 
@@ -725,18 +683,12 @@ if __name__=="__main__":
     # 日期
     # ==========================
 
-    if AUTO_DATE:
-        today = datetime.now(BRAZIL_TZ).date()
-        yesterday = today - timedelta(days=1)
-    else:
-        yesterday = datetime.strptime(
-            START_DATE,
-        "%Y-%m-%d"
-    ).date()
-        today = datetime.strptime(
-        END_DATE,
-        "%Y-%m-%d"
-    ).date()
+
+    today=datetime.now(
+    BRAZIL_TZ
+).date()
+
+
 
     all_data=[]
 
@@ -775,44 +727,6 @@ if __name__=="__main__":
         today_rows
 
     )
-
-
-
-    # ==========================
-    # 昨日
-    # ==========================
-
-
-    print(
-
-        "🇧🇷 昨日:",
-
-        yesterday
-
-    )
-
-
-    yesterday_rows=get_channel_data(
-
-        str(yesterday)
-
-    )
-
-
-
-    for row in yesterday_rows:
-
-
-        row["data_type"]="昨日"
-
-
-
-    all_data.extend(
-
-        yesterday_rows
-
-    )
-
 
 
     print(

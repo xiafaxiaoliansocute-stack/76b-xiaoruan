@@ -18,7 +18,7 @@ from io import BytesIO
 # CONFIG
 # =============================
 
-TOKEN = "m0ck85gh1ur9muyaqr01uaa4brfdpl9xfdz7erz6"
+TOKEN = "756gxn1uyot52rydkfovc4bw63w38p5ykqtak13z"
 
 ACCOUNT = "xiaoruan16028"
 

@@ -20,6 +20,8 @@ import requests
 
 BOT_TOKEN = "8994992623:AAGc4TRHHEPHujeOUCa9VBPCYIR3bff6r6Y"
 CHAT_ID = "-5268959413"
+SHEET_URL = "https://docs.google.com/spreadsheets/d/1gfsTt_nL0wK2mepUAXkBgRqZHLYRY3xqWmbAxkzp0ao/edit?pli=1&gid=846636141#gid=846636141"
+WEB_URL = "https://xiafaxiaoliansocute-stack.github.io/76b-xiaoruan/"
 
 # ============================================================
 # PROJECT PATH
@@ -34,9 +36,9 @@ BASE_DIR = Path(__file__).resolve().parent
 TASKS = [
 
     {
-        "name": "23E",
-        "type": "23E",
-        "file": BASE_DIR / "23E-liucun" / "23erunliucun.py",
+        "name": "TELEGRAM_BOT",
+        "type": "TELEGRAM_BOT",
+        "file": BASE_DIR / "telegram_bot.py",
     },
 
     {
@@ -83,6 +85,7 @@ def telegram(text):
                 "text": text[:4000],
 
                 "disable_web_page_preview": True,
+                "parse_mode": "HTML",
 
             },
 
@@ -358,23 +361,6 @@ class Worker:
 
     def handle_line(self, line):
 
-        # 23E
-        if self.type == "23E":
-            if line == "✅ 23E留存计算完成":
-
-                self.finished = True
-                next_title = self.process.stdout.readline().strip()
-                next_time = self.process.stdout.readline().strip()
-                wait_time = self.process.stdout.readline().strip()
-
-                telegram(
-                    "🟢 23E留存计算完成\n\n"
-                    f"{next_title}\n"
-                    f"{next_time}\n"
-                    f"{wait_time}")               
-                return
-       
-
         # QUANJU
         if self.type == "QUANJU":
             if line == "✅ 全站汇总更新完成":
@@ -385,7 +371,8 @@ class Worker:
                 wait_time = self.process.stdout.readline().strip()
 
                 telegram(
-                    "🟢 全站汇总更新完成\n\n"
+                    "✅ 全站汇总更新完成\n\n"
+                    f"📊 数据表: <a href='{SHEET_URL}'>打开</a>\n\n"
                     f"{next_title}\n"
                     f"{next_time}\n"
                     f"{wait_time}")
@@ -402,7 +389,8 @@ class Worker:
                 wait_time = self.process.stdout.readline().strip()
 
                 telegram(
-                    "🟢 推广汇总更新完成\n\n"
+                    "✅ 推广汇总更新完成\n\n"
+                    f"🌐 数据网页: <a href='{WEB_URL}'>打开</a>\n\n"
                     f"{next_title}\n"
                     f"{next_time}\n"
                     f"{wait_time}")
@@ -484,27 +472,6 @@ def watchdog():
                 )
 
         time.sleep(5)
-# ============================================================
-# TELEGRAM HEARTBEAT (30 phút)
-# ============================================================
-
-def telegram_heartbeat():
-
-    while True:
-
-        try:
-
-            run = format_seconds(time.time() - START_TIME)
-
-            telegram(
-                f"🤖 机器人正在运行中\n"
-                f"⏱ Uptime: {run}"
-            )
-
-        except:
-            pass
-
-        time.sleep(1800)   # 30 phút
 
 # ============================================================
 # START BACKGROUND THREADS
@@ -521,14 +488,7 @@ def start_background():
         name="WATCHDOG"
 
     ).start()
-    threading.Thread(
-        target=telegram_heartbeat,
-        daemon=True,
-        name="TG_HEARTBEAT"
-        ).start()
-
-
-   
+    
 # ============================================================
 # MAIN
 # ============================================================

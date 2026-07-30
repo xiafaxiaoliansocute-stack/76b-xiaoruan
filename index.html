@@ -1428,13 +1428,54 @@ placeholder="请输入密码">
 </div>
     
 <script>
-    // =======================
+// =======================
 // LOGIN VERSION
 // Đổi số này mỗi khi đổi mật khẩu
 // =======================
 const LOGIN_VERSION = "2";
 
+// ===== KHI CẦN THÊM CÁC MỤC Ở CỘT NHƯ RENJUN LIUCUN  =====
+
     let currentSite = "73J";
+    function updateSiteHeaders(site){
+
+const extraHeader =
+    document.getElementById("avgExtraHeader");
+
+const avgGroupHeader =
+    document.getElementById("avgGroupHeader");
+
+const retentionExtraHeader =
+    document.getElementById("retentionExtraHeader");
+
+const retentionGroupHeader =
+    document.getElementById("retentionGroupHeader");
+
+const tableMainTitle =
+    document.getElementById("tableMainTitle");
+
+if(site === "73J" || site === "23A" || site === "23E"){
+
+    extraHeader.style.display = "";
+    avgGroupHeader.colSpan = 11;
+
+    retentionExtraHeader.style.display = "";
+    retentionGroupHeader.colSpan = 7;
+
+    tableMainTitle.colSpan = 38;
+
+}else{
+
+    extraHeader.style.display = "none";
+    avgGroupHeader.colSpan = 10;
+
+    retentionExtraHeader.style.display = "none";
+    retentionGroupHeader.colSpan = 6;
+
+    tableMainTitle.colSpan = 36;
+}
+
+}
 
 // JSON TƯƠNG ỨNG VỚI ĐÀI
 const siteFiles = {
@@ -1454,62 +1495,11 @@ const siteTitles = {
     "TEST3": "TEST"
 };
 
-// ===== KHI CẦN THÊM CÁC MỤC Ở CỘT NHƯ RENJUN LIUCUN  =====
+
 
 function switchSite(site,obj){
-
 currentSite=site;
-
-// ===== SỬA TỪ ĐÂY  =====
-
-const extraHeader =
-    document.getElementById("avgExtraHeader");
-
-const avgGroupHeader =
-    document.getElementById("avgGroupHeader");
-
-const retentionExtraHeader =
-    document.getElementById("retentionExtraHeader");
-
-const retentionGroupHeader =
-    document.getElementById("retentionGroupHeader");
-
-const tableMainTitle =
-    document.getElementById("tableMainTitle");
-
-// ===== SỬA TỪ ĐÂY CÓ ĐÀI MỚI CHỈ VIÊC THÊM TÊN  =====
-
-if(site === "73J" || site === "23A" || site === "23E"){
-
-    // 人均 +1 cột
-    extraHeader.style.display = "";
-    avgGroupHeader.colSpan = 11;
-
-
-    // 留存率 +1 cột
-    retentionExtraHeader.style.display = "";
-    retentionGroupHeader.colSpan = 7;
-
-
-    // Tổng bảng +2 cột
-    tableMainTitle.colSpan = 38;
-
-
-}else{
-
-    extraHeader.style.display = "none";
-    avgGroupHeader.colSpan = 10;
-
-
-    retentionExtraHeader.style.display = "none";
-    retentionGroupHeader.colSpan = 6;
-
-
-    tableMainTitle.colSpan = 36;
-
-}
-// ===== TỚI ĐÂY LÀ KẾT THÚC  =====
-
+updateSiteHeaders(site);
 document.querySelectorAll(".site-btn").forEach(btn=>{
     btn.classList.remove("active");
 });
@@ -1564,8 +1554,9 @@ let retentionChannel = "ALL";
 let latestRealtimeRow = null;
 /* ============ LOAD DATA FROM JSON ============ */
 function loadData(){
-
+    updateSiteHeaders(currentSite);
     const jsonFile=siteFiles[currentSite];
+    
 
     return fetch(jsonFile+"?t="+Date.now())
 
@@ -1698,6 +1689,7 @@ function renderTab1(data){
 const sections=[
 {key:"ALL_TOTAL",name:"全部"},
 {key:"fb-h5",name:"FB-H5"},
+{key:"fb-h5-a",name:"FB-H5-A"},
 {key:"fb-pwa",name:"FB-PWA"},
 {key:"fb-pwa-a",name:"FB-PWA-A"},
 {key:"fb-pwa-b",name:"FB-PWA-B"},
@@ -1991,6 +1983,7 @@ function renderTab2(){
 const list=[
 {show:"大盘",key:"ALL_TOTAL"},
 {show:"FB-H5",key:"fb-h5"},
+{show:"FB-H5-A",key:"fb-h5-a"},
 {show:"FB-PWA",key:"fb-pwa"},
 {show:"FB-PWA-A",key:"fb-pwa-a"},
 {show:"FB-PWA-B",key:"fb-pwa-b"},
@@ -2019,6 +2012,7 @@ list.forEach(item=>{
 
         const channels = [
             "fb-h5",
+            "fb-h5-a",
             "fb-pwa",
             "fb-pwa-a",
             "fb-pwa-b",
@@ -2097,7 +2091,7 @@ Object.keys(allHour).forEach(key=>{
         ? (globalData.next_avg?.first ?? 0)
         : item.show === "FB-H5"
             ? (globalData.next_avg?.parent ?? 0)
-            : item.show === "FB-PWA"
+            : item.show === "FB-H5-A"
                 ? (globalData.next_avg?.child ?? 0)
                 : "";
 
@@ -2112,13 +2106,13 @@ avg = normal.rechargeCount
         ? (parent.rechargeAmount/parent.rechargeCount).toFixed(2)
         : 0;
 }
-    else if(item.key==="fb-pwa"){
+    else if(item.key==="fb-h5-a"){
     // 裂变
     avg = child.rechargeCount
         ? (child.rechargeAmount/child.rechargeCount).toFixed(2)
         : 0;
 }
-    else if(item.key==="fb-pwa-a"){
+    else if(item.key==="fb-pwa"){
     // 首充
     avg = Number(normal.firstRechargeCount)>0
         ? (Number(normal.firstRechargeAmount)/Number(normal.firstRechargeCount)).toFixed(2)
@@ -2304,9 +2298,9 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
         ? "大盘"
         : item.key === "fb-h5"
             ? "直推"
-            : item.key === "fb-pwa"
+            : item.key === "fb-h5-a"
                 ? "裂变"
-                : item.key === "fb-pwa-a"
+                 : item.key === "fb-pwa"
                     ? "首充"
                     : "&nbsp;";
 
@@ -2317,7 +2311,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
         ? "大盘"
         : item.show === "FB-H5"
             ? "直推"
-            : item.show === "FB-PWA"
+            : item.show === "FB-H5-A"
                 ? "裂变"
                 : "";
 
@@ -2328,21 +2322,21 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
     ? "2日留存"
     : item.show?.trim() === "FB-H5"
         ? "3日留存"
-        : item.show?.trim() === "FB-PWA"
+        : item.show?.trim() === "FB-H5-A"
             ? "4日留存"
-            : item.show?.trim() === "FB-PWA-A"
+            : item.show?.trim() === "FB-PWA"
                 ? "5日留存"
-                : item.show?.trim() === "FB-PWA-B"
+                : item.show?.trim() === "FB-PWA-A"
                     ? "6日留存"
-                    : item.show?.trim() === "FB-IOS"
+                    : item.show?.trim() === "FB-PWA-B"
                         ? "7日留存"
-                        : item.show?.trim() === "TT-PWA"
+                        : item.show?.trim() === "FB-IOS"
                             ? "10日留存"
-                            : item.show === "KW-PWA"
+                            : item.show === "TT-PWA"
                                 ? "14日留存"
-                                : item.show === "上架包"
+                                : item.show === "KW-PWA"
                                     ? "30日留存"
-                                    : item.show === "DL"
+                                    : item.show === "上架包"
                                         ? "60日留存"
                                         : "-";
 
@@ -2351,7 +2345,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
         ? (globalData.repeat_rate?.first ?? 0).toFixed(2) + "%"
         : item.show === "FB-H5"
             ? (globalData.repeat_rate?.parent ?? 0).toFixed(2) + "%"
-            : item.show === "FB-PWA"
+            : item.show === "FB-H5-A"
                 ? (globalData.repeat_rate?.child ?? 0).toFixed(2) + "%"
                 : "";
 
@@ -2360,21 +2354,21 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
         ? retentionRate("ALL", 1)
         : item.show === "FB-H5"
             ? retentionRate("ALL", 2)
-            : item.show === "FB-PWA"
+            : item.show === "FB-H5-A"
                 ? retentionRate("ALL", 3)
-                : item.show === "FB-PWA-A"
+                : item.show === "FB-PWA"
                     ? retentionRate("ALL", 4)
-                    : item.show === "FB-PWA-B"
+                    : item.show === "FB-PWA-A"
                         ? retentionRate("ALL", 5)
-                    : item.show === "FB-IOS"
+                    : item.show === "FB-PWA-B"
                         ? retentionRate("ALL", 6)
-                        : item.show === "TT-PWA"
+                        : item.show === "FB-IOS"
                             ? retentionRate("ALL", 9)
-                            : item.show === "KW-PWA"
+                            : item.show === "TT-PWA"
                                 ? retentionRate("ALL", 13)
-                                : item.show === "上架包"
+                                : item.show === "KW-PWA"
                                     ? retentionRate("ALL", 29)
-                                    : item.show === "DL"
+                                    : item.show === "上架包"
                                         ? retentionRate("ALL", 59)
                                             
                                                                         : "";
@@ -2383,21 +2377,21 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
         ? retentionRateFB(1)
         : item.show === "FB-H5"
             ? retentionRateFB(2)
-            : item.show === "FB-PWA"
+            : item.show === "FB-H5-A"
                 ? retentionRateFB(3)
-                : item.show === "FB-PWA-A"
+                : item.show === "FB-PWA"
                     ? retentionRateFB(4)
-                    : item.show === "FB-PWA-B"
+                    : item.show === "FB-PWA-A"
                         ? retentionRateFB(5)
-                        : item.show === "FB-IOS"
+                        : item.show === "FB-PWA-B"
                             ? retentionRateFB(6)
-                        : item.show === "TT-PWA"
+                        : item.show === "FB-IOS"
                             ? retentionRateFB(9)
-                            : item.show === "KW-PWA"
+                            : item.show === "TT-PWA"
                                 ? retentionRateFB(13)
-                                : item.show === "上架包"
+                                : item.show === "KW-PWA"
                                     ? retentionRateFB(29)
-                                    : item.show === "DL"
+                                    : item.show === "上架包"
                                         ? retentionRateFB(59)
                                                                     : "";
 
@@ -2405,21 +2399,21 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
         ? retentionRate("tt-pwa", 1)
         : item.show === "FB-H5"
             ? retentionRate("tt-pwa", 2)
-            : item.show === "FB-PWA"
+            : item.show === "FB-H5-A"
                 ? retentionRate("tt-pwa", 3)
-                : item.show === "FB-PWA-A"
+                : item.show === "FB-PWA"
                     ? retentionRate("tt-pwa", 4)
-                    : item.show === "FB-PWA-B"
+                    : item.show === "FB-PWA-A"
                         ? retentionRate("tt-pwa", 5)
-                        : item.show === "FB-IOS"
+                        : item.show === "FB-PWA-B"
                             ? retentionRate("tt-pwa", 6)
-                            : item.show === "TT-PWA"
+                            : item.show === "FB-IOS"
                                 ? retentionRate("tt-pwa", 9)
-                            : item.show === "KW-PWA"
+                            : item.show === "TT-PWA"
                                 ? retentionRate("tt-pwa", 13)
-                                : item.show === "上架包"
+                                : item.show === "KW-PWA"
                                     ? retentionRate("tt-pwa", 29)
-                                    : item.show === "DL"
+                                    : item.show === "上架包"
                                         ? retentionRate("tt-pwa", 59)
                                                                           : "";
 
@@ -2427,21 +2421,21 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
         ? retentionRate("kwai-pwa", 1)
         : item.show === "FB-H5"
             ? retentionRate("kwai-pwa", 2)
-            : item.show === "FB-PWA"
+            : item.show === "FB-H5-A"
                 ? retentionRate("kwai-pwa", 3)
-                : item.show === "FB-PWA-A"
+                : item.show === "FB-PWA"
                     ? retentionRate("kwai-pwa", 4)
-                    : item.show === "FB-PWA-B"
+                    : item.show === "FB-PWA-A"
                         ? retentionRate("kwai-pwa", 5)
-                        : item.show === "FB-IOS"
+                        : item.show === "FB-PWA-B"
                             ? retentionRate("kwai-pwa", 6)
-                            : item.show === "TT-PWA"
+                            : item.show === "FB-IOS"
                                 ? retentionRate("kwai-pwa", 9)
-                                : item.show === "KW-PWA"
+                                : item.show === "TT-PWA"
                                     ? retentionRate("kwai-pwa", 13)
-                                    : item.show === "上架包"
+                                    : item.show === "KW-PWA"
                                        ? retentionRate("kwai-pwa", 29)
-                                        : item.show === "DL"
+                                        : item.show === "上架包"
                                           ? retentionRate("kwai-pwa", 59)                                       
                                                                           : "";
 
@@ -2449,21 +2443,21 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
         ? retentionRate("ws-h5", 1)
         : item.show === "FB-H5"
             ? retentionRate("ws-h5", 2)
-            : item.show === "FB-PWA"
+            : item.show === "FB-H5-A"
                 ? retentionRate("ws-h5", 3)
-                : item.show === "FB-PWA-A"
+                : item.show === "FB-PWA"
                     ? retentionRate("ws-h5", 4)
-                    : item.show === "FB-PWA-B"
+                    : item.show === "FB-PWA-A"
                         ? retentionRate("ws-h5", 5)
-                        : item.show === "FB-IOS"
+                        : item.show === "FB-PWA-B"
                             ? retentionRate("ws-h5", 6)
-                            : item.show === "TT-PWA"
+                            : item.show === "FB-IOS"
                                 ? retentionRate("ws-h5", 9)
-                                : item.show === "KW-PWA"
+                                : item.show === "TT-PWA"
                                     ? retentionRate("ws-h5", 13)
-                                    : item.show === "上架包"
+                                    : item.show === "KW-PWA"
                                       ? retentionRate("ws-h5", 29)
-                                      : item.show === "DL"
+                                      : item.show === "上架包"
                                           ? retentionRate("ws-h5", 59)                                      
                                                                           : "";
 
@@ -2471,31 +2465,31 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
     ? retentionRate("上架包", 1)
     : item.show === "FB-H5"
         ? retentionRate("上架包", 2)
-      : item.show === "FB-PWA"
+      : item.show === "FB-H5-A"
           ? retentionRate("上架包", 3)
-        : item.show === "FB-PWA-A"
+        : item.show === "FB-PWA"
              ? retentionRate("上架包", 4)
-         : item.show === "FB-PWA-B"
+         : item.show === "FB-PWA-A"
                ? retentionRate("上架包", 5)
-           : item.show === "FB-IOS"
+           : item.show === "FB-PWA-B"
                   ? retentionRate("上架包", 6)
-               : item.show === "TT-PWA"
+               : item.show === "FB-IOS"
                     ? retentionRate("上架包", 9)
-                   : item.show === "KW-PWA"
+                   : item.show === "TT-PWA"
                       ? retentionRate("上架包", 13)
-                     : item.show === "上架包"
+                     : item.show === "KW-PWA"
                           ? retentionRate("上架包", 29)
-                            : item.show === "DL"
+                            : item.show === "上架包"
                               ? retentionRate("上架包", 59)
 
                                                        : "";
                                     
     let avgText =
-        item.key === "ALL_TOTAL" || item.key === "fb-h5" || item.key === "fb-pwa" || item.key === "fb-pwa-a"
+        item.key === "ALL_TOTAL" || item.key === "fb-h5" || item.key === "fb-h5-a" || item.key === "fb-pwa"
             ? avg
             : "";
     let nextAvgText =
-        item.key === "ALL_TOTAL" || item.key === "fb-h5" || item.key === "fb-pwa"
+        item.key === "ALL_TOTAL" || item.key === "fb-h5" || item.key === "fb-h5-a"
             ? nextAvg
             : "";
 
@@ -2506,9 +2500,9 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
         ? fbNormalAvg
         : item.key === "fb-h5"
             ? fbParentAvg
-            : item.key === "fb-pwa"
+            : item.key === "fb-h5-a"
                 ? fbChildAvg
-                : item.key === "fb-pwa-a"
+                : item.key === "fb-pwa"
                     ? fbFirstAvg
                     : "";
     let h5AvgText = item.key === "ALL_TOTAL"
@@ -2530,7 +2524,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
 
         // ===== MỤC TÍNH 人均 fb 裂变  =====
 
-            : item.key === "fb-pwa"
+            : item.key === "fb-h5-a"
     ? (
         (
             Number(h5Child.rechargeAmount||0) +
@@ -2544,7 +2538,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
 
       // ===== MỤC TÍNH 人均 fb 首充  =====
 
-                : item.key === "fb-pwa-a"
+                : item.key === "fb-pwa"
     ? (
         (
             Number(h5.firstRechargeAmount||0) +
@@ -2573,7 +2567,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                 )
             ).toFixed(2)
 
-        : item.key === "fb-pwa"
+        : item.key === "fb-h5-a"
             ? (
                 (
                     Number(pwaChild.rechargeAmount || 0) +
@@ -2585,7 +2579,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                 )
             ).toFixed(2)
 
-        : item.key === "fb-pwa-a"
+        : item.key === "fb-pwa"
             ? (
                 (
                     Number(pwa.firstRechargeAmount || 0) +
@@ -2602,36 +2596,36 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
         ? iosAvg
         : item.key === "fb-h5"
             ? (iosParent.rechargeCount ? (iosParent.rechargeAmount / iosParent.rechargeCount).toFixed(2) : 0)
-            : item.key === "fb-pwa"
+            : item.key === "fb-h5-a"
                 ? (iosChild.rechargeCount ? (iosChild.rechargeAmount / iosChild.rechargeCount).toFixed(2) : 0)
-                : item.key === "fb-pwa-a"
+                : item.key === "fb-pwa"
                     ? (ios.firstRechargeCount ? (ios.firstRechargeAmount / ios.firstRechargeCount).toFixed(2) : 0)
                     : "";
     let ttAvgText = item.key === "ALL_TOTAL"
         ? ttAvg
         : item.key === "fb-h5"
             ? (ttParent.rechargeCount ? (ttParent.rechargeAmount / ttParent.rechargeCount).toFixed(2) : 0)
-            : item.key === "fb-pwa"
+            : item.key === "fb-h5-a"
                 ? (ttChild.rechargeCount ? (ttChild.rechargeAmount / ttChild.rechargeCount).toFixed(2) : 0)
-                : item.key === "fb-pwa-a"
+                : item.key === "fb-pwa"
                     ? (tt.firstRechargeCount ? (tt.firstRechargeAmount / tt.firstRechargeCount).toFixed(2) : 0)
                     : "";
     let kwAvgText = item.key === "ALL_TOTAL"
         ? kwAvg
         : item.key === "fb-h5"
             ? (kwParent.rechargeCount ? (kwParent.rechargeAmount / kwParent.rechargeCount).toFixed(2) : 0)
-            : item.key === "fb-pwa"
+            : item.key === "fb-h5-a"
                 ? (kwChild.rechargeCount ? (kwChild.rechargeAmount / kwChild.rechargeCount).toFixed(2) : 0)
-                : item.key === "fb-pwa-a"
+                : item.key === "fb-pwa"
                     ? (kw.firstRechargeCount ? (kw.firstRechargeAmount / kw.firstRechargeCount).toFixed(2) : 0)
                     : "";
     let wsAvgText = item.key === "ALL_TOTAL"
         ? wsAvg
         : item.key === "fb-h5"
             ? (wsParent.rechargeCount ? (wsParent.rechargeAmount / wsParent.rechargeCount).toFixed(2) : 0)
-            : item.key === "fb-pwa"
+            : item.key === "fb-h5-a"
                 ? (wsChild.rechargeCount ? (wsChild.rechargeAmount / wsChild.rechargeCount).toFixed(2) : 0)
-                : item.key === "fb-pwa-a"
+                : item.key === "fb-pwa"
                     ? (ws.firstRechargeCount ? (ws.firstRechargeAmount / ws.firstRechargeCount).toFixed(2) : 0)
                     : "";
      let sjbAvgText = item.key === "ALL_TOTAL"
@@ -2654,7 +2648,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                 : 0
           )
 
-    : item.key === "fb-pwa"
+    : item.key === "fb-h5-a"
         ? (
             sjbChild.rechargeCount
                 ? (
@@ -2664,7 +2658,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                 : 0
           )
 
-    : item.key === "fb-pwa-a"
+    : item.key === "fb-pwa"
         ? (
             sjb.firstRechargeCount
                 ? (
@@ -5972,6 +5966,11 @@ function renderRetentionButtons(){
         <button class="retBtn"
             onclick="changeRetention('fb-h5',this)">
             FB-H5
+        </button>
+
+        <button class="retBtn"
+            onclick="changeRetention('fb-h5-a',this)">
+            FB-H5-A
         </button>
 
 
