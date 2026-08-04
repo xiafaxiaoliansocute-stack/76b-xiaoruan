@@ -3,6 +3,7 @@ import subprocess
 import time
 from pathlib import Path
 from datetime import datetime
+import sqlite3
 
 from telegram import Update
 from telegram.ext import (
@@ -31,9 +32,9 @@ TASKS = {
 
     "23E-计算留存": [
 
-        ("💰 充值用户", "23E-liucun/23echongzhi.py", 10),
+        ("💰 充值用户", "23E-liucun/23echongzhi.py", 15),
 
-        ("👤 首充用户", "23E-liucun/23eshoucun.py", 30),
+        ("👤 首充用户", "23E-liucun/23eshoucun.py", 15),
 
         ("📊 留存计算", "23E-liucun/23eliucun.py", 0),
 
@@ -41,9 +42,9 @@ TASKS = {
 
     "73J-计算留存": [
 
-        ("💰 充值用户", "73J-liucun/73jchongzhi.py", 10),
+        ("💰 充值用户", "73J-liucun/73jchongzhi.py", 15),
         
-        ("👤 首充用户", "73J-liucun/73jshouchong.py", 30),
+        ("👤 首充用户", "73J-liucun/73jshouchong.py", 15),
         
         ("📊 留存计算", "73J-liucun/73jliucun.py", 0),
 
@@ -104,6 +105,36 @@ def execute_script(script):
     if result.returncode != 0:
 
         raise RuntimeError(f"{script} 执行失败")
+    
+# 👇 THÊM ĐOẠN CODE NÀY VÀO SAU execute_script
+def execute_delete(project_type, date_str):
+    # Tìm kiếm thư mục chứa database dựa vào từ khóa bạn nhập vào
+    project_lower = project_type.lower()
+    
+    if "23e" in project_lower:
+        # Thử tìm trực tiếp theo tên thư mục trong ảnh của bạn
+        db_path = BASE_DIR / "23E-liucun" / "23E.db"
+    elif "73j" in project_lower:
+        db_path = BASE_DIR / "73J-liucun" / "73J.db"
+    else:
+        raise ValueError("Tên dự án không hợp lệ! Hãy dùng 23e hoặc 73j.")
+        
+    if not db_path.exists():
+        raise FileNotFoundError(f"Không thấy file tại đường dẫn: {db_path}")
+    
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    
+    cursor.execute(
+        "DELETE FROM shouchong WHERE 统计时间 = ?", 
+        (date_str,)
+    )
+    
+    affected_rows = cursor.rowcount
+    conn.commit()
+    conn.close()
+    
+    return affected_rows
 # =====================================================
 # TASK MANAGER
 # =====================================================
@@ -365,6 +396,40 @@ async def run_group(group_name, message):
 # =====================================================
 # COMMANDS
 # =====================================================
+async def delete_shouchong_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not allow(update):
+        return
+
+    # Lấy tham số người dùng nhập: [loại_db, ngày]
+    args = context.args
+    if len(args) < 2:
+        await update.message.reply_text(
+            "⚠️ 格式错误 / Sai cú pháp!\n\n"
+            "📌 示例 / Ví dụ:\n"
+            "`/del_shouchong 23e 2026-07-28`\n"
+            "`/del_shouchong 73j 2026-07-28`",
+            parse_mode="Markdown"
+        )
+        return
+
+    project_type = args[0]
+    target_date = args[1]
+
+    try:
+        deleted_count = await asyncio.to_thread(execute_delete, project_type, target_date)
+        
+        await update.message.reply_text(
+            f"✅ 成功删除 `{project_type.upper()}.db` 中\n"
+            f"📂 表: `shouchong`\n"
+            f"📅 统计时间: `{target_date}`\n"
+            f"🗑 共影响 {deleted_count} 行",
+            parse_mode="Markdown"
+        )
+    except Exception as e:
+        await update.message.reply_text(
+            f"❌ 删除失败:\n`{e}`",
+            parse_mode="Markdown"
+        )
 
 async def run23e(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
@@ -439,12 +504,11 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 /23e_start
 /73j_start
-/leuleu
-
+/data
+/del_shouchong [23e/73j] [YYYY-MM-DD]
 /status
 /help
 """
-
     )
 
 
@@ -493,26 +557,26 @@ def register(app):
             help_cmd
         )
     )
+    app.add_handler(
+        CommandHandler(
+            "del_shouchong",
+            delete_shouchong_cmd
+        )
+    )
 
 
 # =====================================================
 # MAIN
 # =====================================================
-
 def main():
-
     print("=" * 50)
     print("Telegram Bot Starting...")
     print("=" * 50)
 
     app = (
-
         ApplicationBuilder()
-
         .token(BOT_TOKEN)
-
         .build()
-
     )
 
     register(app)
@@ -520,9 +584,7 @@ def main():
     print("Bot Started.")
 
     app.run_polling(
-
         drop_pending_updates=True
-
     )
 
 

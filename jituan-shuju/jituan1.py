@@ -57,25 +57,37 @@ DATA_URL = (
 
 
 # ==================================================
-# BRAZIL TIME
+# BRAZIL TIME UTC-3
 # ==================================================
 
 BRAZIL_TZ = ZoneInfo(
-    "Etc/GMT+3"
+    "America/Sao_Paulo"
 )
 
+
 def get_brazil_time_range(date_str):
+
     def utc_format(dt):
         return dt.astimezone(
             timezone.utc
         ).strftime(
             "%Y-%m-%dT%H:%M:%S.000Z"
         )
-    y,m,d = map(
+
+
+    y, m, d = map(
         int,
         date_str.split("-")
     )
-    now = datetime.now(BRAZIL_TZ)
+
+
+    # giờ hiện tại Brazil UTC-3
+    now = datetime.now(
+        BRAZIL_TZ
+    )
+
+
+    # 00:00:00 ngày cần lấy (Brazil)
     start = datetime(
         y,
         m,
@@ -86,9 +98,42 @@ def get_brazil_time_range(date_str):
         tzinfo=BRAZIL_TZ
     )
 
-    # hôm nay lấy tới thời gian hiện tại
 
-    end = now
+    # nếu lấy hôm nay -> tới hiện tại
+    if date_str == str(now.date()):
+
+        end = now
+
+    else:
+
+        # ngày cũ lấy hết ngày
+        end = datetime(
+            y,
+            m,
+            d,
+            23,
+            59,
+            59,
+            tzinfo=BRAZIL_TZ
+        )
+
+
+    print(
+        "🇧🇷 Brazil:",
+        start,
+        "→",
+        end
+    )
+
+
+    print(
+        "UTC:",
+        utc_format(start),
+        "→",
+        utc_format(end)
+    )
+
+
     return {
 
         "查询":{
@@ -100,11 +145,6 @@ def get_brazil_time_range(date_str):
         }
 
     }
-
-
-
-
-
 # ==================================================
 # LOGIN TOKEN
 # ==================================================
@@ -684,9 +724,29 @@ if __name__=="__main__":
     # ==========================
 
 
-    today=datetime.now(
+    now_brazil = datetime.now(
     BRAZIL_TZ
-).date()
+)
+    if (
+        now_brazil.hour == 0
+        and now_brazil.minute < 30
+):
+
+        target_date = (
+            now_brazil.date()
+            - timedelta(days=1)
+    )
+    else:
+
+            target_date = now_brazil.date()
+    print(
+            "🇧🇷 Brazil 当前时间:",
+            now_brazil
+)
+    print(
+            "📅 获取日期:",
+            target_date
+)
 
 
 
@@ -700,19 +760,14 @@ if __name__=="__main__":
 
 
     print(
-
-        "🇧🇷 今日:",
-
-        today
-
-    )
+    "🇧🇷 获取:",
+    target_date
+)
 
 
     today_rows=get_channel_data(
-
-        str(today)
-
-    )
+    str(target_date)
+)
 
 
     for row in today_rows:

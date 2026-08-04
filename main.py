@@ -12,7 +12,7 @@ from zoneinfo import ZoneInfo
 # ======================
 
 ACCOUNT = "jqr73j"
-TOKEN = "zj62gcom0g1muuv5220hkj3iftcwrzdxlkvb51s6"
+TOKEN = "z5hwwpepikzhyao7ahiyxz0b3t5aa0vihsmi1irl"
 
 BASE_URL = "https://api5.v-n-r-1.com/api/backend/trpc/channel.effect"
 HOUR_URL = "https://api5.v-n-r-1.com/api/backend/trpc/channel.hourReportSum"
@@ -24,6 +24,7 @@ REGION_ID = 1
 CHANNELS = {
     "fb-h5": 2786,
     "fb-h5-a": 2833,
+    "fb-h5-b": 2837,
     "fb-pwa": 2787,
     "fb-pwa-a": 2788,
     "fb-pwa-b": 2789,
@@ -566,7 +567,7 @@ with ThreadPoolExecutor(max_workers=10) as executor:
 
 
 
-RETENTION_URL = "https://api3.a-b-c-5.com/api/backend/trpc/channel.dayRetention"
+RETENTION_URL = "https://api5.v-n-r-1.com/api/backend/trpc/channel.dayRetention"
 
 result_data["retention"] = {}
 # ======================

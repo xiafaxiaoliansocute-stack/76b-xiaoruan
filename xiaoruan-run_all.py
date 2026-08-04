@@ -34,6 +34,11 @@ BASE_DIR = Path(__file__).resolve().parent
 # ============================================================
 
 TASKS = [
+    {
+        "name": "shujugenjin",
+        "type": "shujugenjin",
+       "file": BASE_DIR / "shujugenjin" / "shujugenjin.py",
+    },
 
     {
         "name": "TELEGRAM_BOT",
@@ -52,6 +57,7 @@ TASKS = [
         "type": "DASHBOARD",
         "file": BASE_DIR / "run_forever.py",
     },
+    
 
 ]
 

@@ -1991,9 +1991,12 @@ const list=[
 {show:"TT-PWA",key:"tt-pwa"},
 {show:"KW-PWA",key:"kwai-pwa"},
 {show:"上架包",key:"上架包"},
+{show:"FB-H5-B",key:"fb-h5-b"},
+{show:"TT-H5",key:"tt-h5"},
 {show:"DL",key:"DL"},
 {show:"官方渠道",key:"官方渠道"},
 {show:"其他",key:"其他"},
+
 ];
 
 let html="";
@@ -2013,11 +2016,13 @@ list.forEach(item=>{
         const channels = [
             "fb-h5",
             "fb-h5-a",
+            "fb-h5-b",
             "fb-pwa",
             "fb-pwa-a",
             "fb-pwa-b",
             "fb-ios",
             "tt-pwa",
+            "tt-h5",
             "kwai-pwa",
             "上架包",
             "DL",
@@ -2125,6 +2130,7 @@ avg = normal.rechargeCount
 // ===== FB =====
 let h5   = globalData["fb-h5"]?.normalList || {};
 let h5a  = globalData["fb-h5-a"]?.normalList || {};
+let h5b  = globalData["fb-h5-b"]?.normalList || {};
 let pwa  = globalData["fb-pwa"]?.normalList || {};
 let pwaa = globalData["fb-pwa-a"]?.normalList || {};
 let pwab = globalData["fb-pwa-b"]?.normalList || {};
@@ -2172,6 +2178,7 @@ let sjbAvg=sjb.rechargeCount?(sjb.rechargeAmount/sjb.rechargeCount).toFixed(2):0
 let fbNormalAvg = (
 Number(h5.rechargeAmount || 0) +
 Number(h5a.rechargeAmount || 0) +
+Number(h5b.rechargeAmount || 0) +
 Number(pwa.rechargeAmount || 0) +
 Number(pwaa.rechargeAmount || 0) +
 Number(pwab.rechargeAmount || 0) +
@@ -2179,6 +2186,7 @@ Number(ios.rechargeAmount || 0)
 ) / (
 Number(h5.rechargeCount || 0) +
 Number(h5a.rechargeCount || 0) +
+Number(h5b.rechargeCount || 0) +
 Number(pwa.rechargeCount || 0) +
 Number(pwaa.rechargeCount || 0) +
 Number(pwab.rechargeCount || 0) +
@@ -2192,6 +2200,8 @@ fbNormalAvg = isFinite(fbNormalAvg)
 
 let h5Parent = globalData["fb-h5"]?.parentList || {};
 let h5aParent = globalData["fb-h5-a"]?.parentList || {};
+let h5bParent = globalData["fb-h5-b"]?.parentList || {};
+
 
 let pwaParent = globalData["fb-pwa"]?.parentList || {};
 let pwaaParent = globalData["fb-pwa-a"]?.parentList || {};
@@ -2201,6 +2211,7 @@ let iosParent = globalData["fb-ios"]?.parentList || {};
 
 let h5Child = globalData["fb-h5"]?.childList || {};
 let h5aChild = globalData["fb-h5-a"]?.childList || {};
+let h5bChild = globalData["fb-h5-b"]?.childList || {};
 
 let pwaChild = globalData["fb-pwa"]?.childList || {};
 let pwaaChild = globalData["fb-pwa-a"]?.childList || {};
@@ -2212,6 +2223,7 @@ let iosChild = globalData["fb-ios"]?.childList || {};
 let fbParentAvg = (
 Number(h5Parent.rechargeAmount || 0) +
 Number(h5aParent.rechargeAmount || 0) +
+Number(h5bParent.rechargeAmount || 0) +
 Number(pwaParent.rechargeAmount || 0) +
 Number(pwaaParent.rechargeAmount || 0) +
 Number(pwabParent.rechargeAmount || 0) +
@@ -2221,6 +2233,7 @@ Number(iosParent.rechargeAmount || 0)
 
 Number(h5Parent.rechargeCount || 0) +
 Number(h5aParent.rechargeCount || 0) +
+Number(h5bParent.rechargeCount || 0) +
 Number(pwaParent.rechargeCount || 0) +
 Number(pwaaParent.rechargeCount || 0) +
 Number(pwabParent.rechargeCount || 0) +
@@ -2235,6 +2248,7 @@ fbParentAvg = isFinite(fbParentAvg)
 let fbChildAvg = (
 Number(h5Child.rechargeAmount || 0) +
 Number(h5aChild.rechargeAmount || 0) +
+Number(h5bChild.rechargeAmount || 0) +
 Number(pwaChild.rechargeAmount || 0) +
 Number(pwaaChild.rechargeAmount || 0) +
 Number(pwabChild.rechargeAmount || 0) +
@@ -2242,6 +2256,7 @@ Number(iosChild.rechargeAmount || 0)
 ) / (
 Number(h5Child.rechargeCount || 0) +
 Number(h5aChild.rechargeCount || 0) +
+Number(h5bChild.rechargeCount || 0) +
 Number(pwaChild.rechargeCount || 0) +
 Number(pwaaChild.rechargeCount || 0) +
 Number(pwabChild.rechargeCount || 0) +
@@ -2255,6 +2270,7 @@ fbChildAvg = isFinite(fbChildAvg)
 let fbFirstAvg = (
 Number(h5.firstRechargeAmount || 0) +
 Number(h5a.firstRechargeAmount || 0) +
+Number(h5b.firstRechargeAmount || 0) +
 Number(pwa.firstRechargeAmount || 0) +
 Number(pwaa.firstRechargeAmount || 0) +
 Number(pwab.firstRechargeAmount || 0) +
@@ -2262,6 +2278,7 @@ Number(ios.firstRechargeAmount || 0)
 ) / (
 Number(h5.firstRechargeCount || 0) +
 Number(h5a.firstRechargeCount || 0) +
+Number(h5b.firstRechargeCount || 0) +
 Number(pwa.firstRechargeCount || 0) +
 Number(pwaa.firstRechargeCount || 0) +
 Number(pwab.firstRechargeCount || 0) +
@@ -2514,11 +2531,13 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
     ? (
         (
             Number(h5Parent.rechargeAmount||0) +
-            Number(h5aParent.rechargeAmount||0)
+            Number(h5aParent.rechargeAmount||0) +
+            Number(h5bParent.rechargeAmount||0)
         ) /
         (
             Number(h5Parent.rechargeCount||0) +
-            Number(h5aParent.rechargeCount||0)
+            Number(h5aParent.rechargeCount||0)+
+            Number(h5bParent.rechargeCount||0)
         )
       ).toFixed(2)
 
@@ -2528,11 +2547,13 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
     ? (
         (
             Number(h5Child.rechargeAmount||0) +
-            Number(h5aChild.rechargeAmount||0)
+            Number(h5aChild.rechargeAmount||0) +
+            Number(h5bChild.rechargeAmount||0)
         ) /
         (
             Number(h5Child.rechargeCount||0) +
-            Number(h5aChild.rechargeCount||0)
+            Number(h5aChild.rechargeCount||0) +
+            Number(h5bChild.rechargeCount||0)
         )
       ).toFixed(2)
 
@@ -2542,11 +2563,13 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
     ? (
         (
             Number(h5.firstRechargeAmount||0) +
-            Number(h5a.firstRechargeAmount||0)
+            Number(h5a.firstRechargeAmount||0) +
+            Number(h5b.firstRechargeAmount||0)
         ) /
         (
             Number(h5.firstRechargeCount||0) +
-            Number(h5a.firstRechargeCount||0)
+            Number(h5a.firstRechargeCount||0) +
+            Number(h5b.firstRechargeCount||0)
         )
       ).toFixed(2)
 
@@ -2559,11 +2582,13 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
             ? (
                 (
                     Number(pwaParent.rechargeAmount || 0) +
-                    Number(pwaaParent.rechargeAmount || 0)
+                    Number(pwaaParent.rechargeAmount || 0) +
+                    Number(pwabParent.rechargeAmount || 0)
                 ) /
                 (
                     Number(pwaParent.rechargeCount || 0) +
-                    Number(pwaaParent.rechargeCount || 0)
+                    Number(pwaaParent.rechargeCount || 0) +
+                    Number(pwabParent.rechargeCount || 0)
                 )
             ).toFixed(2)
 
@@ -2571,11 +2596,13 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
             ? (
                 (
                     Number(pwaChild.rechargeAmount || 0) +
-                    Number(pwaaChild.rechargeAmount || 0)
+                    Number(pwaaChild.rechargeAmount || 0)+
+                    Number(pwabChild.rechargeAmount || 0)
                 ) /
                 (
                     Number(pwaChild.rechargeCount || 0) +
-                    Number(pwaaChild.rechargeCount || 0)
+                    Number(pwaaChild.rechargeCount || 0)+
+                    Number(pwabChild.rechargeCount || 0)
                 )
             ).toFixed(2)
 
@@ -2583,11 +2610,13 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
             ? (
                 (
                     Number(pwa.firstRechargeAmount || 0) +
-                    Number(pwaa.firstRechargeAmount || 0)
+                    Number(pwaa.firstRechargeAmount || 0)+
+                    Number(pwab.firstRechargeAmount || 0)
                 ) /
                 (
                     Number(pwa.firstRechargeCount || 0) +
-                    Number(pwaa.firstRechargeCount || 0)
+                    Number(pwaa.firstRechargeCount || 0)+
+                    Number(pwab.firstRechargeCount || 0)
                 )
             ).toFixed(2)
 

@@ -591,7 +591,7 @@ if __name__ == "__main__":
 
     print()
     print("=" * 60)
-    print("🎉 全部完成")
+    print("✅ 留存计算-上传完成")
     print(
         "耗时:",
         round(
