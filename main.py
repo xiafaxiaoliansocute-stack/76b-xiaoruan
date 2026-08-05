@@ -22,7 +22,6 @@ TENANT_ID = 1634560
 REGION_ID = 1
 
 CHANNELS = {
-    "fb-h5": 2786,
     "fb-h5-a": 2833,
     "fb-h5-b": 2837,
     "fb-pwa": 2787,

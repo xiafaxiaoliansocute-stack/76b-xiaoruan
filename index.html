@@ -1386,7 +1386,7 @@ placeholder="请输入密码">
 <th style="width:90px">FB-IOS</th>
 <th style="width:90px">TT-PWA</th>
 <th style="width:90px">KW-PWA</th>
-<th style="width:90px">WS-H5</th>
+<th style="width:90px" id="wsH5Header">WS-H5</th>
 <th id="avgExtraHeader" style="width:90px;display:none;">上架包</th>
 <th style="width:250px">类型</th>
 <th style="width:90px">比例</th>
@@ -1395,9 +1395,9 @@ placeholder="请输入密码">
 <th style="width:320px">字段</th>
 <th>大盘</th>
 <th>FB</th>
-<th>TT</th>
+<th>TT-PWA</th>
 <th>KW</th>
-<th>WS</th>
+<th>TT-H5</th>
 <th id="retentionExtraHeader" style="display:none;">上架包</th>
 </tr>
 </thead>
@@ -1453,6 +1453,15 @@ const retentionGroupHeader =
 
 const tableMainTitle =
     document.getElementById("tableMainTitle");
+
+const wsH5Header = document.getElementById("wsH5Header");
+if(wsH5Header) {
+    if(site === "73J"){
+        wsH5Header.innerText = "TT-H5";
+    } else {
+        wsH5Header.innerText = "WS-H5";
+    }
+}
 
 if(site === "73J" || site === "23A" || site === "23E"){
 
@@ -1976,7 +1985,6 @@ function renderTab2(){
         return;
     }
 
-
     //==== TAB 2 73J  实时数据分析 ====
 
 
@@ -2151,10 +2159,11 @@ let dsp = globalData["上架包"]?.normalList || {};
 let dspParent = globalData["上架包"]?.parentList || {};
 let dspChild = globalData["上架包"]?.childList || {};
 
-// ===== WS =====
-let ws = globalData["ws-h5"]?.normalList || {};
-let wsParent = globalData["ws-h5"]?.parentList || {};
-let wsChild = globalData["ws-h5"]?.childList || {};
+// 👈 ĐÃ SỬA: Thay ws-h5 thành tt-h5
+// ===== TT-H5 (Thay thế cho WS) =====
+let ttH5 = globalData["tt-h5"]?.normalList || {};
+let ttH5Parent = globalData["tt-h5"]?.parentList || {};
+let ttH5Child = globalData["tt-h5"]?.childList || {};
 
 // ===== 上架包 =====
 let sjb = globalData["上架包"]?.normalList || {};
@@ -2170,7 +2179,8 @@ let pwaAvg = pwaCount ? (pwaAmount / pwaCount).toFixed(2) : "0.00";
 let iosAvg=ios.rechargeCount?(ios.rechargeAmount/ios.rechargeCount).toFixed(2):0;
 let ttAvg=tt.rechargeCount?(tt.rechargeAmount/tt.rechargeCount).toFixed(2):0;
 let kwAvg=kw.rechargeCount?(kw.rechargeAmount/kw.rechargeCount).toFixed(2):0;
-let wsAvg=ws.rechargeCount?(ws.rechargeAmount/ws.rechargeCount).toFixed(2):0;
+// 👈 ĐÃ SỬA: Đổi wsAvg thành ttH5Avg
+let ttH5Avg=ttH5.rechargeCount?(ttH5.rechargeAmount/ttH5.rechargeCount).toFixed(2):0;
 let sjbAvg=sjb.rechargeCount?(sjb.rechargeAmount/sjb.rechargeCount).toFixed(2):0;
 
 // ===== TÍNH GỘP FB RENJUN =====
@@ -2456,26 +2466,27 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                                           ? retentionRate("kwai-pwa", 59)                                       
                                                                           : "";
 
-    let wsRate = item.show === "大盘"
-        ? retentionRate("ws-h5", 1)
+    // 👈 ĐÃ SỬA: Đổi wsRate thành ttH5Rate và gọi "tt-h5"
+    let ttH5Rate = item.show === "大盘"
+        ? retentionRate("tt-h5", 1)
         : item.show === "FB-H5"
-            ? retentionRate("ws-h5", 2)
+            ? retentionRate("tt-h5", 2)
             : item.show === "FB-H5-A"
-                ? retentionRate("ws-h5", 3)
+                ? retentionRate("tt-h5", 3)
                 : item.show === "FB-PWA"
-                    ? retentionRate("ws-h5", 4)
+                    ? retentionRate("tt-h5", 4)
                     : item.show === "FB-PWA-A"
-                        ? retentionRate("ws-h5", 5)
+                        ? retentionRate("tt-h5", 5)
                         : item.show === "FB-PWA-B"
-                            ? retentionRate("ws-h5", 6)
+                            ? retentionRate("tt-h5", 6)
                             : item.show === "FB-IOS"
-                                ? retentionRate("ws-h5", 9)
+                                ? retentionRate("tt-h5", 9)
                                 : item.show === "TT-PWA"
-                                    ? retentionRate("ws-h5", 13)
+                                    ? retentionRate("tt-h5", 13)
                                     : item.show === "KW-PWA"
-                                      ? retentionRate("ws-h5", 29)
+                                      ? retentionRate("tt-h5", 29)
                                       : item.show === "上架包"
-                                          ? retentionRate("ws-h5", 59)                                      
+                                          ? retentionRate("tt-h5", 59)                                      
                                                                           : "";
 
     let sjbRate = item.show === "大盘"
@@ -2552,7 +2563,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
         ) /
         (
             Number(h5Child.rechargeCount||0) +
-            Number(h5aChild.rechargeCount||0) +
+            Number(h5aChild.rechargeCount||0)+
             Number(h5bChild.rechargeCount||0)
         )
       ).toFixed(2)
@@ -2648,15 +2659,18 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                 : item.key === "fb-pwa"
                     ? (kw.firstRechargeCount ? (kw.firstRechargeAmount / kw.firstRechargeCount).toFixed(2) : 0)
                     : "";
-    let wsAvgText = item.key === "ALL_TOTAL"
-        ? wsAvg
+    
+    // 👈 ĐÃ SỬA: Đổi wsAvgText thành ttH5AvgText
+    let ttH5AvgText = item.key === "ALL_TOTAL"
+        ? ttH5Avg
         : item.key === "fb-h5"
-            ? (wsParent.rechargeCount ? (wsParent.rechargeAmount / wsParent.rechargeCount).toFixed(2) : 0)
+            ? (ttH5Parent.rechargeCount ? (ttH5Parent.rechargeAmount / ttH5Parent.rechargeCount).toFixed(2) : 0)
             : item.key === "fb-h5-a"
-                ? (wsChild.rechargeCount ? (wsChild.rechargeAmount / wsChild.rechargeCount).toFixed(2) : 0)
+                ? (ttH5Child.rechargeCount ? (ttH5Child.rechargeAmount / ttH5Child.rechargeCount).toFixed(2) : 0)
                 : item.key === "fb-pwa"
-                    ? (ws.firstRechargeCount ? (ws.firstRechargeAmount / ws.firstRechargeCount).toFixed(2) : 0)
+                    ? (ttH5.firstRechargeCount ? (ttH5.firstRechargeAmount / ttH5.firstRechargeCount).toFixed(2) : 0)
                     : "";
+
      let sjbAvgText = item.key === "ALL_TOTAL"
     ? (
         sjb.rechargeCount
@@ -2738,7 +2752,8 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
       <td>${iosAvgText}</td>
       <td>${ttAvgText}</td>
       <td>${kwAvgText}</td>
-      <td>${wsAvgText}</td>
+      <!-- 👈 ĐÃ SỬA: Đổi wsAvgText thành ttH5AvgText ở đây -->
+      <td>${ttH5AvgText}</td>
       <td>${sjbAvgText}</td>
       <td class="label-col">${item.show}</td>
       <td class="${firstRechargeRatioClass}">${firstRechargeRatioText}</td>
@@ -2749,7 +2764,8 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
       <td>${fbRate}</td>
       <td>${ttRate}</td>
       <td>${kwRate}</td>
-      <td>${wsRate}</td>
+      <!-- 👈 Đổi wsRate thành ttH5Rate ở đây -->
+      <td>${ttH5Rate}</td>
       <td>${sjbRate}</td>
       </tr>`;
     
@@ -2757,6 +2773,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
     applyHideZero();
 }); 
 }
+
 
     //==== TAB NN22  实时数据分析 ====
 
