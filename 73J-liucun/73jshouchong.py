@@ -4,13 +4,14 @@ import json
 from pathlib import Path
 import sqlite3
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
 import requests
+
 
 
 # =============================
@@ -25,11 +26,14 @@ TENANT_ID = 1634560
 
 REGION_ID = 1
 
-# ====================================================
+# Tài khoản tạo/thao tác (Cố định để lọc chuẩn 100%)
 
-#          第一天开盘-第一次同步日期下面修改
+EXPECTED_OPERATOR = ACCOUNT
 
-# ====================================================
+
+# 第一次同步日期
+
+
 FIRST_DATE = "2026-08-04"
 
 # =============================
@@ -117,10 +121,14 @@ def get_need_days():
 
 
 # =============================
-# 创建导出任务并直接锁定专属 ID (100% không nhầm lẫn)
+# 创建导出任务并严格锁定专属 ID (基于时间、模块、remark和操作人)
 # =============================
 def create_and_get_export_id(day):
     print("🚀 创建:", day)
+    
+    # 1. Ghi lại mốc thời gian UTC chính xác trước khi gửi lệnh tạo task
+    create_time = datetime.now(timezone.utc)
+
     tomorrow = (
         datetime.strptime(day, "%Y-%m-%d") + timedelta(days=1)
     ).strftime("%Y-%m-%d")
@@ -138,12 +146,12 @@ def create_and_get_export_id(day):
         "queryType": "export",
     }
 
-    # 1. Gửi request tạo task
+    # 2. Gửi request tạo task
     get_api(USERDAY_API, payload)
-    print("✅ 创建成功，正在锁定专属 ID...")
+    print("✅ 创建成功，正在精准匹配并锁定专属 ID...")
 
-    # 2. Quét ngay để bắt đúng ID của task "每日用户数据" khớp ngày
-    for _ in range(10):
+    # 3. Quét danh sách task trả về để lọc chuẩn 100%
+    for _ in range(15):
         time.sleep(2)
         data = get_api(
             EXPORT_LIST_API,
@@ -157,13 +165,32 @@ def create_and_get_export_id(day):
 
         items = data.get("result", {}).get("data", {}).get("json", {}).get("exportDataList", [])
         
+        # Sắp xếp theo ID giảm dần để kiểm tra các task mới nhất trước
+        items = sorted(items, key=lambda x: x["id"], reverse=True)
+
         for item in items:
             remark = item.get("remark", "")
             module_type = item.get("moduleType", "")
             
-            # Chỉ lấy đúng module UserDayData và đúng ngày
-            if module_type == "UserDayData" and f"查询时间:{day}" in remark:
-                print(f"🎯 成功锁定 Task ID: {item['id']}")
+            # Điều kiện 1: Đúng module dữ liệu người dùng hàng ngày
+            if module_type != "UserDayData":
+                continue
+
+            # Điều kiện 2: Phải chứa đúng ngày cần truy vấn trong remark
+            if f"查询时间:{day}" not in remark:
+                continue
+
+            # Điều kiện 3: Khớp đúng người tạo / thao tác (lastOperator hoặc operate)
+            op = item.get("lastOperator") or item.get("operate")
+            if EXPECTED_OPERATOR and op != EXPECTED_OPERATOR:
+                continue
+
+            # Điều kiện 4: Thời gian tạo task trên server phải SAU thời điểm script vừa gọi lệnh
+            api_time = datetime.fromisoformat(
+                item["createTime"].replace("Z", "+00:00")
+            )
+            if api_time >= create_time:
+                print(f"🎯 成功锁定 Task ID: {item['id']} | 操作人: {op} | 创建时间: {item['createTime']}")
                 return item["id"]
 
     print(f"⚠️ 无法自动捕获日期 {day} 的 ID")
@@ -320,7 +347,7 @@ if __name__ == "__main__":
 
     for day in days:
         try:
-            # 1. 创建任务并精准锁定专属 ID
+            # 1. 创建任务并精准锁定专属 ID (通过时间、模块、remark和操作人)
             export_id = create_and_get_export_id(day)
 
             if not export_id:

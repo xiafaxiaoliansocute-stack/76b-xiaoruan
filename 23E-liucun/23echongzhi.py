@@ -22,6 +22,10 @@ TENANT_ID = 9503839
 REGION_ID = 1
 BASE_URL = "https://api6.o-9-d-4.com/api/backend/trpc"
 
+# Cố định người tạo/thao tác theo tài khoản của bạn
+
+EXPECTED_OPERATOR = "jiqiren23e" 
+
 HEADERS = {
     "authorization": f"Bearer {TOKEN}",
     "account": ACCOUNT,
@@ -34,6 +38,7 @@ HEADERS = {
 # ==================================================
 # Brazil 昨天
 # ==================================================
+
 def get_brazil_yesterday():
     tz = ZoneInfo("America/Sao_Paulo")
     now = datetime.now(tz)
@@ -44,7 +49,6 @@ def get_brazil_yesterday():
 # 创建充值导出并记录发起时间 (1-1 锁定基准)
 # ==================================================
 def create_export(day):
-    # Lấy thời gian UTC chuẩn xác ngay trước khi gọi tạo task
     create_time = datetime.now(timezone.utc)
 
     payload = {
@@ -68,18 +72,17 @@ def create_export(day):
     )
     print("创建导出响应状态:", r.status_code)
     
-    # Trả về mốc thời gian để làm mốc lọc 1-1
     return create_time
 
 
 # ==================================================
-# 查找专属的导出任务 (100% 绝对匹配刚创建的任务)
+# 查找专属的导出任务 (严格匹配时间、模块和操作人)
 # ==================================================
 def find_new_export(create_time):
     payload = {
         "json": {
             "page": 1,
-            "pageSize": 20,  # Lấy top 20 bản ghi mới nhất là đủ
+            "pageSize": 20,
             "regionId": REGION_ID,
             "tenantId": TENANT_ID,
         }
@@ -99,21 +102,26 @@ def find_new_export(create_time):
         .get("exportDataList", [])
     )
 
-    # Sắp xếp ID giảm dần để kiểm tra các task mới sinh ra trước
     items = sorted(items, key=lambda x: x["id"], reverse=True)
 
     for item in items:
-        # Chỉ lọc đúng module nạp tiền thành công
+        # 1. Kiểm tra đúng module nạp tiền (hoặc module tương ứng theo hệ thống của bạn)
         if item.get("moduleType") != "SuccessPayRecord":
+            continue
+
+        # 2. Khớp đúng người tạo / thao tác (lastOperator hoặc operate)
+        
+        op = item.get("lastOperator") or item.get("operate")
+        if EXPECTED_OPERATOR and op != EXPECTED_OPERATOR:
             continue
 
         api_time = datetime.fromisoformat(
             item["createTime"].replace("Z", "+00:00")
         )
 
-        # Khớp tuyệt đối: Task phải được tạo SAU thời điểm script vừa gửi lệnh create_export
+        # 3. Khớp thời gian tạo phải sau thời điểm gọi request
         if api_time >= create_time:
-            print(f"🎯 成功锁定专属任务 ID: {item['id']} (创建时间: {item['createTime']})")
+            print(f"🎯 成功锁定专属任务 ID: {item['id']} | 操作人: {op} | 创建时间: {item['createTime']}")
             return item
 
     return None
@@ -225,21 +233,14 @@ def process_recharge(csv_url):
     df = raw[[user_col, amount_col, channel_col, time_col]].copy()
     df.columns = ["会员id", "支付金额", "会员渠道", "完成时间"]
 
-    # ID统一
     df["会员id"] = df["会员id"].astype(str)
-
-    # 日期
     df["完成时间"] = pd.to_datetime(df["完成时间"]).dt.strftime("%Y-%m-%d")
-
-    # 金额转数字
     df["支付金额"] = pd.to_numeric(df["支付金额"], errors="coerce").fillna(0)
 
-    # 计算支付次数
     pay_count = (
         df.groupby(["会员id", "完成时间"]).size().reset_index(name="支付次数")
     )
 
-    # 合并金额
     df = (
         df.groupby(["会员id", "完成时间"], as_index=False)
         .agg({"支付金额": "sum", "会员渠道": "first"})
@@ -258,31 +259,24 @@ if __name__ == "__main__":
     print("\n🚀 三方充值开始")
     start = time.time()
 
-    # 巴西昨天
     day = get_brazil_yesterday()
     print("🇧🇷 日期:", day)
 
-    # 1. 创建导出并记录发起基准时间
     create_time = create_export(day)
 
-    # 2. 等待专属任务写入列表并完成
     print("⏳ 等待任务生成...")
     export_id = wait_export(create_time)
 
     if not export_id:
-        print("❌ 导出任务失败或超时终止")
+        print("❌ 任务失败或超时终止")
         exit()
 
     print("Export ID:", export_id)
 
-    # 3. 获取 CSV 下载地址
     csv_url = get_csv_url(export_id)
-
-    # 4. 处理数据
     df = process_recharge(csv_url)
     print("保存日期:", df["完成时间"].unique())
 
-    # 5. 保存到 SQLite
     db = Path(__file__).parent / "23E.db"
     conn = sqlite3.connect(db)
     conn.execute(
