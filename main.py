@@ -243,7 +243,7 @@ def load_channel(name, cid):
         res = session.get(
             BASE_URL,
             params=params,
-            timeout=(3, 20)
+            timeout=(3, 40)
         )
 
         data = safe_get(res.json())
@@ -440,7 +440,7 @@ try:
     res = session.get(
     HOUR_URL,
     params=params,
-    timeout=(3, 20)
+    timeout=(3, 40)
 )
 
     hour_json = (
@@ -506,7 +506,7 @@ def load_hour_channel(name, cid):
         res = session.get(
             HOUR_URL,
             params=params,
-            timeout=(3, 20)
+            timeout=(3, 40)
         )
 
         hour_json = (
@@ -606,7 +606,7 @@ try:
     retention_res = session.get(
     RETENTION_URL,
     params=retention_params,
-    timeout=(3, 20)
+    timeout=(3, 40)
 )
 
     retention_json = retention_res.json()
@@ -668,7 +668,7 @@ def load_retention_channel(name, cid):
         retention_res = session.get(
             RETENTION_URL,
             params=retention_params,
-            timeout=(3, 20)
+            timeout=(3, 40)
         )
 
         retention_json = retention_res.json()
@@ -888,7 +888,7 @@ for date in dates:
         res = session.get(
             REALTIME_URL,
             params=params,
-            timeout=(3,20)
+            timeout=(3,40)
         )
 
         realtime_json = (
