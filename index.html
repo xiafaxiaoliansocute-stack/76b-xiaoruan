@@ -979,27 +979,33 @@ transform:translateY(-5px);
 .realtime-wrap{
     width:100%;
     height:calc(100vh - 220px);
-    overflow-y:auto;
-    overflow-x:auto;
+    overflow:auto;
     background:#fff;
     border-radius:15px;
     position:relative;
+    isolation:isolate;
 }
 
+/* TAB 3: cho sticky header hoạt động ổn định */
 #realtimeTable{
     width:100%;
-    border-collapse:collapse;
+    border-collapse:separate;
+    border-spacing:0;
     table-layout:fixed;
     font-size:14px;
+    overflow:visible;
 }
 
+/* TAB 3: dòng 时间 + ngày luôn nằm trên đầu khi cuộn */
 #realtimeTable thead th{
     position:sticky;
     top:0;
-    z-index:1000;
-    background:#f3f3f3;
+    z-index:5000;
+    background:#f3f3f3 !important;
     height:42px;
     border:1px solid #ddd;
+    background-clip:padding-box;
+    box-shadow:0 1px 0 #ddd;
 }
 
 #realtimeTable td{
@@ -1052,13 +1058,17 @@ transform:translateY(-5px);
     overflow:auto;
     background:#fff;
     border-radius:15px;
+    position:relative;
+    isolation:isolate;
 }
 
 #retentionTable{
     width:100%;
-    border-collapse:collapse;
+    border-collapse:separate;
+    border-spacing:0;
     table-layout:auto;
     font-size:14px;
+    overflow:visible;
 }
 
 #retentionTable th,
@@ -1069,12 +1079,569 @@ transform:translateY(-5px);
     white-space:nowrap;
 }
 
+/* TAB 4: giữ dòng tiêu đề luôn trên đầu */
 #retentionTable thead th{
     position:sticky;
     top:0;
-    background:#f3f3f3;
-    z-index:10;
+    z-index:5000;
+    background:#f3f3f3 !important;
     font-weight:bold;
+    background-clip:padding-box;
+    box-shadow:0 1px 0 #ddd;
+}
+
+
+
+/* ============ COPY TABLE BUTTON ============ */
+.copy-data-toolbar{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    margin:0 0 10px 0;
+}
+.copy-data-btn{
+    border:none;
+    background:#1677ff;
+    color:#fff;
+    padding:10px 20px;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 4px 12px rgba(22,119,255,.25);
+    transition:.2s;
+}
+.copy-data-btn:hover{
+    transform:translateY(-1px);
+    background:#0958d9;
+}
+.copy-data-btn:active{
+    transform:scale(.98);
+}
+.copy-data-btn.copied{
+    background:#16a34a;
+}
+
+#tab2{
+    position:relative;
+}
+
+.copy-data-toolbar{
+    position:absolute;
+    left:2px;       /* sát góc trái */
+    top:4px;
+    z-index:100;
+    margin:0;
+}
+
+/* Nút 复制数据 nổi bật */
+.copy-data-btn{
+    border:2px solid rgba(255,255,255,.9);
+    background:linear-gradient(135deg,#1677ff,#0057d9);
+    color:#fff;
+
+    padding:7px 18px;
+    border-radius:8px;
+
+    font-size:15px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 3px 8px rgba(0,0,0,.28),
+        0 0 10px rgba(255,255,255,.35);
+
+    transition:.2s;
+}
+
+.copy-data-btn:hover{
+    background:linear-gradient(135deg,#4096ff,#0958d9);
+    transform:translateY(-1px) scale(1.04);
+
+    box-shadow:
+        0 5px 12px rgba(0,0,0,.35),
+        0 0 14px rgba(255,255,255,.5);
+}
+
+.copy-data-btn:active{
+    transform:scale(.97);
+}
+
+.copy-data-btn.copied{
+    background:#16a34a;
+}
+
+
+/* =========================================================
+   DASHBOARD UI V2 — CHỈ NÂNG GIAO DIỆN, KHÔNG ĐỔI CẤU TRÚC DỮ LIỆU
+   ========================================================= */
+:root{
+    --ui-bg:#f3f6f8;
+    --ui-card:#ffffff;
+    --ui-text:#17212b;
+    --ui-muted:#6b7785;
+    --ui-line:#dfe5ea;
+    --ui-primary:#1677ff;
+    --ui-primary-2:#0b5ed7;
+    --ui-green:#18a558;
+    --ui-yellow:#f2c200;
+    --ui-danger:#dc3545;
+    --ui-shadow:0 8px 24px rgba(24,39,75,.09);
+    --ui-shadow-soft:0 3px 12px rgba(24,39,75,.08);
+    --ui-radius:12px;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:
+        radial-gradient(circle at 15% 0%, rgba(22,119,255,.055), transparent 26%),
+        linear-gradient(180deg,#f8fafb 0%,var(--ui-bg) 100%) !important;
+    color:var(--ui-text);
+    padding:10px !important;
+}
+
+/* HERO — gọn hơn, đỡ chiếm chiều cao */
+.hero-banner{
+    height:225px !important;
+    min-height:225px !important;
+    margin-bottom:12px !important;
+    border-radius:16px !important;
+    border:1px solid rgba(255,255,255,.35) !important;
+    box-shadow:0 10px 28px rgba(0,63,34,.18) !important;
+}
+
+.hero-banner::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(90deg,rgba(0,43,29,.55),rgba(0,0,0,.12) 55%,rgba(0,0,0,.28));
+    z-index:1;
+    pointer-events:none;
+}
+
+.hero-content{
+    width:auto;
+    text-align:center !important;
+
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%, -50%);
+
+    margin:0 !important;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.hero-content h1{
+    font-size:clamp(30px,2.35vw,46px) !important;
+    margin:14px 0 16px !important;
+    text-align:center;
+    white-space:nowrap;
+}
+
+#updateTimeHero{
+    padding:9px 16px !important;
+    border-radius:999px !important;
+    font-size:clamp(13px,.9vw,17px) !important;
+    background:rgba(255,255,255,.18) !important;
+    border:1px solid rgba(255,255,255,.35) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+.run-btn{
+    margin:0 !important;
+    padding:10px 20px !important;
+    border-radius:10px !important;
+    font-size:14px !important;
+    box-shadow:0 7px 18px rgba(0,180,83,.24) !important;
+}
+
+#brazilClockBox{
+    top:18px !important;
+    right:26px !important;
+}
+
+.clock{
+    width:118px !important;
+    height:118px !important;
+    border-width:3px !important;
+}
+
+#brazilTimeText{
+    margin-top:6px !important;
+    font-size:13px !important;
+}
+
+/* THANH ĐIỀU HƯỚNG — gom gọn, giảm khoảng trắng lớn */
+.dashboard-nav-shell{
+    position:relative;
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:16px 24px;
+    align-items:start !important;
+    margin:0 0 12px !important;
+    padding:12px 14px !important;
+    background:rgba(255,255,255,.92);
+    border:1px solid #e6ebef;
+    border-radius:14px;
+    box-shadow:var(--ui-shadow-soft);
+}
+
+.dashboard-nav-shell > div:first-child{
+    min-width:0;
+}
+
+.dashboard-actions{
+    gap:14px !important;
+    align-self:start;
+}
+
+.site-bar{
+    gap:8px !important;
+    margin-bottom:9px !important;
+}
+
+.site-btn{
+    padding:10px 20px !important;
+    min-height:40px;
+
+    border:1px solid #e6eaee;
+    border-radius:10px !important;
+
+    box-shadow:0 3px 9px rgba(24,39,75,.07) !important;
+
+    background:#fff !important;
+    color:#26323e;
+
+    font-size:13px;
+    font-weight:bold;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.site-btn:hover{
+    transform:translateY(-1px) !important;
+    border-color:#c9d3dc;
+}
+
+.site-btn.active{
+    background:linear-gradient(135deg,#16a34a 0%,#f2d000 100%) !important;
+    color:#fff !important;
+    border-color:transparent !important;
+    box-shadow:0 5px 14px rgba(42,157,68,.2) !important;
+}
+
+.tab-bar{
+    gap:8px !important;
+    margin-bottom:8px !important;
+}
+
+.tab-btn{
+    padding:8px 14px !important;
+    min-height:36px;
+
+    border:1px solid #e6eaee;
+    border-radius:9px !important;
+
+    box-shadow:0 2px 7px rgba(24,39,75,.07) !important;
+
+    font-size:12px !important;
+    font-weight:700;
+
+    color:#26323e;
+}
+
+.tab-btn:hover{
+    transform:translateY(-1px) !important;
+}
+
+.tab-btn.active{
+    background:linear-gradient(135deg,#139a48 0%,#f0cf00 100%) !important;
+    color:#fff !important;
+    border-color:transparent !important;
+    box-shadow:0 5px 14px rgba(42,157,68,.2) !important;
+}
+
+.globalNotice{
+    display:inline-flex;
+    align-items:center;
+    min-height:28px;
+    margin:0 !important;
+    padding:5px 10px !important;
+    border-radius:8px;
+    background:#fff5f5;
+    border:1px solid #ffd6d6;
+    color:#ef3b3b !important;
+    font-size:13px !important;
+}
+
+.logout-btn{
+    padding:10px 18px !important;
+    border-radius:10px !important;
+    font-size:13px !important;
+    box-shadow:0 5px 14px rgba(220,53,69,.20);
+    transition:.2s;
+}
+.logout-btn:hover{
+    transform:translateY(-1px);
+    filter:brightness(.98);
+}
+
+.zero-toggle-row{
+    padding:7px 10px;
+    border:1px solid #e5eaee;
+    border-radius:10px;
+    background:#f8fafb;
+    gap:10px !important;
+}
+
+.zero-toggle-row > span{
+    font-size:13px !important;
+    color:#3d4853;
+}
+
+.switch{
+    width:42px !important;
+    height:22px !important;
+}
+.slider:before{
+    width:16px !important;
+    height:16px !important;
+}
+.switch input:checked + .slider:before{
+    transform:translateX(20px) !important;
+}
+
+/* KHUNG CHUNG CHO CÁC TAB */
+#tab1,#tab2,#tab3,#tab4{
+    border-radius:14px;
+}
+
+.section,
+.realtime-wrap,
+.retention-wrap{
+    border:1px solid #e3e8ed;
+    box-shadow:var(--ui-shadow-soft);
+}
+
+/* TABLE — sạch hơn nhưng KHÔNG đổi dữ liệu */
+table{
+    box-shadow:none !important;
+}
+
+th,td{
+    border-color:#d4dbe1 !important;
+}
+
+tbody tr:hover{
+    background:#f5f9ff !important;
+}
+
+/* TAB 1 */
+.section{
+    margin-bottom:16px !important;
+    border-radius:12px !important;
+}
+.title{
+    padding:9px !important;
+    background:linear-gradient(180deg,#eef2f5,#e4e9ed) !important;
+    color:#26323e;
+}
+.sub-title{
+    padding:7px 10px !important;
+    background:#f7f9fa !important;
+    color:#56616d;
+}
+
+/* TAB 2 */
+#tab2{
+    overflow:auto;
+    background:#fff;
+    border:1px solid #dfe5ea;
+    box-shadow:var(--ui-shadow);
+    border-radius:12px;
+}
+
+#summaryTable{
+    margin:0;
+}
+
+.table-main-title th{
+    height:46px;
+    background:linear-gradient(180deg,#55a3df,#4695d1) !important;
+    color:#10202e !important;
+    font-size:18px !important;
+    letter-spacing:.1px;
+    border-color:#2f5975 !important;
+}
+
+.group1{background:#f5b744 !important;}
+.group2{background:#47ab51 !important;}
+.group3{background:#2697db !important;}
+.group5{background:#7655c4 !important;}
+.group6{background:#ec3c75 !important;}
+
+.copy-data-toolbar{
+    left:6px !important;
+    top:6px !important;
+}
+.copy-data-btn{
+    padding:6px 13px !important;
+    font-size:13px !important;
+    border-radius:8px !important;
+    box-shadow:0 4px 12px rgba(0,75,190,.28) !important;
+}
+
+/* TAB 3 */
+.realtime-wrap{
+    height:calc(100vh - 190px) !important;
+    border-radius:12px !important;
+}
+
+#realtimeTable thead th{
+    height:40px !important;
+    background:#eef2f5 !important;
+    color:#26323e;
+    font-weight:800;
+    border-color:#d6dde3 !important;
+    box-shadow:0 2px 6px rgba(22,34,45,.08) !important;
+}
+
+#realtimeTable td{
+    padding:9px !important;
+}
+
+#realtimeTable tbody tr:nth-child(even) td{
+    background:#fafcfd;
+}
+
+/* TAB 4 */
+.retentionFilter{
+    position:relative !important;
+    top:auto !important;
+    z-index:20 !important;
+    gap:8px !important;
+    padding:10px 12px !important;
+    margin-bottom:8px;
+    background:#fff !important;
+    border:1px solid #e1e6eb !important;
+    border-radius:12px;
+    box-shadow:var(--ui-shadow-soft);
+}
+
+.retBtn{
+    padding:7px 14px !important;
+    border-radius:8px !important;
+    font-size:13px !important;
+    font-weight:700;
+}
+.retBtn:hover,
+.retBtn.active{
+    background:linear-gradient(135deg,#1677ff,#0b5ed7) !important;
+    border-color:transparent !important;
+}
+
+.retention-wrap{
+    height:calc(100vh - 245px) !important;
+    border-radius:12px !important;
+}
+
+#retentionTable thead th{
+    background:#eef2f5 !important;
+    color:#26323e;
+    font-weight:800 !important;
+    border-color:#d6dde3 !important;
+    box-shadow:0 2px 6px rgba(22,34,45,.08) !important;
+}
+
+#retentionTable tbody tr:nth-child(even) td{
+    background:#fafcfd;
+}
+
+/* scrollbar gọn */
+.realtime-wrap::-webkit-scrollbar,
+.retention-wrap::-webkit-scrollbar,
+#tab2::-webkit-scrollbar{
+    width:9px;
+    height:9px;
+}
+.realtime-wrap::-webkit-scrollbar-thumb,
+.retention-wrap::-webkit-scrollbar-thumb,
+#tab2::-webkit-scrollbar-thumb{
+    background:#c5ced6;
+    border-radius:999px;
+    border:2px solid #f7f9fa;
+}
+.realtime-wrap::-webkit-scrollbar-track,
+.retention-wrap::-webkit-scrollbar-track,
+#tab2::-webkit-scrollbar-track{
+    background:#f7f9fa;
+}
+
+/* responsive */
+@media (max-width:1100px){
+    .dashboard-nav-shell{
+        grid-template-columns:1fr;
+    }
+    .dashboard-actions{
+        flex-direction:row !important;
+        align-items:center !important;
+        justify-content:space-between;
+        width:100%;
+    }
+    .hero-content{
+        margin-left:4%;
+        width:68%;
+    }
+}
+
+@media (max-width:760px){
+    body{padding:6px !important;}
+    .hero-banner{
+        height:190px !important;
+        min-height:190px !important;
+    }
+    #brazilClockBox{
+        transform:scale(.78);
+        transform-origin:top right;
+        right:8px !important;
+    }
+    .hero-content h1{
+        font-size:26px !important;
+    }
+    .site-btn,.tab-btn{
+        padding:8px 11px !important;
+        font-size:12px !important;
+    }
+    .dashboard-actions{
+        flex-wrap:wrap;
+    }
+}
+
+
+/* ===== TAB 2: GIỮ VIỀN KHUNG ĐEN NHƯ BẢN GỐC ===== */
+#summaryTable th,
+#summaryTable td{
+    border:1px solid #333 !important;
+}
+
+#summaryTable .table-main-title th{
+    border:1px solid #333 !important;
+}
+
+/* Không dùng viền xám global cho Tab 2 */
+#summaryTable{
+    border-collapse:collapse !important;
 }
 
 </style>
@@ -1273,7 +1840,7 @@ placeholder="请输入密码">
 </div>
 
 <!-- ============ TAB NAVIGATION ============ -->
-<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:15px;">
+<div class="dashboard-nav-shell" style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:15px;">
 
 <div>
 
@@ -1317,15 +1884,16 @@ placeholder="请输入密码">
 
 </div>
 
-<div style="display:flex;flex-direction:column;align-items:flex-end;gap:35px;">
+<div class="dashboard-actions" style="display:flex;flex-direction:column;align-items:flex-end;gap:35px;">
     
     <button
+    class="logout-btn"
     onclick="logout()"
     style="background:#dc3545;color:white;border:none;padding:15px 28px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:15px;">
     🚪退出登录
 </button>
 
-    <div style="display:flex;align-items:center;gap:15px;">
+    <div class="zero-toggle-row" style="display:flex;align-items:center;gap:15px;">
 
         <span style="font-weight:bold;font-size:16px;">显示零数据字段</span>
 
@@ -1351,7 +1919,10 @@ placeholder="请输入密码">
 
 <!-- ============ TAB 2 - REAL-TIME DATA ANALYSIS ============ -->
 <div id="tab2" style="display:none" class="table-rain-wrap">
-<table>
+<div class="copy-data-toolbar">
+    <button id="copyTab2Btn" class="copy-data-btn" onclick="copyTab2Data()">📋 复制数据</button>
+</div>
+<table id="summaryTable">
 <thead>
 <tr class="table-main-title">
 <th colspan="36" id="tableMainTitle">15016-73J</th>
@@ -1545,10 +2116,17 @@ function switchTab(n){
     if(n===3){
         setTimeout(()=>{
             if(latestRealtimeRow){
-                document.getElementById(latestRealtimeRow)?.scrollIntoView({
-                    behavior:"smooth",
-                    block:"center"
-                });
+                const wrap = document.querySelector(".realtime-wrap");
+                const row = document.getElementById(latestRealtimeRow);
+                const head = document.querySelector("#realtimeTable thead");
+
+                if(wrap && row){
+                    const headH = head ? head.offsetHeight : 42;
+                    wrap.scrollTo({
+                        top:Math.max(0, row.offsetTop - headH),
+                        behavior:"smooth"
+                    });
+                }
             }
         },100);
     }
@@ -1968,6 +2546,130 @@ function retentionRateFB(countField){
 
 /* ====  TAB 2  实时数据分析  ====*/
 
+
+
+/* ============ COPY TAB 2 TABLE WITH COLORS ============ */
+async function copyTab2Data(){
+    const table = document.getElementById("summaryTable");
+    const btn = document.getElementById("copyTab2Btn");
+    if(!table) return;
+
+    // Clone the whole table and convert the current computed appearance
+    // into inline styles so Excel / Google Sheets / Word can keep colors.
+    const clone = table.cloneNode(true);
+    const sourceNodes = [table, ...table.querySelectorAll("*")];
+    const cloneNodes  = [clone, ...clone.querySelectorAll("*")];
+
+    const props = [
+        "background-color","color","font-family","font-size","font-weight",
+        "font-style","text-align","vertical-align","white-space",
+        "border-top","border-right","border-bottom","border-left",
+        "padding-top","padding-right","padding-bottom","padding-left",
+        "width","min-width","max-width","height"
+    ];
+
+    sourceNodes.forEach((src, i)=>{
+    const dst = cloneNodes[i];
+    if(!dst) return;
+
+    const cs = getComputedStyle(src);
+    props.forEach(p=>{
+        dst.style.setProperty(p, cs.getPropertyValue(p));
+    });
+
+    dst.style.boxSizing = "border-box";
+});
+
+// ===== STYLE RIÊNG KHI COPY SANG EXCEL =====
+clone.querySelectorAll("th, td").forEach(cell => {
+
+    // Tất cả dữ liệu = 16pt
+    cell.style.fontSize = "16pt";
+
+    // Viền mỏng màu đen
+    cell.style.borderTop = "0.5px solid #000";
+    cell.style.borderRight = "0.5px solid #000";
+    cell.style.borderBottom = "0.5px solid #000";
+    cell.style.borderLeft = "0.5px solid #000";
+});
+
+// Tiêu đề chính khi copy sang Excel = 20pt
+const copyTitle = clone.querySelector("#tableMainTitle");
+if(copyTitle){
+    copyTitle.style.fontSize = "20pt";
+    copyTitle.style.fontWeight = "bold";
+}
+
+clone.style.borderCollapse = "collapse";
+
+    clone.style.tableLayout = getComputedStyle(table).tableLayout;
+    clone.style.background = getComputedStyle(table).backgroundColor || "#fff";
+
+    const wrapper = document.createElement("div");
+    wrapper.appendChild(clone);
+    const html = wrapper.innerHTML;
+
+    // Plain-text fallback (tab-separated), useful when rich HTML is unsupported.
+    const rows = [...table.rows].map(row =>
+        [...row.cells]
+            .filter(cell => getComputedStyle(cell).display !== "none")
+            .map(cell => cell.innerText.replace(/\t/g," ").replace(/\r?\n/g," ").trim())
+            .join("\t")
+    ).join("\n");
+
+    try{
+        if(navigator.clipboard && window.ClipboardItem){
+            const item = new ClipboardItem({
+                "text/html": new Blob([html], {type:"text/html"}),
+                "text/plain": new Blob([rows], {type:"text/plain"})
+            });
+            await navigator.clipboard.write([item]);
+        }else{
+            richCopyFallback(clone);
+        }
+        showCopySuccess(btn);
+    }catch(err){
+        console.warn("Rich clipboard failed, using fallback:", err);
+        try{
+            richCopyFallback(clone);
+            showCopySuccess(btn);
+        }catch(e){
+            alert("复制失败，请使用 Chrome/Edge 并允许剪贴板权限");
+        }
+    }
+}
+
+function richCopyFallback(clonedTable){
+    const area = document.createElement("div");
+    area.contentEditable = "true";
+    area.style.position = "fixed";
+    area.style.left = "-99999px";
+    area.style.top = "0";
+    area.appendChild(clonedTable.cloneNode(true));
+    document.body.appendChild(area);
+
+    const range = document.createRange();
+    range.selectNodeContents(area);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    const ok = document.execCommand("copy");
+    sel.removeAllRanges();
+    area.remove();
+    if(!ok) throw new Error("execCommand copy failed");
+}
+
+function showCopySuccess(btn){
+    if(!btn) return;
+    const oldText = btn.innerHTML;
+    btn.innerHTML = "✅ 已复制（含颜色）";
+    btn.classList.add("copied");
+    setTimeout(()=>{
+        btn.innerHTML = oldText;
+        btn.classList.remove("copied");
+    },1600);
+}
 
 function renderTab2(){
 
@@ -5169,15 +5871,22 @@ ${change5.rechargeAmount>=0?"+":""}${change5.rechargeAmount}
 
     table.innerHTML = html;
 
-    // Tự cuộn tới giờ mới nhất của hôm nay
+    // Tự cuộn BÊN TRONG khung Tab 3, không kéo cả trang
     if(latestRealtimeRow){
 
         setTimeout(()=>{
 
-            document.getElementById(latestRealtimeRow)?.scrollIntoView({
-                behavior:"smooth",
-                block:"start"
-            });
+            const wrap = document.querySelector(".realtime-wrap");
+            const row = document.getElementById(latestRealtimeRow);
+            const head = document.querySelector("#realtimeTable thead");
+
+            if(wrap && row){
+                const headH = head ? head.offsetHeight : 42;
+                wrap.scrollTo({
+                    top:Math.max(0, row.offsetTop - headH),
+                    behavior:"smooth"
+                });
+            }
 
         },100);
 

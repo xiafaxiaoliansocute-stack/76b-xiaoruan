@@ -99,7 +99,7 @@ WEBS = [
         "name":"2306-76B",
         "api":"https://api3.a-b-c-5.com",
         "tenantId":5317688,
-        "token":"cybyjzn7bqgqmxeet7wfck3esmx44tucxq8xa3yj",
+        "token":"2saobx3un5x7kbbplypl8ej0w1b9itfnkh4r18io",
         "account":"xiaoruan2306",
         "adminHost":"admin-2306-66b1c5.m-b-d-1.com"
     },
@@ -107,7 +107,7 @@ WEBS = [
         "name":"2300-5BBB",
         "api":"https://api3.a-b-c-5.com",
         "tenantId":1530143,
-        "token":"iww5gl2rsnpvsyp3q85eaisb7nx6fb9bs3sdl6wi",
+        "token":"0kaonw5gfuesnsv5o8tcp7je0qfhqdg0w26ttdec",
         "account":"xiaoruan2300",
         "adminHost":"admin-2300-68f8c3.m-b-d-1.com"
     },
@@ -115,7 +115,7 @@ WEBS = [
         "name":"2527-XXX7",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":2730566,
-        "token":"lb8d6fgrb5s64nu6h60318to70dkg81atd34k3xz",
+        "token":"x1a0fecyl3arx2e20ub3jh4xbp54ef8nwuv7bnxd",
         "account":"xiaoruan2527",
         "adminHost":"admin-2527-351324.y-7-l-x.com"
     } ,
@@ -123,7 +123,7 @@ WEBS = [
         "name":"15008-WW33",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":9930159,
-        "token":"60kai59pwagg9vrdaje6xydkr6ttokpmakjn8epo",
+        "token":"c6zmciqrqs963q0myotq2lhitfrvm2alzygbut9p",
         "account":"xiaoruan15008",
         "adminHost":"admin-15008-7b9c73.y-7-l-x.com"
     },
@@ -131,7 +131,7 @@ WEBS = [
         "name":"2502-55UU",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":1823786,
-        "token":"r1ount1y9qp923o36l5f3t74wan9mfvcuit1zpb6",
+        "token":"0qdah3s68h49gr21ik4kc74aoja6syb1y5pksgey",
         "account":"xiaoruan2502",
         "adminHost":"admin-2502-29b1ef.y-7-l-x.com"
     },
@@ -139,7 +139,7 @@ WEBS = [
         "name":"2515-EE44",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":7113392,
-        "token":"otvu9m92j67rx3zamuhur43sidrknfx6jw4rwh97",
+        "token":"u70ohpl8uxhi0vyjif51z37c98mpjot2292xlvgr",
         "account":"xiaoruan2515",
         "adminHost":"admin5-2515-67db94.y-7-l-x.com"
     },
@@ -147,7 +147,7 @@ WEBS = [
         "name":"720-BB22",
         "api":"https://api4.i-j-k-8.com",
         "tenantId":6247284,
-        "token":"93miijm7x32tpt8lha27ahwevrb1a0oc1q6qkdsb",
+        "token":"dtb9uff6er7bjzcia4zn5nj6lq9b5xs4stfsubpg",
         "account":"xiaoruan720",
         "adminHost":"admin4-720-05ec73.m-9-y-j.com"
     },
@@ -155,7 +155,7 @@ WEBS = [
         "name":"2409-7JJJ",
         "api":"https://api4.i-j-k-8.com",
         "tenantId":5416567,
-        "token":"m8b4z55yl8mye5cwtt83qy1pits98bpnxx2f691x",
+        "token":"txl9o3kit0m70883znb3ijib4n6fvcbz4js75poe",
         "account":"xiaoruan2409",
         "adminHost":"admin-2409-56df41.m-9-y-j.com"
     },
@@ -163,7 +163,7 @@ WEBS = [
         "name":"2501-XX11",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":9933402,
-        "token":"pkby1mmntas2fw1u8cfm03aph1ukwkkkj7wqqm93",
+        "token":"je4v9kssehuel8oofuxk0fen99lqstxhzg63oos0",
         "account":"xiaoruan2501",
         "adminHost":"admin-2501-a5aaf3.y-7-l-x.com"
     },
@@ -171,7 +171,7 @@ WEBS = [
         "name":"928-44WW",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":4552161,
-        "token":"zb6drugxzva0luug0mbcptqfeyy3ryz3pkv77b74",
+        "token":"0mntlei1x27w62236mm9nh3hssw1mrhe9dt6iits",
         "account":"xiaoruan928",
         "adminHost":"admin5-928-mdywmz.y-7-l-x.com"
     },
@@ -179,7 +179,7 @@ WEBS = [
         "name":"923-33NN",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":4077356,
-        "token":"15pam71m9bn3jc0wdsm5fip7l6rasiqr0evw3fl8",
+        "token":"j88x07eqbtdmg28z3sj04abuvu0sj0ygnuwi3qpe",
         "account":"xiaoruan923",
         "adminHost":"admin5-923-nevem0.y-7-l-x.com"
     },
@@ -187,7 +187,7 @@ WEBS = [
         "name":"913-RR66",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":1803215,
-        "token":"yy52a2j7d8nlwjfba63dei4pg3wcqr8tka6j05nu",
+        "token":"e86szunet2emq2x37nc63htqsgtwta3pod8893d2",
         "account":"xiaoruan913",
         "adminHost":"admin5-913-67b575.y-7-l-x.com"
     },
@@ -195,7 +195,7 @@ WEBS = [
         "name":"915-KK44",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":4379055,
-        "token":"eqozuanukb3tfnew6xv1ib3gotl64ns8ro9jlkyq",
+        "token":"qnpbnr4n82xar36iw6c6yklaecyo5p30d6x9plh9",
         "account":"xiaoruan915",
         "adminHost":"admin5-915-9b50d1.y-7-l-x.com"
     },
@@ -203,7 +203,7 @@ WEBS = [
         "name":"907-33CC",
         "api":"https://api5.v-n-r-1.com",
         "tenantId":8416670,
-        "token":"i3d3bmyyrpc06pb2fzgt1tg5yg8r65p6r5x8hv1o",
+        "token":"rxaecel8k943n1reqeo1gffmz6y4vwwvxzxx9il9",
         "account":"xiaoruan907",
         "adminHost":"admin5-907-4c06b8.y-7-l-x.com"
     },
@@ -211,7 +211,7 @@ WEBS = [
         "name":"517-22CC",
         "api":"https://api3.a-b-c-5.com",
         "tenantId":3731525,
-        "token":"6eaxjvip1rxq6txkrmfkeqdqdns4w6cf7itk3hyk",
+        "token":"5pk90mcdvnr6rnln7p61e4xo6dno9gg417j4lz3c",
         "account":"xiaoruan517",
         "adminHost":"admin3-517-47ea8f.m-b-d-1.com"
     },
@@ -219,7 +219,7 @@ WEBS = [
         "name":"713-77SS",
         "api":"https://api4.i-j-k-8.com",
         "tenantId":7597753,
-        "token":"uxk61wze01n4dh9jl96594b154bq8xlw2h2bmg47",
+        "token":"x4ozdz1da51av7tgoncrs74kdqvrmwxgp6estv2k",
         "account":"7sxiaoruan",
         "adminHost":"admin4-713-d801e1.m-9-y-j.com"
     },
@@ -227,7 +227,7 @@ WEBS = [
         "name":"707-11CC",
         "api":"https://api4.i-j-k-8.com",
         "tenantId":8109130,
-        "token":"m79bij1otg6q5o91xc3y3tzg6cqg9zzu3ryis759",
+        "token":"6m5kiop4qlkitrbweugxixn6mzbyo3nhehdo7ysw",
         "account":"1cxiaoruan",
         "adminHost":"admin4-707-fc85eb.m-9-y-j.com"
     },
@@ -235,7 +235,7 @@ WEBS = [
         "name":"706-99SS",
         "api":"https://api4.i-j-k-8.com",
         "tenantId":4932219,
-        "token":"lr664etwrqpd5o37p4sfm4lslt96kb3mlwglg4nv",
+        "token":"234itrays7gwgpbk1lkgia9hnv2hw38p2n7ftake",
         "account":"9sxiaoruan",
         "adminHost":"admin4-706-c31640.m-9-y-j.com"
     },
@@ -243,7 +243,7 @@ WEBS = [
         "name":"704-66AA",
         "api":"https://api4.i-j-k-8.com",
         "tenantId":5772945,
-        "token":"vfq2b7pcvvbafld6yiot9rzkk7hvkqnpfb5re11m",
+        "token":"s69ry2abb5kqavybzsiumdie80l6xhubz6rstg4a",
         "account":"6axiaoruan",
         "adminHost":"admin4-704-81d77a.m-9-y-j.com"
     },
@@ -251,7 +251,7 @@ WEBS = [
         "name":"650-77GG",
         "api":"https://api3.a-b-c-5.com",
         "tenantId":5031033,
-        "token":"bmabpokl4mkc8160vl82aw3o1c653bdatr8tb4vi",
+        "token":"uupodaxme1dd11c8r9knz55z7nfhreu96w9xtv44",
         "account":"7gxiaoruan",
         "adminHost":"admin3-650-1361e9.m-b-d-1.com"
     },
@@ -259,7 +259,7 @@ WEBS = [
         "name":"619-77BB",
         "api":"https://api3.a-b-c-5.com",
         "tenantId":4040571,
-        "token":"ht8xittww34is4zavqrb7qhohbf03k7jmffaiu8f",
+        "token":"1m1p8xdcxp0en2cosml9gha9g680szpi2io95og7",
         "account":"77xiaoruan",
         "adminHost":"admin3-619-2ac217.m-b-d-1.com"
     }
@@ -755,7 +755,6 @@ NEED_COLUMNS = [
     "firstRechargeRebate",
     "firstWithdrawRebate",
     "rechargeBonus",
-    "validBet",
     "全部登录",
     "安卓H5",
     "苹果H5",
@@ -854,7 +853,6 @@ GROUPS = [
     "firstRechargeRebate",
     "firstWithdrawRebate",
     "rechargeBonus",
-    "validBet",
     "全部登录",
     "安卓H5",
     "苹果H5",

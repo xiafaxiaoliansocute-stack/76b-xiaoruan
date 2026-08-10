@@ -40,13 +40,13 @@ while True:
         today,
         datetime.min.time(),
         tzinfo=BRAZIL
-    ).replace(hour=0, minute=5)
+    ).replace(hour=0, minute=1)
 
     run2 = datetime.combine(
         today,
         datetime.min.time(),
         tzinfo=BRAZIL
-    ).replace(hour=1, minute=5)
+    ).replace(hour=1, minute=1)
 
     if now < run1:
         target = run1

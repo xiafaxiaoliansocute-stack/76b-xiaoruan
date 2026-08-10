@@ -65,7 +65,6 @@ adapter = HTTPAdapter(
 session.mount("https://", adapter)
 session.mount("http://", adapter)
 
-
 # ======================
 # TIME (BRAZIL)
 # ======================
@@ -149,18 +148,19 @@ def fix_retention_amounts(row):
     money_fields = [
         "recharge",
         "withdrawals",
-        "repeatRechargeAmount",
-        "amount"
+        "repeatRechargeAmount"
     ]
 
     for key in list(row.keys()):
 
-        if key in money_fields:
-            if isinstance(row[key], (int, float)):
+        if isinstance(row.get(key), (int, float)):
+
+            # amount, amount1, amount2... amount59
+            if key.startswith("amount"):
                 row[key] = round(row[key] / 100)
 
-        if key.startswith("amount"):
-            if isinstance(row[key], (int, float)):
+            # các trường tiền khác
+            elif key in money_fields:
                 row[key] = round(row[key] / 100)
 
     return row
@@ -243,7 +243,7 @@ def load_channel(name, cid):
         res = session.get(
             BASE_URL,
             params=params,
-            timeout=(3, 20)
+            timeout=(3, 40)
         )
 
         data = safe_get(res.json())
@@ -275,7 +275,7 @@ def load_channel(name, cid):
         return None
 
 
-with ThreadPoolExecutor(max_workers=10) as executor:
+with ThreadPoolExecutor(max_workers=2) as executor:
 
     futures = [
         executor.submit(load_channel, name, cid)
@@ -364,8 +364,50 @@ def fix_realtime_amounts(item):
 
     }
 # ======================
-# HOUR REPORT (昨日)
+# HOUR REPORT (昨日) & RETENTION HELPER
 # ======================
+import time
+
+def fetch_hour_with_retry(params):
+    """Cơ chế KHÔNG BAO GIỜ BỎ CUỘC: Lặp lại vô hạn cho đến khi lấy được dữ liệu thành công"""
+    attempt = 1
+    delay = 2  # Thời gian chờ ban đầu (giây)
+    
+    while True:
+        try:
+            res = session.get(
+                HOUR_URL,
+                params=params,
+                timeout=(5, 60)
+            )
+            
+            # Nếu bị lỗi 429 hoặc lỗi Server (5xx)
+            if res.status_code == 429 or res.status_code >= 500:
+                print(f"⚠️ Bị giới hạn/lỗi server (Mã: {res.status_code}), đang thử lại lần {attempt} sau {delay}s...")
+                time.sleep(delay)
+                attempt += 1
+                delay = min(delay * 1.5, 30)
+                continue
+                
+            if res.status_code != 200:
+                print(f"⚠️ Phản hồi bất thường (Mã: {res.status_code}), đang thử lại lần {attempt}...")
+                time.sleep(delay)
+                attempt += 1
+                continue
+
+            hour_json = (
+                res.json()
+                .get("result", {})
+                .get("data", {})
+                .get("json", {})
+            )
+            return hour_json
+            
+        except Exception as e:
+            print(f"⚠️ Lỗi kết nối ({e}), đang thử lại lần {attempt} sau {delay}s...")
+            time.sleep(delay)
+            attempt += 1
+            delay = min(delay * 1.5, 30)
 
 hour_report_day = yesterday_day
 
@@ -411,11 +453,7 @@ print("Yesterday  :", yesterday_day)
 print("Hour start :", hour_start)
 print("Hour end   :", hour_end)
 
-print("Brazil now :", now_br)
-print("Hour start :", hour_start)
-print("Hour end   :", hour_end)
-
-# ALL TOTAL
+# ALL TOTAL (Hour)
 try:
     params = {
         "input": json.dumps({
@@ -437,18 +475,8 @@ try:
         }, separators=(',', ':'))
     }
 
-    res = session.get(
-    HOUR_URL,
-    params=params,
-    timeout=(3, 20)
-)
-
-    hour_json = (
-        res.json()
-        .get("result", {})
-        .get("data", {})
-        .get("json", {})
-    )
+    # 👈 Sử dụng hàm retry thay cho session.get trực tiếp
+    hour_json = fetch_hour_with_retry(params)
 
     result_data["hour_report"]["ALL_TOTAL"] = fix_hour_amounts(hour_json)
     result_data["hour_report"]["ALL_TOTAL"]["promotionList"] = {
@@ -470,18 +498,17 @@ try:
 }
 
     print("✅ hour ALL_TOTAL")
+    time.sleep(1) # Nghỉ nhẹ 1 giây sau khi gọi tổng
 
 except Exception as e:
     print("❌ hour ALL_TOTAL", e)
 
 # ======================
-# HOUR REPORT EACH CHANNEL (FAST)
+# HOUR REPORT EACH CHANNEL (CHẠY TUẦN TỰ)
 # ======================
 
-def load_hour_channel(name, cid):
-
+for name, cid in CHANNELS.items():
     try:
-
         params = {
             "input": json.dumps({
                 "json": {
@@ -503,18 +530,8 @@ def load_hour_channel(name, cid):
             }, separators=(',', ':'))
         }
 
-        res = session.get(
-            HOUR_URL,
-            params=params,
-            timeout=(3, 20)
-        )
-
-        hour_json = (
-            res.json()
-            .get("result", {})
-            .get("data", {})
-            .get("json", {})
-        )
+        # Sử dụng hàm retry không bao giờ bỏ cuộc
+        hour_json = fetch_hour_with_retry(params)
 
         data = fix_hour_amounts(hour_json)
 
@@ -536,34 +553,19 @@ def load_hour_channel(name, cid):
                 + data.get("splitRechargeAmount", 0)
         }
 
-        return name, data
+        result_data["hour_report"][name] = data
+        print(f"✅ hour {name} thành công")
+
+        # Nghỉ nhẹ 0.5s giữa các channel
+        time.sleep(0.5)
 
     except Exception as e:
         print(f"❌ hour {name}", e)
-        return None
-
-
-with ThreadPoolExecutor(max_workers=10) as executor:
-
-    futures = [
-        executor.submit(load_hour_channel, name, cid)
-        for name, cid in CHANNELS.items()
-    ]
-
-    for future in as_completed(futures):
-
-        result = future.result()
-
-        if result:
-            name, data = result
-            result_data["hour_report"][name] = data
-            print(f"✅ hour {name}")
 
     
 # ======================
 # STEP 3: GET RETENTION
 # ======================
-
 
 
 
@@ -607,7 +609,7 @@ try:
     retention_res = session.get(
     RETENTION_URL,
     params=retention_params,
-    timeout=(3, 20)
+    timeout=(3, 40)
 )
 
     retention_json = retention_res.json()
@@ -669,7 +671,7 @@ def load_retention_channel(name, cid):
         retention_res = session.get(
             RETENTION_URL,
             params=retention_params,
-            timeout=(3, 20)
+            timeout=(3, 40)
         )
 
         retention_json = retention_res.json()
@@ -689,7 +691,7 @@ def load_retention_channel(name, cid):
         return None
 
 
-with ThreadPoolExecutor(max_workers=10) as executor:
+with ThreadPoolExecutor(max_workers=5) as executor:
 
     futures = [
         executor.submit(load_retention_channel, name, cid)
@@ -889,7 +891,7 @@ for date in dates:
         res = session.get(
             REALTIME_URL,
             params=params,
-            timeout=(3,20)
+            timeout=(3,40)
         )
 
         realtime_json = (
@@ -910,7 +912,6 @@ for date in dates:
                 brazil_time = utc_time - timedelta(hours=3)
 
                    # lấy đầy đủ 5 phút/lần
-                   
                 time_key = brazil_time.strftime("%H:%M")
 
                 time_key = brazil_time.strftime("%H:%M")
@@ -948,49 +949,33 @@ with open(output_file, "w", encoding="utf-8") as f:
     )
 
 print(f"✅ Saved: {output_file}")
-
 import subprocess
 
 try:
-    # Git add
     subprocess.run(
         ["git", "add", "nn22.json"],
-        check=True,
-        capture_output=True,
-        text=True
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
     )
 
-    # Git commit
-    commit = subprocess.run(
+    result = subprocess.run(
         ["git", "commit", "-m", "auto update data"],
         capture_output=True,
         text=True
     )
 
-    if "nothing to commit" in commit.stdout.lower():
+    if "nothing to commit" in result.stdout:
         print("ℹ️ No data changes")
-    elif commit.returncode == 0:
-        print("✅ Commit success")
     else:
-        print("❌ Commit failed")
-        print(commit.stderr)
+        print("✅ Commit success")
 
-    # Git push (đẩy lên branch main)
-    push = subprocess.run(
+    subprocess.run(
         ["git", "push", "origin", "main"],
-        capture_output=True,
-        text=True
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
     )
 
-    if push.returncode == 0:
-        print("✅ GitHub updated")
-    else:
-        print("❌ GitHub push failed")
-        print(push.stderr)
-
-except subprocess.CalledProcessError as e:
-    print("❌ Git command error")
-    print(e.stderr)
+    print("✅ GitHub updated")
 
 except Exception as e:
-    print("❌ Unexpected error:", e)
+    print("❌ GitHub push error:", e)

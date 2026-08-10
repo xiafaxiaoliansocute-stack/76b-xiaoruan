@@ -35,8 +35,8 @@ BASE_DIR = Path(__file__).resolve().parent
 
 TASKS = [
     {
-        "name": "shujugenjin",
-        "type": "shujugenjin",
+        "name": "数据跟进",
+        "type": "数据跟进",
        "file": BASE_DIR / "shujugenjin" / "shujugenjin.py",
     },
 
@@ -47,15 +47,20 @@ TASKS = [
     },
 
     {
-        "name": "QUANJU",
-        "type": "QUANJU",
+        "name": "全局报表",
+        "type": "全局报表",
         "file": BASE_DIR / "quanju-baobiao" / "runquanju.py",
     },
 
     {
-        "name": "DASHBOARD",
-        "type": "DASHBOARD",
+        "name": "推广汇总",
+        "type": "推广汇总",
         "file": BASE_DIR / "run_forever.py",
+    },
+    {
+        "name": "集团数据",
+        "type": "集团数据",
+        "file": BASE_DIR / "jituan-shuju" / "jituan1.py",
     },
     
 
@@ -167,7 +172,7 @@ def startup_message():
 
     lines = [
 
-        "🚀 XIAORUAN RUN ALL START",
+        "🚀 🚀 开始执行全部任务....",
 
         "",
 
@@ -368,7 +373,7 @@ class Worker:
     def handle_line(self, line):
 
         # QUANJU
-        if self.type == "QUANJU":
+        if self.type == "全局报表":
             if line == "✅ 全站汇总更新完成":
 
                 self.finished = True
@@ -386,7 +391,7 @@ class Worker:
 
 
         # DASHBOARD
-        if self.type == "DASHBOARD":
+        if self.type == "推广汇总":
             if line == "✅ 推广汇总更新完成":
 
                 self.finished = True
@@ -505,7 +510,7 @@ def main():
 
     start_background()
 
-    telegram("✅ XIAORUAN RUN ALL Started Successfully")
+    telegram("✅全量任务启动成功")
 
     print("\n🚀 System Running...\n")
 
