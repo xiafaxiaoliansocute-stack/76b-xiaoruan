@@ -2581,16 +2581,32 @@ async function copyTab2Data(){
 });
 
 // ===== STYLE RIÊNG KHI COPY SANG EXCEL =====
-clone.querySelectorAll("th, td").forEach(cell => {
+const originalCells = table.querySelectorAll("th, td");
+const copiedCells   = clone.querySelectorAll("th, td");
 
-    // Tất cả dữ liệu = 16pt
-    cell.style.fontSize = "16pt";
+copiedCells.forEach((cell, i) => {
+
+    const original = originalCells[i];
+
+    if(original){
+        const cs = getComputedStyle(original);
+
+        // GIỮ NGUYÊN MÀU GỐC
+        cell.style.setProperty("color", cs.color, "important");
+        cell.style.setProperty("background-color", cs.backgroundColor, "important");
+
+        // Giữ độ đậm chữ gốc
+        cell.style.setProperty("font-weight", cs.fontWeight, "important");
+    }
+
+    // Excel = 16
+    cell.style.setProperty("font-size", "16pt", "important");
 
     // Viền mỏng màu đen
-    cell.style.borderTop = "0.5px solid #000";
-    cell.style.borderRight = "0.5px solid #000";
-    cell.style.borderBottom = "0.5px solid #000";
-    cell.style.borderLeft = "0.5px solid #000";
+    cell.style.setProperty("border-top", "0.5px solid #000", "important");
+    cell.style.setProperty("border-right", "0.5px solid #000", "important");
+    cell.style.setProperty("border-bottom", "0.5px solid #000", "important");
+    cell.style.setProperty("border-left", "0.5px solid #000", "important");
 });
 
 // Tiêu đề chính khi copy sang Excel = 20pt
