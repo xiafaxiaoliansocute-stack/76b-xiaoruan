@@ -8,6 +8,7 @@ Features:
 4. BRAZIL CLOCK - Đồng hồ liveGia bảo vệ Brazil
 5. DATA SYNC - Đồng bộ dữ liệu từ data.json
 -->
+<!-- COPY_EXCEL_COLOR_FIX_V3 -->
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -2554,82 +2555,186 @@ async function copyTab2Data(){
     const btn = document.getElementById("copyTab2Btn");
     if(!table) return;
 
-    // Clone the whole table and convert the current computed appearance
-    // into inline styles so Excel / Google Sheets / Word can keep colors.
+    // Clone bảng để chỉ chỉnh style cho dữ liệu COPY, không ảnh hưởng giao diện web.
     const clone = table.cloneNode(true);
+
+    // Chuyển rgb/rgba thành HEX để Excel / WPS nhận màu ổn định hơn.
+    function colorToHex(color, fallback="#ffffff"){
+        if(!color) return fallback;
+
+        color = String(color).trim();
+
+        if(color.startsWith("#")){
+            if(color.length === 4){
+                return "#" +
+                    color[1] + color[1] +
+                    color[2] + color[2] +
+                    color[3] + color[3];
+            }
+            return color.substring(0,7);
+        }
+
+        const m = color.match(/rgba?\s*\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)/i);
+        if(!m) return fallback;
+
+        // rgba(..., 0) = trong suốt
+        if(m[4] !== undefined && Number(m[4]) === 0){
+            return fallback;
+        }
+
+        const r = Math.max(0, Math.min(255, Math.round(Number(m[1]))));
+        const g = Math.max(0, Math.min(255, Math.round(Number(m[2]))));
+        const b = Math.max(0, Math.min(255, Math.round(Number(m[3]))));
+
+        return "#" + [r,g,b].map(v=>v.toString(16).padStart(2,"0")).join("");
+    }
+
+    function isTransparent(color){
+        if(!color) return true;
+        const c = String(color).replace(/\s+/g,"").toLowerCase();
+        return (
+            c === "transparent" ||
+            c === "rgba(0,0,0,0)" ||
+            /rgba\([^)]*,0(?:\.0+)?\)$/.test(c)
+        );
+    }
+
+    // Nếu ô trong suốt, lấy màu nền thực tế từ cha gần nhất.
+    function getEffectiveBackground(el){
+        let cur = el;
+
+        while(cur){
+            const cs = getComputedStyle(cur);
+            const bg = cs.backgroundColor;
+
+            if(bg && !isTransparent(bg)){
+                return bg;
+            }
+
+            if(cur === table) break;
+            cur = cur.parentElement;
+        }
+
+        return "#ffffff";
+    }
+
+    // Copy computed style cơ bản từ bảng gốc sang clone.
     const sourceNodes = [table, ...table.querySelectorAll("*")];
     const cloneNodes  = [clone, ...clone.querySelectorAll("*")];
 
     const props = [
-        "background-color","color","font-family","font-size","font-weight",
-        "font-style","text-align","vertical-align","white-space",
-        "border-top","border-right","border-bottom","border-left",
-        "padding-top","padding-right","padding-bottom","padding-left",
-        "width","min-width","max-width","height"
+        "color",
+        "font-family",
+        "font-weight",
+        "font-style",
+        "text-align",
+        "vertical-align",
+        "white-space",
+        "padding-top",
+        "padding-right",
+        "padding-bottom",
+        "padding-left",
+        "width",
+        "min-width",
+        "max-width",
+        "height"
     ];
 
-    sourceNodes.forEach((src, i)=>{
-    const dst = cloneNodes[i];
-    if(!dst) return;
+    sourceNodes.forEach((srcNode, i)=>{
+        const dstNode = cloneNodes[i];
+        if(!dstNode) return;
 
-    const cs = getComputedStyle(src);
-    props.forEach(p=>{
-        dst.style.setProperty(p, cs.getPropertyValue(p));
+        const cs = getComputedStyle(srcNode);
+
+        props.forEach(p=>{
+            dstNode.style.setProperty(p, cs.getPropertyValue(p));
+        });
+
+        dstNode.style.boxSizing = "border-box";
     });
 
-    dst.style.boxSizing = "border-box";
-});
+    // ===== STYLE RIÊNG CHO EXCEL / WPS =====
+    const sourceCells = table.querySelectorAll("th, td");
+    const copyCells   = clone.querySelectorAll("th, td");
 
-// ===== STYLE RIÊNG KHI COPY SANG EXCEL =====
-const originalCells = table.querySelectorAll("th, td");
-const copiedCells   = clone.querySelectorAll("th, td");
+    copyCells.forEach((cell, i)=>{
+        const srcCell = sourceCells[i];
+        if(!srcCell) return;
 
-copiedCells.forEach((cell, i) => {
+        const cs = getComputedStyle(srcCell);
 
-    const original = originalCells[i];
+        // MÀU NỀN GỐC
+        const bgHex = colorToHex(
+            getEffectiveBackground(srcCell),
+            "#ffffff"
+        );
 
-    if(original){
-        const cs = getComputedStyle(original);
+        // bgcolor là thuộc tính HTML cũ nhưng Excel/WPS nhận rất ổn định.
+        cell.setAttribute("bgcolor", bgHex);
+        cell.style.setProperty("background", bgHex, "important");
+        cell.style.setProperty("background-color", bgHex, "important");
 
-        // GIỮ NGUYÊN MÀU GỐC
-        cell.style.setProperty("color", cs.color, "important");
-        cell.style.setProperty("background-color", cs.backgroundColor, "important");
-
-        // Giữ độ đậm chữ gốc
+        // MÀU CHỮ GỐC
+        const colorHex = colorToHex(cs.color, "#000000");
+        cell.style.setProperty("color", colorHex, "important");
         cell.style.setProperty("font-weight", cs.fontWeight, "important");
+
+        // Cỡ chữ khi dán Excel = 16pt
+        cell.style.setProperty("font-size", "16pt", "important");
+
+        // Viền mỏng màu đen
+        cell.style.setProperty("border-top", "0.5px solid #000000", "important");
+        cell.style.setProperty("border-right", "0.5px solid #000000", "important");
+        cell.style.setProperty("border-bottom", "0.5px solid #000000", "important");
+        cell.style.setProperty("border-left", "0.5px solid #000000", "important");
+    });
+
+    // Tiêu đề chính = 20pt + GIỮ NỀN XANH KHI COPY SANG EXCEL
+    const copyTitle = clone.querySelector("#tableMainTitle");
+    if(copyTitle){
+        const titleBg = "#4b97d9";
+
+        // Excel/WPS nhận bgcolor ổn định hơn với nền tiêu đề
+        copyTitle.setAttribute("bgcolor", titleBg);
+        copyTitle.style.setProperty("background", titleBg, "important");
+        copyTitle.style.setProperty("background-color", titleBg, "important");
+
+        copyTitle.style.setProperty("font-size", "20pt", "important");
+        copyTitle.style.setProperty("font-weight", "bold", "important");
+        copyTitle.style.setProperty("color", "#000000", "important");
     }
 
-    // Excel = 16
-    cell.style.setProperty("font-size", "16pt", "important");
-
-    // Viền mỏng màu đen
-    cell.style.setProperty("border-top", "0.5px solid #000", "important");
-    cell.style.setProperty("border-right", "0.5px solid #000", "important");
-    cell.style.setProperty("border-bottom", "0.5px solid #000", "important");
-    cell.style.setProperty("border-left", "0.5px solid #000", "important");
-});
-
-// Tiêu đề chính khi copy sang Excel = 20pt
-const copyTitle = clone.querySelector("#tableMainTitle");
-if(copyTitle){
-    copyTitle.style.fontSize = "20pt";
-    copyTitle.style.fontWeight = "bold";
-}
-
-clone.style.borderCollapse = "collapse";
-
+    clone.style.borderCollapse = "collapse";
     clone.style.tableLayout = getComputedStyle(table).tableLayout;
-    clone.style.background = getComputedStyle(table).backgroundColor || "#fff";
+    clone.style.backgroundColor = "#ffffff";
 
+    // Tạo HTML đầy đủ theo kiểu Office để Excel/WPS giữ format tốt hơn.
     const wrapper = document.createElement("div");
     wrapper.appendChild(clone);
-    const html = wrapper.innerHTML;
 
-    // Plain-text fallback (tab-separated), useful when rich HTML is unsupported.
+    const html = `
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+${wrapper.innerHTML}
+</body>
+</html>`;
+
+    // Plain-text fallback.
     const rows = [...table.rows].map(row =>
         [...row.cells]
             .filter(cell => getComputedStyle(cell).display !== "none")
-            .map(cell => cell.innerText.replace(/\t/g," ").replace(/\r?\n/g," ").trim())
+            .map(cell =>
+                cell.innerText
+                    .replace(/\t/g," ")
+                    .replace(/\r?\n/g," ")
+                    .trim()
+            )
             .join("\t")
     ).join("\n");
 
@@ -2639,17 +2744,22 @@ clone.style.borderCollapse = "collapse";
                 "text/html": new Blob([html], {type:"text/html"}),
                 "text/plain": new Blob([rows], {type:"text/plain"})
             });
+
             await navigator.clipboard.write([item]);
         }else{
             richCopyFallback(clone);
         }
+
         showCopySuccess(btn);
+
     }catch(err){
         console.warn("Rich clipboard failed, using fallback:", err);
+
         try{
             richCopyFallback(clone);
             showCopySuccess(btn);
         }catch(e){
+            console.error(e);
             alert("复制失败，请使用 Chrome/Edge 并允许剪贴板权限");
         }
     }
