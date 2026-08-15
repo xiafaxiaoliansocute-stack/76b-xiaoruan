@@ -261,7 +261,8 @@ def _git_sync_files(file_names, commit_message, success_message):
         for attempt in range(1, 6):
             try:
                 add = subprocess.run(
-                    ["git", "add", "--", *existing],
+                    # -f để tunnel.json vẫn được sync ngay cả khi .gitignore đang bỏ qua file này.
+                    ["git", "add", "-f", "--", *existing],
                     cwd=BASE_DIR,
                     capture_output=True,
                     text=True,
