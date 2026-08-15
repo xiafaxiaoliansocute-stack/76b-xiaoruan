@@ -1386,6 +1386,43 @@ body{
     font-size:13px !important;
 }
 
+/* Nút 刷新 cạnh thông báo - hoạt động giống F5 */
+.notice-refresh-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.data-refresh-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:28px;
+    padding:5px 14px;
+    border:1px solid #b7d5ff;
+    border-radius:8px;
+    background:#eef6ff;
+    color:#1677ff;
+    font-size:13px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 2px 6px rgba(22,119,255,.12);
+    transition:.2s;
+    white-space:nowrap;
+}
+
+.data-refresh-btn:hover{
+    background:#1677ff;
+    color:#fff;
+    border-color:#1677ff;
+    transform:translateY(-1px);
+}
+
+.data-refresh-btn:active{
+    transform:scale(.97);
+}
+
 .logout-btn{
     padding:10px 18px !important;
     border-radius:10px !important;
@@ -1909,8 +1946,11 @@ placeholder="请输入密码">
 
     </div>
 
-    <div class="globalNotice">
-        * 数据统计报表数据统计每个小时更新一次
+    <div class="notice-refresh-row">
+        <div class="globalNotice">
+            * 数据统计报表数据统计每个小时更新一次
+        </div>
+        <button type="button" class="data-refresh-btn" onclick="refreshDashboardPage()">🔄 刷新</button>
     </div>
 
 </div>
@@ -7312,6 +7352,12 @@ async function queryData(){
             btn.innerHTML = "🔍 查询数据";
         }, 1800);
     }
+}
+
+// Nút 刷新: tương đương nhấn F5, chỉ reload trang để lấy dữ liệu mới.
+// Không chạy lại bot và không gọi nút 查询数据.
+function refreshDashboardPage(){
+    window.location.reload();
 }
 
 function toggleZeroSwitch(){
