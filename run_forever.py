@@ -330,6 +330,10 @@ class RunApiHandler(BaseHTTPRequestHandler):
     server_version = "XiaoruanRunAPI/1.0"
 
     def log_message(self, fmt, *args):
+        # Không in log request /health, giữ nguyên toàn bộ logic chạy cũ.
+        if len(args) > 0 and "/health" in str(args[0]):
+            return
+
         print(
             f"🌐 {self.address_string()} - {fmt % args}",
             flush=True,
