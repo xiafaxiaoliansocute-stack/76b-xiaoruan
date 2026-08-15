@@ -7035,15 +7035,14 @@ function renderRetentionButtons(){
    GitHub Pages -> http://127.0.0.1:8765/run
    ============================================================ */
 const RUN_API_URL = "http://127.0.0.1:8765/run";
-const RUN_HEALTH_URL = "http://127.0.0.1:8765/health";
+const RUN_WAIT_FINISH_URL = "http://127.0.0.1:8765/wait-finish";
 const RUN_LATEST_URL = "http://127.0.0.1:8765/latest";
 const RUN_TOKEN_KEY = "xiaoruan_run_trigger_token";
 
 // Theo dõi run_forever.py: khi lượt chạy tự động mỗi giờ KẾT THÚC,
 // HTML lấy JSON trực tiếp từ Mac, không chờ GitHub Pages/CDN.
 let autoRunMonitorStarted = false;
-let autoRunMonitorBusy = false;
-let autoLastFinishedRunNumber = null;
+let autoLastFinishedRunNumber = 0;
 
 function getRunToken(){
     let token = localStorage.getItem(RUN_TOKEN_KEY) || "";
@@ -7118,53 +7117,83 @@ async function loadLatestLocalDataSilently(){
     applyRunDataToDashboard(result.data, result.master_update_time);
 }
 
-async function monitorRunForeverAutoUpdate(){
-    if(autoRunMonitorBusy || currentSite === "TEST3") return;
-    autoRunMonitorBusy = true;
+function waitMs(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-    try{
-        const res = await fetch(
-            RUN_HEALTH_URL + "?t=" + Date.now(),
-            { mode:"cors", cache:"no-store" }
-        );
-        if(!res.ok) return;
+// Sau MỖI lượt run kết thúc: đọc JSON local đúng 3 lần,
+// lần 1 ngay lập tức, lần 2 sau 5 giây, lần 3 sau thêm 5 giây.
+async function loadLatestLocal3Times(){
+    if(currentSite === "TEST3") return;
 
-        const health = await res.json();
-        if(!health.success) return;
-
-        const finished = Number(health.last_finished_run_number || 0);
-
-        // Lần đầu HTML nối được với local API: lấy local JSON ngay một lần.
-        // Nhờ vậy nếu GitHub Pages đang chậm cache, màn hình vẫn là dữ liệu mới nhất.
-        if(autoLastFinishedRunNumber === null){
-            autoLastFinishedRunNumber = finished;
-            if(!health.running){
-                await loadLatestLocalDataSilently();
-            }
-            return;
-        }
-
-        // Chỉ cập nhật sau khi một lượt mới đã KẾT THÚC.
-        if(!health.running && finished > autoLastFinishedRunNumber){
+    for(let i = 1; i <= 3; i++){
+        try{
             await loadLatestLocalDataSilently();
-            autoLastFinishedRunNumber = finished;
-            console.log("✅ 自动小时数据已立即同步到页面 #" + finished);
+            console.log(`✅ 已读取最新数据 ${i}/3`);
+        }catch(err){
+            console.debug(`读取最新数据失败 ${i}/3:`, err);
         }
 
-    }catch(err){
-        // Nếu run_forever.py tắt thì web vẫn dùng JSON GitHub bình thường.
-        console.debug("local auto update unavailable:", err);
-    }finally{
-        autoRunMonitorBusy = false;
+        if(i < 3){
+            await waitMs(5000);
+        }
+    }
+}
+
+// Long-poll: chỉ giữ 1 kết nối chờ run_forever.py báo "đã chạy xong".
+// Không còn gọi /health mỗi 2 giây.
+async function waitRunForeverAutoLoop(){
+    while(autoRunMonitorStarted){
+        try{
+            const res = await fetch(
+                RUN_WAIT_FINISH_URL +
+                "?after=" + encodeURIComponent(autoLastFinishedRunNumber) +
+                "&t=" + Date.now(),
+                { mode:"cors", cache:"no-store" }
+            );
+
+            if(!res.ok){
+                throw new Error("wait-finish HTTP " + res.status);
+            }
+
+            const result = await res.json();
+            if(!result.success){
+                throw new Error(result.error || "wait-finish failed");
+            }
+
+            // 70 phút chưa có lượt mới thì mở lại 1 kết nối chờ mới.
+            if(result.timeout){
+                continue;
+            }
+
+            // Nếu run_forever.py vừa restart, bộ đếm run sẽ quay về 1.
+            if(result.reset){
+                autoLastFinishedRunNumber = 0;
+            }
+
+            const finished = Number(result.run_number || 0);
+
+            if(finished > autoLastFinishedRunNumber){
+                autoLastFinishedRunNumber = finished;
+                console.log("✅ run_forever.py 已完成 #" + finished);
+
+                // Chỉ sau khi run xong mới đọc /latest 3 lần, cách nhau 5 giây.
+                await loadLatestLocal3Times();
+            }
+
+        }catch(err){
+            // Nếu local API đang tắt/restart, web vẫn dùng JSON GitHub bình thường.
+            // Chỉ thử nối lại sau 30 giây, không spam request.
+            console.debug("local wait-finish unavailable:", err);
+            await waitMs(30000);
+        }
     }
 }
 
 function startRunForeverAutoMonitor(){
     if(autoRunMonitorStarted) return;
     autoRunMonitorStarted = true;
-
-    setTimeout(monitorRunForeverAutoUpdate, 1200);
-    setInterval(monitorRunForeverAutoUpdate, 2000);
+    waitRunForeverAutoLoop();
 }
 
 async function queryData(){

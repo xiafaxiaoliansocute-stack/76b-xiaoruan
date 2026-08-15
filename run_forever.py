@@ -395,6 +395,73 @@ class RunApiHandler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         path = parsed.path.rstrip("/") or "/"
 
+        # HTML giữ 1 kết nối chờ ở đây. Chỉ trả về khi một lượt run đã KẾT THÚC.
+        # Nhờ vậy không cần gọi /health liên tục mỗi vài giây.
+        if path == "/wait-finish":
+            query = parse_qs(parsed.query)
+
+            try:
+                after_run = max(0, int((query.get("after") or ["0"])[0]))
+            except Exception:
+                after_run = 0
+
+            # 70 phút: đủ để chờ qua lượt chạy tự động kế tiếp theo giờ.
+            deadline = time.time() + 70 * 60
+            timed_out = False
+            reset_counter = False
+            last_result = None
+            last_number = 0
+
+            with RUN_CONDITION:
+                while True:
+                    running = IS_RUNNING
+                    current_number = int(RUN_NUMBER or 0)
+                    last_result = dict(LAST_RESULT) if LAST_RESULT else None
+                    last_number = int((last_result or {}).get("run_number", 0) or 0)
+
+                    # Nếu đang chạy thì chờ đúng lượt hiện tại kết thúc, không đọc file giữa chừng.
+                    if not running:
+                        # run_forever.py vừa được restart => RUN_NUMBER quay về nhỏ hơn
+                        # số mà HTML đang nhớ. Báo reset để HTML bắt đầu theo dõi lại.
+                        if after_run > current_number and last_number > 0:
+                            reset_counter = True
+                            break
+
+                        # Có một lượt mới đã hoàn thành.
+                        if last_number > after_run:
+                            break
+
+                    remaining = deadline - time.time()
+                    if remaining <= 0:
+                        timed_out = True
+                        break
+
+                    # Đây chỉ là wait nội bộ trong Python, KHÔNG tạo request /health.
+                    RUN_CONDITION.wait(timeout=min(60, remaining))
+
+            if timed_out:
+                self._json_response(
+                    200,
+                    {
+                        "success": True,
+                        "timeout": True,
+                        "run_number": last_number,
+                    },
+                )
+                return
+
+            self._json_response(
+                200,
+                {
+                    "success": True,
+                    "finished": True,
+                    "reset": reset_counter,
+                    "run_number": last_number,
+                    "finished_at": (last_result or {}).get("finished_at"),
+                },
+            )
+            return
+
         if path == "/health":
             with RUN_CONDITION:
                 running = IS_RUNNING
