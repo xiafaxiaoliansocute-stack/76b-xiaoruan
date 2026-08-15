@@ -7071,42 +7071,92 @@ function renderRetentionButtons(){
 
 
 /* ============================================================
-   ✅ ĐÃ SỬA: NÚT 查询数据 -> CHẠY run_forever.py TRÊN MÁY MAC
-   GitHub Pages -> http://127.0.0.1:8765/run
+   NÚT 查询数据 - TUNNEL TỰ ĐỘNG
+   run_forever.py tự tạo tunnel.json với URL trycloudflare hiện tại.
+   HTML luôn đọc tunnel.json nên URL Tunnel đổi cũng không cần sửa HTML.
    ============================================================ */
-const RUN_API_URL = "http://127.0.0.1:8765/run";
-const RUN_WAIT_FINISH_URL = "http://127.0.0.1:8765/wait-finish";
-const RUN_LATEST_URL = "http://127.0.0.1:8765/latest";
-const RUN_TOKEN_KEY = "xiaoruan_run_trigger_token";
+const RUN_TUNNEL_CONFIG_URL = "tunnel.json";
+let RUN_API_BASE = "";
+let RUN_API_BASE_LOADED_AT = 0;
 
-// Theo dõi run_forever.py: khi lượt chạy tự động mỗi giờ KẾT THÚC,
-// HTML lấy JSON trực tiếp từ Mac, không chờ GitHub Pages/CDN.
-let autoRunMonitorStarted = false;
-let autoLastFinishedRunNumber = 0;
+function normalizeRunApiBase(value){
+    return String(value || "").trim().replace(/\/+$/, "");
+}
 
-function getRunToken(){
-    let token = localStorage.getItem(RUN_TOKEN_KEY) || "";
+async function loadRunApiBase(forceRefresh=false){
+    // Cache rất ngắn để các request của cùng một lượt 查询 không phải đọc file liên tục.
+    if(
+        !forceRefresh &&
+        RUN_API_BASE &&
+        (Date.now() - RUN_API_BASE_LOADED_AT) < 15000
+    ){
+        return RUN_API_BASE;
+    }
 
-    if(!token){
-        token = (prompt("请输入查询密钥（第一次输入后会自动保存）") || "").trim();
-        if(token){
-            localStorage.setItem(RUN_TOKEN_KEY, token);
+    const res = await fetch(
+        RUN_TUNNEL_CONFIG_URL + "?t=" + Date.now(),
+        { cache:"no-store" }
+    );
+
+    if(!res.ok){
+        throw new Error("读取 tunnel.json 失败 HTTP " + res.status);
+    }
+
+    const info = await res.json();
+    const base = normalizeRunApiBase(info && info.api_base);
+
+    if(!info || !info.success || !base || !/^https:\/\//i.test(base)){
+        throw new Error("Tunnel 尚未准备好");
+    }
+
+    RUN_API_BASE = base;
+    RUN_API_BASE_LOADED_AT = Date.now();
+    return RUN_API_BASE;
+}
+
+async function runApiFetch(path, options={}){
+    let lastError = null;
+
+    // Khi Mac vừa restart, Quick Tunnel URL có thể đổi và GitHub Pages cần vài giây
+    // để thấy tunnel.json mới. Tự reload cấu hình + retry, người dùng không cần F5.
+    for(let attempt=1; attempt<=18; attempt++){
+        try{
+            const base = await loadRunApiBase(attempt > 1);
+            const res = await fetch(base + path, options);
+
+            // 502/503/504 thường là tunnel cũ đang đổi hoặc origin vừa reconnect.
+            if([502,503,504].includes(res.status)){
+                throw new Error("Tunnel HTTP " + res.status);
+            }
+
+            return res;
+
+        }catch(err){
+            lastError = err;
+            RUN_API_BASE = "";
+            RUN_API_BASE_LOADED_AT = 0;
+
+            if(attempt < 18){
+                await new Promise(resolve => setTimeout(resolve, Math.min(2500 + attempt * 500, 6000)));
+            }
         }
     }
 
-    return token;
+    throw new Error(
+        "无法连接 Mac 查询服务，请确认 Mac 和 run_forever.py 正在运行。" +
+        (lastError ? " (" + String(lastError.message || lastError) + ")" : "")
+    );
 }
 
-async function callRunForever(token){
-    return fetch(RUN_API_URL, {
+async function callRunForever(site){
+    return runApiFetch("/run", {
         method: "POST",
         mode: "cors",
         cache: "no-store",
         headers: {
-            "Content-Type": "application/json",
-            "X-Run-Token": token
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify({ site: currentSite })
+        body: JSON.stringify({ site: site })
     });
 }
 
@@ -7139,101 +7189,60 @@ function applyRunDataToDashboard(newData, updateTime){
     }
 }
 
-async function loadLatestLocalDataSilently(){
-    if(currentSite === "TEST3") return;
+function waitMs(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-    const res = await fetch(
-        RUN_LATEST_URL + "?site=" + encodeURIComponent(currentSite) + "&t=" + Date.now(),
+async function waitForPublicRun(targetRun, site){
+    const deadline = Date.now() + 30 * 60 * 1000;
+
+    while(Date.now() < deadline){
+        const res = await runApiFetch(
+            "/run-status" +
+            "?run=" + encodeURIComponent(targetRun) +
+            "&site=" + encodeURIComponent(site) +
+            "&t=" + Date.now(),
+            { mode:"cors", cache:"no-store" }
+        );
+
+        if(!res.ok){
+            throw new Error("run-status HTTP " + res.status);
+        }
+
+        const status = await res.json();
+        if(!status.success){
+            throw new Error(status.error || "run-status failed");
+        }
+
+        if(status.finished){
+            if(!status.site_success){
+                throw new Error(status.error || "机器人运行失败");
+            }
+            return status;
+        }
+
+        await waitMs(2000);
+    }
+
+    throw new Error("等待机器人运行超时");
+}
+
+async function loadLatestPublicData(site){
+    const res = await runApiFetch(
+        "/latest?site=" + encodeURIComponent(site) + "&t=" + Date.now(),
         { mode:"cors", cache:"no-store" }
     );
 
-    if(!res.ok) throw new Error("latest HTTP " + res.status);
+    if(!res.ok){
+        throw new Error("latest HTTP " + res.status);
+    }
 
     const result = await res.json();
     if(!result.success || !result.data){
         throw new Error(result.error || "latest data failed");
     }
 
-    applyRunDataToDashboard(result.data, result.master_update_time);
-}
-
-function waitMs(ms){
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-// Sau MỖI lượt run kết thúc: đọc JSON local đúng 3 lần,
-// lần 1 ngay lập tức, lần 2 sau 5 giây, lần 3 sau thêm 5 giây.
-async function loadLatestLocal3Times(){
-    if(currentSite === "TEST3") return;
-
-    for(let i = 1; i <= 3; i++){
-        try{
-            await loadLatestLocalDataSilently();
-            console.log(`✅ 已读取最新数据 ${i}/3`);
-        }catch(err){
-            console.debug(`读取最新数据失败 ${i}/3:`, err);
-        }
-
-        if(i < 3){
-            await waitMs(5000);
-        }
-    }
-}
-
-// Long-poll: chỉ giữ 1 kết nối chờ run_forever.py báo "đã chạy xong".
-// Không còn gọi /health mỗi 2 giây.
-async function waitRunForeverAutoLoop(){
-    while(autoRunMonitorStarted){
-        try{
-            const res = await fetch(
-                RUN_WAIT_FINISH_URL +
-                "?after=" + encodeURIComponent(autoLastFinishedRunNumber) +
-                "&t=" + Date.now(),
-                { mode:"cors", cache:"no-store" }
-            );
-
-            if(!res.ok){
-                throw new Error("wait-finish HTTP " + res.status);
-            }
-
-            const result = await res.json();
-            if(!result.success){
-                throw new Error(result.error || "wait-finish failed");
-            }
-
-            // 70 phút chưa có lượt mới thì mở lại 1 kết nối chờ mới.
-            if(result.timeout){
-                continue;
-            }
-
-            // Nếu run_forever.py vừa restart, bộ đếm run sẽ quay về 1.
-            if(result.reset){
-                autoLastFinishedRunNumber = 0;
-            }
-
-            const finished = Number(result.run_number || 0);
-
-            if(finished > autoLastFinishedRunNumber){
-                autoLastFinishedRunNumber = finished;
-                console.log("✅ run_forever.py 已完成 #" + finished);
-
-                // Chỉ sau khi run xong mới đọc /latest 3 lần, cách nhau 5 giây.
-                await loadLatestLocal3Times();
-            }
-
-        }catch(err){
-            // Nếu local API đang tắt/restart, web vẫn dùng JSON GitHub bình thường.
-            // Chỉ thử nối lại sau 30 giây, không spam request.
-            console.debug("local wait-finish unavailable:", err);
-            await waitMs(30000);
-        }
-    }
-}
-
-function startRunForeverAutoMonitor(){
-    if(autoRunMonitorStarted) return;
-    autoRunMonitorStarted = true;
-    waitRunForeverAutoLoop();
+    return result;
 }
 
 async function queryData(){
@@ -7273,41 +7282,31 @@ async function queryData(){
                 "--";
 
         }else{
-            let token = getRunToken();
-            if(!token){
-                throw new Error("未输入查询密钥");
-            }
+            const requestedSite = currentSite;
+            const res = await callRunForever(requestedSite);
 
-            let res = await callRunForever(token);
-
-            // Nếu token cũ sai thì xóa và cho nhập lại 1 lần.
-            if(res.status === 401){
-                localStorage.removeItem(RUN_TOKEN_KEY);
-                token = getRunToken();
-                if(!token){
-                    throw new Error("未输入查询密钥");
-                }
-                res = await callRunForever(token);
-            }
-
-            let result;
+            let accepted;
             try{
-                result = await res.json();
+                accepted = await res.json();
             }catch(_){
-                throw new Error("本地机器人返回格式错误");
+                throw new Error("机器人 API 返回格式错误");
             }
 
-            if(!res.ok || !result.success){
-                if(res.status === 401){
-                    localStorage.removeItem(RUN_TOKEN_KEY);
-                }
-                throw new Error(result.error || ("HTTP " + res.status));
+            if(!res.ok || !accepted.success){
+                throw new Error(accepted.error || ("HTTP " + res.status));
             }
 
-            // run_forever.py trả trực tiếp JSON mới của site đang chọn.
-            newData = result.data;
+            const targetRun = Number(accepted.run_number || 0);
+            if(!targetRun){
+                throw new Error("没有收到运行编号");
+            }
+
+            await waitForPublicRun(targetRun, requestedSite);
+
+            const latest = await loadLatestPublicData(requestedSite);
+            newData = latest.data;
             updateTime =
-                result.master_update_time ||
+                latest.master_update_time ||
                 newData?.update_time_brazil ||
                 newData?.update_time ||
                 "--";
@@ -7448,8 +7447,8 @@ window.onclick=function(e){
 
 window.addEventListener("load",function(){
 
-// Bắt đầu theo dõi lượt chạy tự động mỗi giờ của run_forever.py.
-startRunForeverAutoMonitor();
+// Nạp trước URL Tunnel hiện tại; nếu Mac đang offline thì bỏ qua, nút 查询 sẽ tự retry.
+loadRunApiBase(true).catch(()=>{});
 
 // Tự điền tài khoản mật khẩu
 const savedUser=localStorage.getItem("savedUser");

@@ -3,7 +3,8 @@ warnings.filterwarnings("ignore")
 
 import json
 import os
-import secrets
+import re
+import shutil
 import subprocess
 import threading
 import time
@@ -38,7 +39,27 @@ SITE_TO_SCRIPT = {
 
 API_HOST = "127.0.0.1"
 API_PORT = int(os.environ.get("RUN_API_PORT", "8765"))
-TOKEN_FILE = os.path.join(BASE_DIR, ".run_trigger_token")
+
+# =====================================================================
+# CLOUDFLARE QUICK TUNNEL TỰ ĐỘNG
+# - Chỉ cần chạy run_forever.py.
+# - File này tự mở cloudflared, tự lấy URL *.trycloudflare.com.
+# - URL hiện tại được ghi vào tunnel.json và tự push lên GitHub.
+# - HTML đọc tunnel.json nên không cần sửa URL mỗi lần Mac/restart Tunnel.
+# =====================================================================
+TUNNEL_INFO_NAME = "tunnel.json"
+TUNNEL_INFO_PATH = os.path.join(BASE_DIR, TUNNEL_INFO_NAME)
+TUNNEL_URL_RE = re.compile(r"https://[a-z0-9-]+\.trycloudflare\.com", re.I)
+TUNNEL_STOP_EVENT = threading.Event()
+TUNNEL_READY_EVENT = threading.Event()
+TUNNEL_PUBLISH_DONE_EVENT = threading.Event()
+TUNNEL_PROCESS_LOCK = threading.Lock()
+TUNNEL_PROCESS = None
+CURRENT_TUNNEL_URL = ""
+
+# Khóa các lệnh git của chính run_forever.py để tunnel.json và JSON dữ liệu
+# không tự giẫm nhau. Các script con vẫn được giữ nguyên như trước.
+GIT_LOCK = threading.Lock()
 
 # Có thể ghi đè bằng biến môi trường RUN_ALLOWED_ORIGINS, phân cách bằng dấu phẩy.
 DEFAULT_ALLOWED_ORIGINS = {
@@ -60,37 +81,6 @@ if _raw_origins:
 else:
     ALLOWED_ORIGINS = DEFAULT_ALLOWED_ORIGINS
 
-
-# =====================================================================
-# TOKEN BẢO VỆ NÚT 查询数据
-# =====================================================================
-def load_or_create_token():
-    env_token = os.environ.get("RUN_TRIGGER_TOKEN", "").strip()
-    if env_token:
-        return env_token
-
-    if os.path.exists(TOKEN_FILE):
-        try:
-            with open(TOKEN_FILE, "r", encoding="utf-8") as f:
-                token = f.read().strip()
-            if token:
-                return token
-        except Exception:
-            pass
-
-    token = secrets.token_urlsafe(32)
-    with open(TOKEN_FILE, "w", encoding="utf-8") as f:
-        f.write(token)
-
-    try:
-        os.chmod(TOKEN_FILE, 0o600)
-    except Exception:
-        pass
-
-    return token
-
-
-RUN_TOKEN = load_or_create_token()
 
 
 # =====================================================================
@@ -255,67 +245,250 @@ def run_all(trigger="hourly"):
 
 
 
-def sync_json_to_github():
-    """
-    Sau khi 4 bot chạy xong, đồng bộ lại 4 JSON một lần nữa.
-    Việc này giúp chắc chắn GitHub nhận đủ dữ liệu ngay cả khi các script con
-    cùng lúc git commit/push và một lệnh git bên trong chúng bị tranh chấp lock.
-    """
-    json_files = ["data.json", "nn22.json", "23a.json", "23e.json"]
-    existing = [name for name in json_files if os.path.exists(os.path.join(BASE_DIR, name))]
+def _git_sync_files(file_names, commit_message, success_message):
+    """Commit/push một nhóm file với retry, tránh tranh chấp git trong process cha."""
+    existing = [
+        name for name in file_names
+        if os.path.exists(os.path.join(BASE_DIR, name))
+    ]
 
     if not existing:
-        return {"success": False, "error": "Không có JSON để sync"}
+        return {"success": False, "error": "Không có file để sync"}
 
-    try:
-        subprocess.run(
-            ["git", "add", "--", *existing],
-            cwd=BASE_DIR,
-            check=True,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.PIPE,
-            text=True,
+    last_error = "unknown git error"
+
+    with GIT_LOCK:
+        for attempt in range(1, 6):
+            try:
+                add = subprocess.run(
+                    ["git", "add", "--", *existing],
+                    cwd=BASE_DIR,
+                    capture_output=True,
+                    text=True,
+                )
+                if add.returncode != 0:
+                    raise RuntimeError((add.stderr or add.stdout or "git add failed").strip())
+
+                diff = subprocess.run(
+                    ["git", "diff", "--cached", "--quiet", "--", *existing],
+                    cwd=BASE_DIR,
+                )
+
+                committed = False
+                if diff.returncode == 1:
+                    commit = subprocess.run(
+                        ["git", "commit", "-m", commit_message, "--only", "--", *existing],
+                        cwd=BASE_DIR,
+                        capture_output=True,
+                        text=True,
+                    )
+                    if commit.returncode != 0:
+                        raise RuntimeError(
+                            (commit.stderr or commit.stdout or "git commit failed").strip()
+                        )
+                    committed = True
+                elif diff.returncode not in (0, 1):
+                    raise RuntimeError("git diff --cached failed")
+
+                push = subprocess.run(
+                    ["git", "push", "origin", "main"],
+                    cwd=BASE_DIR,
+                    capture_output=True,
+                    text=True,
+                )
+                if push.returncode != 0:
+                    raise RuntimeError(
+                        (push.stderr or push.stdout or "git push failed").strip()
+                    )
+
+                print(success_message, flush=True)
+                return {"success": True, "committed": committed}
+
+            except Exception as e:
+                last_error = str(e)
+                if attempt < 5:
+                    print(
+                        f"⚠️ Git sync lần {attempt}/5 lỗi, thử lại: {last_error}",
+                        flush=True,
+                    )
+                    time.sleep(min(2 * attempt, 8))
+
+    return {"success": False, "error": last_error}
+
+
+def sync_json_to_github():
+    """
+    Sau khi 4 bot chạy xong, đồng bộ lại JSON dữ liệu.
+    Nếu tunnel.json đang có thay đổi chưa push được trước đó thì đồng bộ luôn.
+    """
+    files_to_sync = ["data.json", "nn22.json", "23a.json", "23e.json"]
+    if os.path.exists(TUNNEL_INFO_PATH):
+        files_to_sync.append(TUNNEL_INFO_NAME)
+
+    result = _git_sync_files(
+        files_to_sync,
+        "auto update all data",
+        "✅ JSON/tunnel 已同步到 GitHub",
+    )
+    if not result.get("success"):
+        print(f"❌ GitHub JSON sync error: {result.get('error')}", flush=True)
+    return result
+
+
+def _find_cloudflared():
+    """Tìm cloudflared cả khi PATH của app/GUI trên macOS không đầy đủ."""
+    candidates = [
+        shutil.which("cloudflared"),
+        "/opt/homebrew/bin/cloudflared",   # Apple Silicon Homebrew
+        "/usr/local/bin/cloudflared",      # Intel Homebrew
+    ]
+    for candidate in candidates:
+        if candidate and os.path.isfile(candidate) and os.access(candidate, os.X_OK):
+            return candidate
+    return None
+
+
+def _write_tunnel_info(public_url):
+    """Ghi tunnel.json theo kiểu atomic rồi push lên GitHub."""
+    payload = {
+        "success": True,
+        "api_base": public_url.rstrip("/"),
+        "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "source": "cloudflare-quick-tunnel",
+        "version": 1,
+    }
+
+    temp_path = TUNNEL_INFO_PATH + ".tmp"
+    with open(temp_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
+        f.write("\n")
+    os.replace(temp_path, TUNNEL_INFO_PATH)
+
+    print(f"🌍 Public API: {public_url}", flush=True)
+    print(f"📝 已更新 {TUNNEL_INFO_NAME}", flush=True)
+
+    result = _git_sync_files(
+        [TUNNEL_INFO_NAME],
+        "auto update tunnel url",
+        "✅ Tunnel URL 已同步到 GitHub",
+    )
+    if not result.get("success"):
+        print(
+            f"⚠️ tunnel.json 暂时无法 push: {result.get('error')}. "
+            "Sau lượt bot tiếp theo hệ thống sẽ thử sync lại.",
+            flush=True,
         )
 
-        diff = subprocess.run(
-            ["git", "diff", "--cached", "--quiet", "--", *existing],
-            cwd=BASE_DIR,
-        )
+    TUNNEL_PUBLISH_DONE_EVENT.set()
+    return result
 
-        committed = False
-        if diff.returncode == 1:
-            commit = subprocess.run(
-                ["git", "commit", "-m", "auto update all data", "--only", "--", *existing],
-                cwd=BASE_DIR,
-                capture_output=True,
-                text=True,
+
+def tunnel_manager_loop():
+    """
+    Giữ Quick Tunnel chạy liên tục.
+    Nếu cloudflared bị rớt, tự khởi động tunnel mới và cập nhật tunnel.json.
+    """
+    global TUNNEL_PROCESS, CURRENT_TUNNEL_URL
+
+    while not TUNNEL_STOP_EVENT.is_set():
+        cloudflared = _find_cloudflared()
+        if not cloudflared:
+            print(
+                "❌ Không tìm thấy cloudflared. Cài bằng: brew install cloudflared",
+                flush=True,
             )
-            if commit.returncode != 0:
-                return {
-                    "success": False,
-                    "error": (commit.stderr or commit.stdout or "git commit failed").strip(),
-                }
-            committed = True
+            TUNNEL_PUBLISH_DONE_EVENT.set()
+            TUNNEL_STOP_EVENT.wait(60)
+            continue
 
-        push = subprocess.run(
-            ["git", "push", "origin", "main"],
-            cwd=BASE_DIR,
-            capture_output=True,
-            text=True,
-        )
-        if push.returncode != 0:
-            return {
-                "success": False,
-                "error": (push.stderr or push.stdout or "git push failed").strip(),
-                "committed": committed,
-            }
+        cmd = [
+            cloudflared,
+            "tunnel",
+            "--url",
+            f"http://{API_HOST}:{API_PORT}",
+        ]
 
-        print("✅ 4 JSON 已同步到 GitHub", flush=True)
-        return {"success": True, "committed": committed}
+        print("☁️ 正在自动启动 Cloudflare Quick Tunnel...", flush=True)
 
-    except Exception as e:
-        print(f"❌ GitHub JSON sync error: {e}", flush=True)
-        return {"success": False, "error": str(e)}
+        try:
+            proc = subprocess.Popen(
+                cmd,
+                cwd=BASE_DIR,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1,
+            )
+
+            with TUNNEL_PROCESS_LOCK:
+                TUNNEL_PROCESS = proc
+
+            found_url = False
+
+            if proc.stdout is not None:
+                for raw_line in proc.stdout:
+                    if TUNNEL_STOP_EVENT.is_set():
+                        break
+
+                    line = raw_line.rstrip()
+                    if line:
+                        print(f"[Tunnel] {line}", flush=True)
+
+                    match = TUNNEL_URL_RE.search(line)
+                    if match:
+                        public_url = match.group(0).rstrip("/")
+                        if public_url != CURRENT_TUNNEL_URL:
+                            CURRENT_TUNNEL_URL = public_url
+                            found_url = True
+                            TUNNEL_READY_EVENT.set()
+                            TUNNEL_PUBLISH_DONE_EVENT.clear()
+                            _write_tunnel_info(public_url)
+
+            if TUNNEL_STOP_EVENT.is_set():
+                break
+
+            return_code = proc.wait()
+            print(
+                f"⚠️ Cloudflare Tunnel 已断开 (exit={return_code}), 5秒后自动重连...",
+                flush=True,
+            )
+
+            if not found_url:
+                TUNNEL_PUBLISH_DONE_EVENT.set()
+
+        except Exception as e:
+            print(f"❌ Cloudflare Tunnel error: {e}", flush=True)
+            TUNNEL_PUBLISH_DONE_EVENT.set()
+
+        finally:
+            with TUNNEL_PROCESS_LOCK:
+                if TUNNEL_PROCESS is not None and TUNNEL_PROCESS.poll() is not None:
+                    TUNNEL_PROCESS = None
+
+        TUNNEL_STOP_EVENT.wait(5)
+
+
+def stop_tunnel_manager():
+    """Dừng cloudflared con khi run_forever.py thoát bình thường."""
+    global TUNNEL_PROCESS
+    TUNNEL_STOP_EVENT.set()
+
+    with TUNNEL_PROCESS_LOCK:
+        proc = TUNNEL_PROCESS
+
+    if proc and proc.poll() is None:
+        try:
+            proc.terminate()
+            proc.wait(timeout=5)
+        except Exception:
+            try:
+                proc.kill()
+            except Exception:
+                pass
+
+    with TUNNEL_PROCESS_LOCK:
+        TUNNEL_PROCESS = None
+
 
 def read_json_file(filename):
     path = os.path.join(BASE_DIR, filename)
@@ -352,7 +525,7 @@ class RunApiHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
         self.send_header(
             "Access-Control-Allow-Headers",
-            "Content-Type, X-Run-Token",
+            "Content-Type",
         )
         self.send_header("Access-Control-Max-Age", "600")
 
@@ -383,10 +556,6 @@ class RunApiHandler(BaseHTTPRequestHandler):
             # Trình duyệt/client đã đóng hoặc hủy request trước khi server trả xong.
             # Đây không phải lỗi chạy bot, nên bỏ qua để tránh in traceback dài ra terminal.
             return
-
-    def _authorized(self):
-        supplied = self.headers.get("X-Run-Token", "")
-        return secrets.compare_digest(supplied, RUN_TOKEN)
 
     def do_OPTIONS(self):
         allowed, origin = self._origin_allowed()
@@ -486,13 +655,82 @@ class RunApiHandler(BaseHTTPRequestHandler):
                     "run_number": run_number,
                     "last_finished_run_number": (last_result or {}).get("run_number", 0),
                     "last_finished_at": (last_result or {}).get("finished_at"),
+                    "tunnel_url": CURRENT_TUNNEL_URL or None,
+                    "tunnel_ready": bool(CURRENT_TUNNEL_URL),
                     "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 },
             )
             return
 
+        # Trạng thái của một lượt chạy được HTML công khai kiểm tra ngắn hạn.
+        # Không giữ kết nối lâu, phù hợp khi API đi qua HTTPS tunnel/proxy.
+        if path == "/run-status":
+            query = parse_qs(parsed.query)
+            site = str((query.get("site") or ["73J"])[0]).upper()
+
+            try:
+                target_run = max(0, int((query.get("run") or ["0"])[0]))
+            except Exception:
+                target_run = 0
+
+            if site not in SITE_TO_JSON:
+                self._json_response(
+                    400,
+                    {
+                        "success": False,
+                        "error": f"Không hỗ trợ site: {site}",
+                    },
+                )
+                return
+
+            with RUN_CONDITION:
+                running = bool(IS_RUNNING)
+                current_number = int(RUN_NUMBER or 0)
+                last_result = dict(LAST_RESULT) if LAST_RESULT else None
+
+            last_number = int((last_result or {}).get("run_number", 0) or 0)
+
+            if target_run <= 0:
+                target_run = current_number or last_number
+
+            if target_run > 0 and last_number >= target_run:
+                current_script = SITE_TO_SCRIPT[site]
+                current_detail = (last_result or {}).get("details", {}).get(current_script, {})
+                site_success = bool(current_detail.get("success"))
+
+                self._json_response(
+                    200,
+                    {
+                        "success": True,
+                        "finished": True,
+                        "running": running,
+                        "run_number": target_run,
+                        "last_finished_run_number": last_number,
+                        "site_success": site_success,
+                        "error": None if site_success else (
+                            f"{current_script} chạy thất bại: "
+                            f"{current_detail.get('info', (last_result or {}).get('error', 'unknown error'))}"
+                        ),
+                        "finished_at": (last_result or {}).get("finished_at"),
+                    },
+                )
+                return
+
+            self._json_response(
+                200,
+                {
+                    "success": True,
+                    "finished": False,
+                    "running": running,
+                    "run_number": target_run,
+                    "current_run_number": current_number,
+                    "last_finished_run_number": last_number,
+                },
+            )
+            return
+
         # HTML dùng endpoint này để lấy JSON TRỰC TIẾP từ Mac sau khi
-        # lượt tự động mỗi giờ chạy xong. Không phải chờ GitHub Pages/CDN.
+        # lượt chạy xong. Không phải chờ GitHub Pages/CDN.
         if path == "/latest":
             query = parse_qs(parsed.query)
             site = str((query.get("site") or ["73J"])[0]).upper()
@@ -548,16 +786,6 @@ class RunApiHandler(BaseHTTPRequestHandler):
             self._json_response(404, {"success": False, "error": "Not found"})
             return
 
-        if not self._authorized():
-            self._json_response(
-                401,
-                {
-                    "success": False,
-                    "error": "查询密钥错误",
-                },
-            )
-            return
-
         try:
             content_length = int(self.headers.get("Content-Length", "0") or 0)
             if content_length > 16 * 1024:
@@ -587,55 +815,31 @@ class RunApiHandler(BaseHTTPRequestHandler):
             )
             return
 
-        result = run_all(trigger=f"html:{site}")
+        # API công khai: nút HTML gọi trực tiếp, không dùng token.
+        # Nếu đang có lượt chạy, người bấm dùng luôn lượt đó.
+        # Nếu chưa chạy, khởi động ở background để request HTTP trả ngay.
+        with RUN_CONDITION:
+            already_running = bool(IS_RUNNING)
+            current_number = int(RUN_NUMBER or 0)
+            target_run = current_number if already_running else current_number + 1
 
-        # Chỉ coi site hiện tại thất bại nếu chính script của site đó lỗi.
-        current_script = SITE_TO_SCRIPT[site]
-        current_detail = result.get("details", {}).get(current_script, {})
-
-        if not current_detail.get("success"):
-            self._json_response(
-                500,
-                {
-                    "success": False,
-                    "error": (
-                        f"{current_script} chạy thất bại: "
-                        f"{current_detail.get('info', result.get('error', 'unknown error'))}"
-                    ),
-                    "run": result,
-                },
+        if not already_running:
+            worker = threading.Thread(
+                target=run_all,
+                kwargs={"trigger": f"html:{site}"},
+                name=f"html-run-{target_run}",
+                daemon=True,
             )
-            return
-
-        try:
-            current_data = read_json_file(SITE_TO_JSON[site])
-            master_data = read_json_file("data.json")
-        except Exception as e:
-            self._json_response(
-                500,
-                {
-                    "success": False,
-                    "error": f"Không đọc được JSON mới: {e}",
-                    "run": result,
-                },
-            )
-            return
-
-        master_update_time = (
-            master_data.get("update_time_brazil")
-            or master_data.get("update_time")
-            or "--"
-        )
+            worker.start()
 
         self._json_response(
-            200,
+            202,
             {
                 "success": True,
+                "accepted": True,
                 "site": site,
-                "data": current_data,
-                "master_update_time": master_update_time,
-                "all_bots_success": result.get("success", False),
-                "run": result,
+                "run_number": target_run,
+                "reused_running_job": already_running,
             },
         )
 
@@ -679,12 +883,32 @@ def scheduler_loop():
 
 def main():
     print("=" * 60, flush=True)
-    print("Xiaoruan Run Forever + HTML Trigger", flush=True)
+    print("Xiaoruan Run Forever + Auto Cloudflare Tunnel", flush=True)
     print(f"📁 BASE_DIR: {BASE_DIR}", flush=True)
     print(f"🌐 Local API: http://{API_HOST}:{API_PORT}", flush=True)
-    print(f"🔐 查询密钥: {RUN_TOKEN}", flush=True)
-    print(f"🔐 密钥文件: {TOKEN_FILE}", flush=True)
+    print("☁️ Tunnel: 自动管理 trycloudflare.com", flush=True)
     print("=" * 60, flush=True)
+
+    # Tạo/bind HTTP server trước để cloudflared có local service đích.
+    server = ThreadingHTTPServer((API_HOST, API_PORT), RunApiHandler)
+
+    # Tunnel tự động: URL mới sẽ được ghi tunnel.json và push lên GitHub.
+    tunnel_thread = threading.Thread(
+        target=tunnel_manager_loop,
+        name="cloudflare-tunnel-manager",
+        daemon=True,
+    )
+    tunnel_thread.start()
+
+    # Chờ một chút để tunnel có URL trước khi 4 bot bắt đầu thao tác git.
+    # Nếu Cloudflare chậm/mất mạng thì không chặn hệ thống quá lâu.
+    if TUNNEL_READY_EVENT.wait(timeout=25):
+        TUNNEL_PUBLISH_DONE_EVENT.wait(timeout=20)
+    else:
+        print(
+            "⚠️ 25秒内还没拿到 Tunnel URL，API 本地和定时任务仍会继续运行。",
+            flush=True,
+        )
 
     scheduler = threading.Thread(
         target=scheduler_loop,
@@ -693,8 +917,6 @@ def main():
     )
     scheduler.start()
 
-    server = ThreadingHTTPServer((API_HOST, API_PORT), RunApiHandler)
-
     try:
         print("✅ HTML 查询 API 已启动", flush=True)
         server.serve_forever()
@@ -702,6 +924,7 @@ def main():
         print("\n🛑 Stopping...", flush=True)
     finally:
         server.server_close()
+        stop_tunnel_manager()
 
 
 if __name__ == "__main__":
