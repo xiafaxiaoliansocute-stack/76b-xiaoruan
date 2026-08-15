@@ -10,6 +10,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import urlparse, parse_qs
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -391,10 +392,14 @@ class RunApiHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        if self.path.rstrip("/") == "/health":
+        parsed = urlparse(self.path)
+        path = parsed.path.rstrip("/") or "/"
+
+        if path == "/health":
             with RUN_CONDITION:
                 running = IS_RUNNING
                 run_number = RUN_NUMBER
+                last_result = dict(LAST_RESULT) if LAST_RESULT else None
 
             self._json_response(
                 200,
@@ -403,9 +408,61 @@ class RunApiHandler(BaseHTTPRequestHandler):
                     "service": "xiaoruan-run-api",
                     "running": running,
                     "run_number": run_number,
+                    "last_finished_run_number": (last_result or {}).get("run_number", 0),
+                    "last_finished_at": (last_result or {}).get("finished_at"),
                     "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 },
             )
+            return
+
+        # HTML dùng endpoint này để lấy JSON TRỰC TIẾP từ Mac sau khi
+        # lượt tự động mỗi giờ chạy xong. Không phải chờ GitHub Pages/CDN.
+        if path == "/latest":
+            query = parse_qs(parsed.query)
+            site = str((query.get("site") or ["73J"])[0]).upper()
+
+            if site not in SITE_TO_JSON:
+                self._json_response(
+                    400,
+                    {
+                        "success": False,
+                        "error": f"Không hỗ trợ site: {site}",
+                    },
+                )
+                return
+
+            try:
+                current_data = read_json_file(SITE_TO_JSON[site])
+                master_data = read_json_file("data.json")
+                master_update_time = (
+                    master_data.get("update_time_brazil")
+                    or master_data.get("update_time")
+                    or "--"
+                )
+
+                with RUN_CONDITION:
+                    running = IS_RUNNING
+                    run_number = RUN_NUMBER
+
+                self._json_response(
+                    200,
+                    {
+                        "success": True,
+                        "site": site,
+                        "data": current_data,
+                        "master_update_time": master_update_time,
+                        "running": running,
+                        "run_number": run_number,
+                    },
+                )
+            except Exception as e:
+                self._json_response(
+                    500,
+                    {
+                        "success": False,
+                        "error": f"Không đọc được JSON local: {e}",
+                    },
+                )
             return
 
         self._json_response(404, {"success": False, "error": "Not found"})

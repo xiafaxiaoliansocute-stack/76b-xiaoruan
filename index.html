@@ -7035,7 +7035,15 @@ function renderRetentionButtons(){
    GitHub Pages -> http://127.0.0.1:8765/run
    ============================================================ */
 const RUN_API_URL = "http://127.0.0.1:8765/run";
+const RUN_HEALTH_URL = "http://127.0.0.1:8765/health";
+const RUN_LATEST_URL = "http://127.0.0.1:8765/latest";
 const RUN_TOKEN_KEY = "xiaoruan_run_trigger_token";
+
+// Theo dõi run_forever.py: khi lượt chạy tự động mỗi giờ KẾT THÚC,
+// HTML lấy JSON trực tiếp từ Mac, không chờ GitHub Pages/CDN.
+let autoRunMonitorStarted = false;
+let autoRunMonitorBusy = false;
+let autoLastFinishedRunNumber = null;
 
 function getRunToken(){
     let token = localStorage.getItem(RUN_TOKEN_KEY) || "";
@@ -7061,6 +7069,102 @@ async function callRunForever(token){
         },
         body: JSON.stringify({ site: currentSite })
     });
+}
+
+function applyRunDataToDashboard(newData, updateTime){
+    if(!newData) return;
+
+    historyData = newData.history || {};
+    globalData = newData;
+    masterUpdateTime =
+        updateTime ||
+        newData.update_time_brazil ||
+        newData.update_time ||
+        "--";
+
+    document.getElementById("updateTimeHero").innerHTML =
+        "📅 数据更新时间：" + masterUpdateTime;
+
+    document.getElementById("tableMainTitle").innerHTML =
+        `${siteTitles[currentSite]}-实时数据汇总-更新时间(巴西)：${masterUpdateTime}`;
+
+    renderTab1(newData);
+    renderTab2();
+    renderTab3();
+    renderRetentionButtons();
+    renderTab4();
+
+    const sw = document.getElementById("zeroSwitch");
+    if(sw){
+        sw.checked = !hideZero;
+    }
+}
+
+async function loadLatestLocalDataSilently(){
+    if(currentSite === "TEST3") return;
+
+    const res = await fetch(
+        RUN_LATEST_URL + "?site=" + encodeURIComponent(currentSite) + "&t=" + Date.now(),
+        { mode:"cors", cache:"no-store" }
+    );
+
+    if(!res.ok) throw new Error("latest HTTP " + res.status);
+
+    const result = await res.json();
+    if(!result.success || !result.data){
+        throw new Error(result.error || "latest data failed");
+    }
+
+    applyRunDataToDashboard(result.data, result.master_update_time);
+}
+
+async function monitorRunForeverAutoUpdate(){
+    if(autoRunMonitorBusy || currentSite === "TEST3") return;
+    autoRunMonitorBusy = true;
+
+    try{
+        const res = await fetch(
+            RUN_HEALTH_URL + "?t=" + Date.now(),
+            { mode:"cors", cache:"no-store" }
+        );
+        if(!res.ok) return;
+
+        const health = await res.json();
+        if(!health.success) return;
+
+        const finished = Number(health.last_finished_run_number || 0);
+
+        // Lần đầu HTML nối được với local API: lấy local JSON ngay một lần.
+        // Nhờ vậy nếu GitHub Pages đang chậm cache, màn hình vẫn là dữ liệu mới nhất.
+        if(autoLastFinishedRunNumber === null){
+            autoLastFinishedRunNumber = finished;
+            if(!health.running){
+                await loadLatestLocalDataSilently();
+            }
+            return;
+        }
+
+        // Chỉ cập nhật sau khi một lượt mới đã KẾT THÚC.
+        if(!health.running && finished > autoLastFinishedRunNumber){
+            await loadLatestLocalDataSilently();
+            autoLastFinishedRunNumber = finished;
+            console.log("✅ 自动小时数据已立即同步到页面 #" + finished);
+        }
+
+    }catch(err){
+        // Nếu run_forever.py tắt thì web vẫn dùng JSON GitHub bình thường.
+        console.debug("local auto update unavailable:", err);
+    }finally{
+        autoRunMonitorBusy = false;
+    }
+}
+
+function startRunForeverAutoMonitor(){
+    if(autoRunMonitorStarted) return;
+    autoRunMonitorStarted = true;
+
+    setTimeout(monitorRunForeverAutoUpdate, 1200);
+    setInterval(monitorRunForeverAutoUpdate, 2000);
 }
 
 async function queryData(){
@@ -7145,26 +7249,7 @@ async function queryData(){
         }
 
         // Cập nhật dữ liệu trên HTML ngay sau khi bot chạy xong.
-        historyData = newData.history || {};
-        globalData = newData;
-        masterUpdateTime = updateTime;
-
-        document.getElementById("updateTimeHero").innerHTML =
-            "📅 数据更新时间：" + masterUpdateTime;
-
-        document.getElementById("tableMainTitle").innerHTML =
-            `${siteTitles[currentSite]}-实时数据汇总-更新时间(巴西)：${masterUpdateTime}`;
-
-        renderTab1(newData);
-        renderTab2();
-        renderTab3();
-        renderRetentionButtons();
-        renderTab4();
-
-        const sw = document.getElementById("zeroSwitch");
-        if(sw){
-            sw.checked = !hideZero;
-        }
+        applyRunDataToDashboard(newData, updateTime);
 
         overlay.classList.add("fade-out");
         overlay.addEventListener("animationend", () => overlay.remove(), {once:true});
@@ -7287,6 +7372,9 @@ window.onclick=function(e){
 }
 
 window.addEventListener("load",function(){
+
+// Bắt đầu theo dõi lượt chạy tự động mỗi giờ của run_forever.py.
+startRunForeverAutoMonitor();
 
 // Tự điền tài khoản mật khẩu
 const savedUser=localStorage.getItem("savedUser");
