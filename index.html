@@ -7030,7 +7030,38 @@ function renderRetentionButtons(){
  //==== KẾT THÚC  SỬA NÚT CHỌN KÊNH   留存率 ======================================================
 
 
-/* ============ QUERY DATA FROM BACKEND ============ */
+/* ============================================================
+   ✅ ĐÃ SỬA: NÚT 查询数据 -> CHẠY run_forever.py TRÊN MÁY MAC
+   GitHub Pages -> http://127.0.0.1:8765/run
+   ============================================================ */
+const RUN_API_URL = "http://127.0.0.1:8765/run";
+const RUN_TOKEN_KEY = "xiaoruan_run_trigger_token";
+
+function getRunToken(){
+    let token = localStorage.getItem(RUN_TOKEN_KEY) || "";
+
+    if(!token){
+        token = (prompt("请输入查询密钥（第一次输入后会自动保存）") || "").trim();
+        if(token){
+            localStorage.setItem(RUN_TOKEN_KEY, token);
+        }
+    }
+
+    return token;
+}
+
+async function callRunForever(token){
+    return fetch(RUN_API_URL, {
+        method: "POST",
+        mode: "cors",
+        cache: "no-store",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Run-Token": token
+        },
+        body: JSON.stringify({ site: currentSite })
+    });
+}
 
 async function queryData(){
 
@@ -7043,117 +7074,132 @@ async function queryData(){
     overlay.className = "refresh-overlay";
     overlay.innerHTML = `
         <div class="spinner"></div>
-        <div class="loading-text">🚀 正在获取最新数据...</div>
+        <div class="loading-text">🚀 正在运行机器人并获取最新数据...</div>
     `;
     document.body.appendChild(overlay);
 
-    let newData = null;
-
     try{
+        let newData = null;
+        let updateTime = "--";
 
-        if(location.port === "5000"){
+        // TEST3 hiện không có script tương ứng trong run_forever.py.
+        if(currentSite === "TEST3"){
+            const jsonRes = await fetch(
+                siteFiles[currentSite] + "?t=" + Date.now(),
+                { cache: "no-store" }
+            );
 
-            await Promise.all([
-                (async ()=>{
-                    const res = await fetch("/run");
-                    const result = await res.json();
+            if(!jsonRes.ok){
+                throw new Error("读取 TEST3 JSON 失败");
+            }
 
-                    if(!result.success){
-                        throw new Error(result.error || "run failed");
-                    }
-
-                    newData = await fetch(
-    siteFiles[currentSite]+"?t="+Date.now()
-).then(r=>r.json());
-
-                })(),
-
-                new Promise(r=>setTimeout(r,1500))
-            ]);
+            newData = await jsonRes.json();
+            updateTime =
+                newData.update_time_brazil ||
+                newData.update_time ||
+                "--";
 
         }else{
+            let token = getRunToken();
+            if(!token){
+                throw new Error("未输入查询密钥");
+            }
 
-            await Promise.all([
-                fetch(siteFiles[currentSite]+"?t="+Date.now())
-                    .then(r=>r.json())
-                    .then(d=>newData=d),
+            let res = await callRunForever(token);
 
-                new Promise(r=>setTimeout(r,1500))
-            ]);
+            // Nếu token cũ sai thì xóa và cho nhập lại 1 lần.
+            if(res.status === 401){
+                localStorage.removeItem(RUN_TOKEN_KEY);
+                token = getRunToken();
+                if(!token){
+                    throw new Error("未输入查询密钥");
+                }
+                res = await callRunForever(token);
+            }
 
+            let result;
+            try{
+                result = await res.json();
+            }catch(_){
+                throw new Error("本地机器人返回格式错误");
+            }
+
+            if(!res.ok || !result.success){
+                if(res.status === 401){
+                    localStorage.removeItem(RUN_TOKEN_KEY);
+                }
+                throw new Error(result.error || ("HTTP " + res.status));
+            }
+
+            // run_forever.py trả trực tiếp JSON mới của site đang chọn.
+            newData = result.data;
+            updateTime =
+                result.master_update_time ||
+                newData?.update_time_brazil ||
+                newData?.update_time ||
+                "--";
+        }
+
+        if(!newData){
+            throw new Error("没有收到最新数据");
+        }
+
+        // Cập nhật dữ liệu trên HTML ngay sau khi bot chạy xong.
+        historyData = newData.history || {};
+        globalData = newData;
+        masterUpdateTime = updateTime;
+
+        document.getElementById("updateTimeHero").innerHTML =
+            "📅 数据更新时间：" + masterUpdateTime;
+
+        document.getElementById("tableMainTitle").innerHTML =
+            `${siteTitles[currentSite]}-实时数据汇总-更新时间(巴西)：${masterUpdateTime}`;
+
+        renderTab1(newData);
+        renderTab2();
+        renderTab3();
+        renderRetentionButtons();
+        renderTab4();
+
+        const sw = document.getElementById("zeroSwitch");
+        if(sw){
+            sw.checked = !hideZero;
         }
 
         overlay.classList.add("fade-out");
+        overlay.addEventListener("animationend", () => overlay.remove(), {once:true});
 
-        overlay.addEventListener("animationend",()=>{
-
-            overlay.remove();
-
-            btn.innerHTML = "✅ 数据已更新";
-
-            setTimeout(()=>{
-
-                // ===== BÂY GIỜ MỚI CẬP NHẬT DỮ LIỆU =====
-
-                if(newData){
-
-    globalData = newData;
-
-    masterUpdateTime =
-        newData.update_time_brazil ||
-        newData.update_time ||
-        "--";
-
-let brazilTime = masterUpdateTime;
-
-    // Hero
-    document.getElementById("updateTimeHero").innerHTML =
-        "📅 数据更新时间：" + brazilTime;
-
-    // Tiêu đề bảng
-    document.getElementById("tableMainTitle").innerHTML =
-        `${siteTitles[currentSite]}-实时数据汇总-更新时间(巴西)：${brazilTime}`;
-
-renderTab1(newData);
-renderTab2();
-renderTab3();
-renderTab4();
-
-const sw = document.getElementById("zeroSwitch");
-if (sw) {
-    sw.checked = !hideZero;
-}
-}
-
-                btn.classList.remove("loading");
-                btn.disabled = false;
-                btn.innerHTML = "🔍 查询数据";
-
-            },1000);
-
-        },{once:true});
-
-    }catch(err){
-
-        console.error(err);
-
-        overlay.classList.add("fade-out");
-
-        overlay.addEventListener(
-            "animationend",
-            ()=>overlay.remove(),
-            {once:true}
-        );
-
-        btn.innerHTML = "❌ 更新失败";
-
-        setTimeout(()=>{
+        btn.innerHTML = "✅ 数据已更新";
+        setTimeout(() => {
             btn.classList.remove("loading");
             btn.disabled = false;
             btn.innerHTML = "🔍 查询数据";
-        },1000);
+        }, 1000);
+
+    }catch(err){
+        console.error("查询数据失败:", err);
+
+        const loadingText = overlay.querySelector(".loading-text");
+        if(loadingText){
+            loadingText.innerHTML =
+                "❌ 更新失败<br><span style=\"font-size:16px;font-weight:600\">" +
+                String(err.message || err) +
+                "</span>";
+        }
+
+        btn.innerHTML = "❌ 更新失败";
+
+        setTimeout(() => {
+            overlay.classList.add("fade-out");
+            overlay.addEventListener("animationend", () => overlay.remove(), {once:true});
+
+            btn.classList.remove("loading");
+            btn.disabled = false;
+            btn.innerHTML = "🔍 查询数据";
+        }, 1800);
     }
 }
+
 function toggleZeroSwitch(){
 
     hideZero = !document.getElementById("zeroSwitch").checked;
