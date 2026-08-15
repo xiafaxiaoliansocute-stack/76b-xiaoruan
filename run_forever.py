@@ -371,13 +371,18 @@ class RunApiHandler(BaseHTTPRequestHandler):
             separators=(",", ":"),
         ).encode("utf-8")
 
-        self.send_response(status)
-        self._send_cors(origin if allowed else "")
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Cache-Control", "no-store")
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
+        try:
+            self.send_response(status)
+            self._send_cors(origin if allowed else "")
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+            # Trình duyệt/client đã đóng hoặc hủy request trước khi server trả xong.
+            # Đây không phải lỗi chạy bot, nên bỏ qua để tránh in traceback dài ra terminal.
+            return
 
     def _authorized(self):
         supplied = self.headers.get("X-Run-Token", "")
