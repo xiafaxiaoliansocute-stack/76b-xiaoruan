@@ -1526,6 +1526,38 @@ tbody tr:hover{
     background:#fafcfd;
 }
 
+/* TAB 3: nút ↑返回顶部 nằm ở góc phải dòng header và luôn thấy khi cuộn */
+.realtime-top-tools{
+    position:sticky;
+    top:0;
+    left:0;
+    width:100%;
+    height:0;
+    z-index:6500;
+    display:flex;
+    justify-content:flex-end;
+    pointer-events:none;
+}
+
+.realtime-back-top-btn{
+    pointer-events:auto;
+    height:40px;
+    margin-right:14px;
+    padding:0 10px;
+    border:none;
+    background:transparent;
+    color:#1677ff;
+    font-size:18px;
+    font-weight:800;
+    cursor:pointer;
+    white-space:nowrap;
+}
+
+.realtime-back-top-btn:hover{
+    color:#0958d9;
+    text-decoration:underline;
+}
+
 /* TAB 4 */
 .retentionFilter{
     position:relative !important;
@@ -1980,6 +2012,13 @@ placeholder="请输入密码">
 <div id="tab3" style="display:none">
 
     <div class="realtime-wrap">
+
+        <div class="realtime-top-tools">
+            <button
+                type="button"
+                class="realtime-back-top-btn"
+                onclick="scrollRealtimeTop()">↑返回顶部</button>
+        </div>
 
         <table id="realtimeTable"></table>
 
@@ -5834,6 +5873,17 @@ function calc5MinuteChange(current, previous){
 
     };
 
+}
+
+/* TAB 3: quay về giờ ở trên cùng của khung dữ liệu */
+function scrollRealtimeTop(){
+    const wrap = document.querySelector(".realtime-wrap");
+    if(!wrap) return;
+
+    wrap.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 }
 
 /* ============ RENDER TAB 3 - 实时数据 ============ */

@@ -10,6 +10,8 @@ import time
 import queue
 import threading
 import subprocess
+import fcntl
+import shutil
 from pathlib import Path
 
 import requests
@@ -28,6 +30,107 @@ WEB_URL = "https://xiafaxiaoliansocute-stack.github.io/76b-xiaoruan/"
 # ============================================================
 
 BASE_DIR = Path(__file__).resolve().parent
+
+
+# ============================================================
+# SINGLE INSTANCE / PROCESS SAFETY
+# ============================================================
+
+RUN_ALL_LOCK_FILE = BASE_DIR / ".run_all.lock"
+_run_all_lock_handle = None
+
+
+def acquire_single_instance_lock():
+    """Chỉ cho phép 1 bản RUN ALL chạy tại một thời điểm."""
+    global _run_all_lock_handle
+
+    _run_all_lock_handle = open(RUN_ALL_LOCK_FILE, "w")
+
+    try:
+        fcntl.flock(
+            _run_all_lock_handle.fileno(),
+            fcntl.LOCK_EX | fcntl.LOCK_NB
+        )
+    except BlockingIOError:
+        print("❌ RUN ALL 已经在运行，禁止重复启动。")
+        return False
+
+    _run_all_lock_handle.write(str(os.getpid()))
+    _run_all_lock_handle.flush()
+    return True
+
+
+def find_script_processes(script_path):
+    """Tìm process Python đang chạy đúng script_path."""
+    target = str(Path(script_path).resolve())
+    found = []
+
+    try:
+        result = subprocess.run(
+            ["ps", "-axo", "pid=,command="],
+            capture_output=True,
+            text=True,
+            check=False
+        )
+
+        for raw_line in result.stdout.splitlines():
+            line = raw_line.strip()
+            if not line:
+                continue
+
+            parts = line.split(None, 1)
+            if len(parts) != 2:
+                continue
+
+            try:
+                pid = int(parts[0])
+            except ValueError:
+                continue
+
+            command = parts[1]
+
+            if pid == os.getpid():
+                continue
+
+            if target in command:
+                found.append(pid)
+
+    except Exception as e:
+        print(f"[Process Check Error] {e}")
+
+    return found
+
+
+def stop_existing_script_processes(script_path):
+    """Dừng TELEGRAM_BOT cũ để tránh Conflict getUpdates."""
+    pids = find_script_processes(script_path)
+
+    for pid in pids:
+        try:
+            print(f"⚠️ Stop duplicate process PID={pid}: {script_path}")
+            os.kill(pid, 15)
+        except ProcessLookupError:
+            pass
+        except Exception as e:
+            print(f"⚠️ Cannot stop PID={pid}: {e}")
+
+    if pids:
+        time.sleep(2)
+
+        for pid in pids:
+            try:
+                os.kill(pid, 0)
+            except ProcessLookupError:
+                continue
+            except Exception:
+                continue
+
+            try:
+                print(f"⚠️ Force stop duplicate PID={pid}")
+                os.kill(pid, 9)
+            except Exception:
+                pass
+
 
 # ============================================================
 # TASK CONFIG
@@ -62,6 +165,11 @@ TASKS = [
         "type": "集团数据",
         "file": BASE_DIR / "jituan-shuju" / "jituan1.py",
     },
+   {
+        "name": "游戏跟进",
+        "type": "游戏跟进",
+        "file": BASE_DIR / "test-data-py" / "datahuiyuan.py",
+    },    
     
 
 ]
@@ -135,6 +243,32 @@ def check_file(path):
     print(f"❌ File not found : {path}")
 
     return False
+
+
+# ============================================================
+# ALWAYS LOAD LATEST CHILD FILES
+# ============================================================
+
+def clear_python_cache(script_path):
+    """Xóa __pycache__ trước khi chạy để luôn nạp code/config .py mới nhất đã lưu."""
+    script_dir = Path(script_path).resolve().parent
+
+    try:
+        for cache_dir in script_dir.rglob("__pycache__"):
+            try:
+                shutil.rmtree(cache_dir, ignore_errors=True)
+            except Exception:
+                pass
+    except Exception as e:
+        print(f"[Cache Clean Warning] {script_dir}: {e}")
+
+
+def fresh_child_env():
+    """Môi trường subprocess: không ghi bytecode cache và giữ stdout realtime."""
+    env = os.environ.copy()
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    env["PYTHONUNBUFFERED"] = "1"
+    return env
 
 # ============================================================
 # BANNER
@@ -218,6 +352,7 @@ class Worker:
 
         self.running = False
         self.finished = False
+        self.restarting = False
 
         self.restart_count = 0
         self.lock = threading.Lock()
@@ -232,9 +367,14 @@ class Worker:
                 return
 
             if not check_file(self.file):
+                self.restarting = False
                 return
 
             self.finished = False
+
+            # TELEGRAM polling chỉ được có 1 instance.
+            if self.type == "TELEGRAM_BOT":
+                stop_existing_script_processes(self.file)
 
             log(self.name, "=" * 60)
             log(self.name, "START")
@@ -243,9 +383,18 @@ class Worker:
 
             try:
 
+                # Luôn chạy theo file con mới nhất vừa lưu, tránh dùng __pycache__ cũ.
+                clear_python_cache(self.file)
+
+                file_mtime = time.strftime(
+                    "%Y-%m-%d %H:%M:%S",
+                    time.localtime(self.file.stat().st_mtime)
+                )
+                log(self.name, f"LOAD LATEST SAVED FILE : {file_mtime}")
+
                 self.process = subprocess.Popen(
 
-                    [sys.executable, "-u", str(self.file)],
+                    [sys.executable, "-B", "-u", str(self.file)],
 
                     cwd=str(self.file.parent),
 
@@ -261,9 +410,13 @@ class Worker:
 
                     bufsize=1,
 
+                    env=fresh_child_env(),
+
                 )
 
             except Exception as e:
+
+                self.restarting = False
 
                 telegram(
                     f"❌ {self.name}\n\n"
@@ -274,6 +427,7 @@ class Worker:
                 return
 
             self.running = True
+            self.restarting = False
 
             self.thread = threading.Thread(
                 target=self.reader,
@@ -303,9 +457,12 @@ class Worker:
 
         with self.lock:
 
-            if self.running:
+            # reader() và watchdog() có thể cùng phát hiện 1 lần process chết.
+            # restarting ngăn việc tạo 2 process mới cùng lúc.
+            if self.running or self.restarting:
                 return
 
+            self.restarting = True
             self.restart_count += 1
 
             log(self.name, f"Restart #{self.restart_count}")
@@ -551,10 +708,9 @@ def clear_buffer():
 
         try:
 
+            # Worker đọc stdout trực tiếp, hiện không có thuộc tính buffer.
             for w in workers:
-
-                if len(w.buffer) > 500:
-                    w.buffer = w.buffer[-100:]
+                pass
 
         except:
             pass
@@ -687,6 +843,9 @@ print("=" * 70)
 if __name__ == "__main__":
 
     try:
+
+        if not acquire_single_instance_lock():
+            sys.exit(1)
 
         main()
 
