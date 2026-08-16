@@ -1714,6 +1714,32 @@ tbody tr:hover{
     border-collapse:collapse !important;
 }
 
+
+/* =========================================================
+   PERFORMANCE PATCH - GitHub Pages / large dashboard
+   Giữ nguyên chức năng, chỉ giảm công việc render/repaint.
+   ========================================================= */
+.section{
+    content-visibility:auto;
+    contain-intrinsic-size:auto 320px;
+}
+
+.realtime-wrap,
+.retention-wrap,
+#tab2{
+    overscroll-behavior:contain;
+}
+
+#hour,#minute,#second{
+    will-change:transform;
+}
+
+#realtimeTable tbody tr,
+#retentionTable tbody tr,
+#summaryTable tbody tr{
+    transition:none !important;
+}
+
 </style>
 </head>
 <script>
@@ -1730,7 +1756,24 @@ document.getElementById("minute").style.transform=`translateX(-50%) rotate(${min
 document.getElementById("second").style.transform=`translateX(-50%) rotate(${secondDeg}deg)`;
 document.getElementById("brazilTimeText").innerHTML="🇧🇷 Brazil<br>"+brazil.toLocaleString("pt-BR");
 }
-window.addEventListener("load",()=>{updateBrazilClock();setInterval(updateBrazilClock,1000);});
+let brazilClockTimer = null;
+function startBrazilClock(){
+    if(brazilClockTimer) return;
+    updateBrazilClock();
+    brazilClockTimer = setInterval(updateBrazilClock,1000);
+}
+function stopBrazilClock(){
+    if(!brazilClockTimer) return;
+    clearInterval(brazilClockTimer);
+    brazilClockTimer = null;
+}
+window.addEventListener("load",()=>{
+    if(!document.hidden) startBrazilClock();
+});
+document.addEventListener("visibilitychange",()=>{
+    if(document.hidden) stopBrazilClock();
+    else startBrazilClock();
+});
 </script>
 <body>
 <!-- ============ LOGIN PAGE ============ -->
@@ -2165,15 +2208,16 @@ document.querySelectorAll(".site-btn").forEach(btn=>{
 });
 
 obj.classList.add("active");
-
-renderRetentionButtons();  
-
+if(activeTab===4){
+    renderRetentionButtons();
+}
 loadData();
 
 }
 
 /* ============ TAB SWITCHING ============ */
 function switchTab(n){
+    activeTab = n;
 
     document.getElementById("tab1").style.display =
         n===1 ? "block" : "none";
@@ -2191,9 +2235,13 @@ function switchTab(n){
         b.classList.toggle("active", i===n-1);
     });
 
-    applyHideZero();
+    const renderedNow = renderActiveTab();
 
-    if(n===3){
+    if(n===2 || n===4){
+        applyHideZero();
+    }
+
+    if(n===3 && !renderedNow){
         setTimeout(()=>{
             if(latestRealtimeRow){
                 const wrap = document.querySelector(".realtime-wrap");
@@ -2219,112 +2267,151 @@ let hideZero=false;
 let masterUpdateTime = "--";
 let retentionChannel = "ALL";
 let latestRealtimeRow = null;
+
+// PERFORMANCE: chỉ render tab đang nhìn thấy, tránh dựng 4 bảng cùng một lúc.
+let activeTab = 1;
+let tabNeedsRender = {1:true,2:true,3:true,4:true};
+let loadDataSeq = 0;
+
+function markAllTabsDirty(){
+    tabNeedsRender[1] = true;
+    tabNeedsRender[2] = true;
+    tabNeedsRender[3] = true;
+    tabNeedsRender[4] = true;
+}
+
+function renderActiveTab(force=false){
+    if(!force && !tabNeedsRender[activeTab]) return false;
+
+    if(activeTab===1){
+        renderTab1(globalData);
+    }else if(activeTab===2){
+        renderTab2();
+    }else if(activeTab===3){
+        renderTab3();
+    }else if(activeTab===4){
+        renderRetentionButtons();
+        renderTab4();
+    }
+
+    tabNeedsRender[activeTab] = false;
+    return true;
+}
 /* ============ LOAD DATA FROM JSON ============ */
 function loadData(){
     updateSiteHeaders(currentSite);
-    const jsonFile=siteFiles[currentSite];
-    
 
-    return fetch(jsonFile+"?t="+Date.now())
+    const requestedSite = currentSite;
+    const jsonFile = siteFiles[requestedSite];
+    const requestSeq = ++loadDataSeq;
+    const cacheBust = Date.now();
 
-	.then(r=>r.json())
-	.then(data=>{
-historyData = data.history || {};
+    return fetch(jsonFile + "?t=" + cacheBust, {cache:"no-store"})
+    .then(r=>{
+        if(!r.ok) throw new Error("HTTP " + r.status + " - " + jsonFile);
+        return r.json();
+    })
+    .then(data=>{
+        if(requestSeq !== loadDataSeq || requestedSite !== currentSite) return;
 
-globalData = data;
+        historyData = data.history || {};
+        globalData = data;
 
-fetch("data.json?t=" + Date.now())
-    .then(r => r.json())
-    .then(mainData => {
+        // 73J chính là data.json: tái sử dụng dữ liệu vừa tải, không tải + parse lần 2.
+        const mainDataPromise = jsonFile === "data.json"
+            ? Promise.resolve(data)
+            : fetch("data.json?t=" + cacheBust, {cache:"no-store"})
+                .then(r=>{
+                    if(!r.ok) throw new Error("HTTP " + r.status + " - data.json");
+                    return r.json();
+                });
 
-        masterUpdateTime =
-            mainData.update_time_brazil ||
-            mainData.update_time ||
-            "--";
+        mainDataPromise
+        .then(mainData=>{
+            if(requestSeq !== loadDataSeq || requestedSite !== currentSite) return;
 
-        let brazilTime = masterUpdateTime;
+            masterUpdateTime =
+                mainData.update_time_brazil ||
+                mainData.update_time ||
+                "--";
 
-        document.getElementById("updateTimeHero").innerHTML =
-            "📅 数据更新时间：" + brazilTime;
+            document.getElementById("updateTimeHero").textContent =
+                "📅 数据更新时间：" + masterUpdateTime;
 
-        document.getElementById("tableMainTitle").innerHTML =
-            `${siteTitles[currentSite]}-实时数据汇总-更新时间(巴西)：${brazilTime}`;
+            document.getElementById("tableMainTitle").textContent =
+                `${siteTitles[requestedSite]}-实时数据汇总-更新时间(巴西)：${masterUpdateTime}`;
+        })
+        .catch(err=>{
+            console.warn("读取主更新时间失败:", err);
+        });
 
+        markAllTabsDirty();
+        renderActiveTab();
+
+        const sw = document.getElementById("zeroSwitch");
+        if(sw){
+            sw.checked = !hideZero;
+        }
+    })
+    .catch(err=>{
+        if(requestSeq !== loadDataSeq || requestedSite !== currentSite) return;
+
+        console.log(err);
+
+        globalData = {};
+        historyData = {};
+        markAllTabsDirty();
+
+        document.getElementById("app").innerHTML = `
+            <div style="
+                background:#fff;
+                padding:80px;
+                border-radius:15px;
+                text-align:center;
+                font-size:36px;
+                font-weight:bold;
+                color:#999;">
+                暂无数据
+            </div>
+        `;
+
+        document.getElementById("body").innerHTML = `
+            <tr>
+                <td colspan="36"
+                    style="height:120px;font-size:30px;color:#999;">
+                    暂无数据
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("realtimeTable").innerHTML = `
+            <tr>
+                <td style="height:120px;text-align:center;font-size:30px;color:#999;">
+                    暂无数据
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("retentionTable").innerHTML = `
+            <tr>
+                <td style="height:120px;text-align:center;font-size:30px;color:#999;">
+                    暂无数据
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("updateTimeHero").textContent =
+            "📅 数据更新时间：--";
+
+        document.getElementById("tableMainTitle").textContent =
+            "暂无数据";
+
+        // 4 tab đã có thông báo 暂无数据 ở trên, không cần render nặng thêm.
+        tabNeedsRender[1] = false;
+        tabNeedsRender[2] = false;
+        tabNeedsRender[3] = false;
+        tabNeedsRender[4] = false;
     });
-renderTab1(data);
-renderTab2();
-renderTab3();
-
-renderRetentionButtons();
-
-renderTab4();
-
-const sw = document.getElementById("zeroSwitch");
-if (sw) {
-    sw.checked = !hideZero;
-}
-})
-.catch(err=>{
-
-    console.log(err);
-
-    globalData = {};
-    historyData = {};
-
-    // TAB1
-    document.getElementById("app").innerHTML = `
-        <div style="
-            background:#fff;
-            padding:80px;
-            border-radius:15px;
-            text-align:center;
-            font-size:36px;
-            font-weight:bold;
-            color:#999;">
-            暂无数据
-        </div>
-    `;
-
-    // TAB2
-    document.getElementById("body").innerHTML = `
-        <tr>
-            <td colspan="36"
-                style="height:120px;font-size:30px;color:#999;">
-                暂无数据
-            </td>
-        </tr>
-    `;
-
-    // TAB3
-    document.getElementById("realtimeTable").innerHTML = `
-        <tr>
-            <td style="height:120px;text-align:center;font-size:30px;color:#999;">
-                暂无数据
-            </td>
-        </tr>
-    `;
-
-    // TAB4
-    document.getElementById("retentionTable").innerHTML = `
-        <tr>
-            <td style="height:120px;text-align:center;font-size:30px;color:#999;">
-                暂无数据
-            </td>
-        </tr>
-    `;
-
-    document.getElementById("updateTimeHero").innerHTML =
-        "📅 数据更新时间：--";
-
-    document.getElementById("tableMainTitle").innerHTML =
-    "暂无数据";
-
-// render lại để xóa toàn bộ dữ liệu cũ
-renderTab2();
-renderTab3();
-renderTab4();
-
-});
 }
 loadData();
 
@@ -5935,17 +6022,13 @@ function renderTab3(){
 
     const realtime = globalData.realtime || {};
 
-    const dates = [];
+    const dateSet = new Set();
 
     Object.values(realtime).forEach(v=>{
-        Object.keys(v).forEach(d=>{
-            if(!dates.includes(d)){
-                dates.push(d);
-            }
-        });
+        Object.keys(v).forEach(d=>dateSet.add(d));
     });
 
-    dates.sort().reverse();
+    const dates = Array.from(dateSet).sort().reverse();
 
     const today = dates[0];          // cột đầu tiên = hôm nay
     latestRealtimeRow = null;
@@ -7163,6 +7246,9 @@ async function callRunForever(site){
 function applyRunDataToDashboard(newData, updateTime){
     if(!newData) return;
 
+    // Hủy hiệu lực request loadData cũ nếu người dùng vừa chạy 查询数据.
+    loadDataSeq++;
+
     historyData = newData.history || {};
     globalData = newData;
     masterUpdateTime =
@@ -7171,17 +7257,14 @@ function applyRunDataToDashboard(newData, updateTime){
         newData.update_time ||
         "--";
 
-    document.getElementById("updateTimeHero").innerHTML =
+    document.getElementById("updateTimeHero").textContent =
         "📅 数据更新时间：" + masterUpdateTime;
 
-    document.getElementById("tableMainTitle").innerHTML =
+    document.getElementById("tableMainTitle").textContent =
         `${siteTitles[currentSite]}-实时数据汇总-更新时间(巴西)：${masterUpdateTime}`;
 
-    renderTab1(newData);
-    renderTab2();
-    renderTab3();
-    renderRetentionButtons();
-    renderTab4();
+    markAllTabsDirty();
+    renderActiveTab();
 
     const sw = document.getElementById("zeroSwitch");
     if(sw){
@@ -7367,29 +7450,38 @@ function toggleZeroSwitch(){
 
 }
 
-function applyHideZero(){
+function applyHideZero(scopeSelector){
+    let root = null;
 
-    document.querySelectorAll("#tab2 td, #tab4 td").forEach(td=>{
+    if(scopeSelector){
+        root = document.querySelector(scopeSelector);
+    }else if(activeTab===2){
+        root = document.getElementById("tab2");
+    }else if(activeTab===4){
+        root = document.getElementById("tab4");
+    }
 
-        const t=td.textContent.trim();
+    // Tab 1/3 không dùng ẩn số 0, không quét DOM của bảng lớn.
+    if(!root) return;
 
-        
-    const isZero =
-    t==="0" ||
-    t==="0.00" ||
-    t==="0%" ||
-    t==="0.00%" ||
-    t==="0.000" ||
-    t==="0.000%" ||
-    t==="0 / 0" ||
-    t==="0/0" ||
-    t==="0 (0.00%)";
+    root.querySelectorAll("td").forEach(td=>{
+        const t = td.textContent.trim();
 
-        td.classList.toggle("hide-zero",hideZero&&isZero);
+        const isZero =
+            t==="0" ||
+            t==="0.00" ||
+            t==="0%" ||
+            t==="0.00%" ||
+            t==="0.000" ||
+            t==="0.000%" ||
+            t==="0 / 0" ||
+            t==="0/0" ||
+            t==="0 (0.00%)";
 
+        td.classList.toggle("hide-zero", hideZero && isZero);
     });
-
 }
+
 /* ============ LOGIN / LOGOUT ============ */
 function login(){
 
