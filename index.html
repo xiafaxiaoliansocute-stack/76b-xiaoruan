@@ -1,14 +1,4 @@
-<!--
-DASHBOARD 76B - REAL-TIME DATA ANALYSIS
-========================================
-Features:
-1. LOGIN - Xác thực người dùng
-2. TAB1 - 推广效果 (Promotion Performance)
-3. TAB2 - 实时数据分析 (Real-time Data Analysis)
-4. BRAZIL CLOCK - Đồng hồ liveGia bảo vệ Brazil
-5. DATA SYNC - Đồng bộ dữ liệu từ data.json
--->
-<!-- COPY_EXCEL_COLOR_FIX_V3 -->
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -1423,6 +1413,66 @@ body{
     transform:scale(.97);
 }
 
+/* TAB 2: nút ẩn/hiện 2 nhóm 昨日数据, chỉ hiện khi đang ở 实时数据汇总 */
+.yesterday-toggle-btn{
+    display:none;
+    align-items:center;
+    justify-content:center;
+    min-height:28px;
+    padding:5px 14px;
+    border:1px solid #ffd591;
+    border-radius:8px;
+    background:#fff7e6;
+    color:#d46b08;
+    font-size:13px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 2px 6px rgba(212,107,8,.12);
+    transition:background-color .16s ease,color .16s ease,border-color .16s ease,transform .16s ease,box-shadow .16s ease;
+    white-space:nowrap;
+}
+
+.yesterday-toggle-btn.visible{
+    display:inline-flex;
+}
+
+.yesterday-toggle-btn:hover{
+    background:#fa8c16;
+    color:#fff;
+    border-color:#fa8c16;
+    transform:translateY(-1px);
+    box-shadow:0 3px 8px rgba(212,107,8,.22);
+}
+
+.yesterday-toggle-btn:active{
+    transform:scale(.97);
+}
+
+.yesterday-toggle-btn.active{
+    background:#e6f4ff;
+    color:#1677ff;
+    border-color:#91caff;
+}
+
+/*
+   TAB 2: ẩn 4 cột thuộc 2 nhóm 昨日数据 + cột 加减比例.
+   Dùng 1 class trên table thay vì lặp qua từng cell bằng JS -> toggle nhẹ, ít DOM work.
+*/
+#summaryTable.hide-yesterday-data thead tr:nth-child(2) > th:nth-child(3),
+#summaryTable.hide-yesterday-data thead tr:nth-child(2) > th:nth-child(5),
+#summaryTable.hide-yesterday-data thead tr:nth-child(2) > th:nth-child(6),
+#summaryTable.hide-yesterday-data thead tr:nth-child(3) > th:nth-child(1),
+#summaryTable.hide-yesterday-data thead tr:nth-child(3) > th:nth-child(2),
+#summaryTable.hide-yesterday-data thead tr:nth-child(3) > th:nth-child(7),
+#summaryTable.hide-yesterday-data thead tr:nth-child(3) > th:nth-child(8),
+#summaryTable.hide-yesterday-data tbody tr > td:nth-child(3),
+#summaryTable.hide-yesterday-data tbody tr > td:nth-child(4),
+#summaryTable.hide-yesterday-data tbody tr > td:nth-child(9),
+#summaryTable.hide-yesterday-data tbody tr > td:nth-child(10),
+#summaryTable.hide-yesterday-data tbody tr > td:nth-child(11){
+    display:none !important;
+}
+
 .logout-btn{
     padding:10px 18px !important;
     border-radius:10px !important;
@@ -1994,6 +2044,12 @@ placeholder="请输入密码">
             * 数据统计报表数据统计每个小时更新一次
         </div>
         <button type="button" class="data-refresh-btn" onclick="refreshDashboardPage()">🔄 刷新</button>
+        <button
+            type="button"
+            id="toggleYesterdayBtn"
+            class="yesterday-toggle-btn"
+            aria-pressed="false"
+            onclick="toggleYesterdayData()">隐藏昨日数据</button>
     </div>
 
 </div>
@@ -2131,6 +2187,8 @@ const LOGIN_VERSION = "2";
 // ===== KHI CẦN THÊM CÁC MỤC Ở CỘT NHƯ RENJUN LIUCUN  =====
 
     let currentSite = "73J";
+    let hideYesterdayData = false;
+
     function updateSiteHeaders(site){
 
 const extraHeader =
@@ -2165,7 +2223,7 @@ if(site === "73J" || site === "23A" || site === "23E"){
     retentionExtraHeader.style.display = "";
     retentionGroupHeader.colSpan = 7;
 
-    tableMainTitle.colSpan = 38;
+    tableMainTitle.colSpan = hideYesterdayData ? 33 : 38;
 
 }else{
 
@@ -2175,7 +2233,7 @@ if(site === "73J" || site === "23A" || site === "23E"){
     retentionExtraHeader.style.display = "none";
     retentionGroupHeader.colSpan = 6;
 
-    tableMainTitle.colSpan = 36;
+    tableMainTitle.colSpan = hideYesterdayData ? 31 : 36;
 }
 
 }
@@ -2234,6 +2292,11 @@ function switchTab(n){
     document.querySelectorAll(".tab-btn").forEach((b,i)=>{
         b.classList.toggle("active", i===n-1);
     });
+
+    const yesterdayBtn = document.getElementById("toggleYesterdayBtn");
+    if(yesterdayBtn){
+        yesterdayBtn.classList.toggle("visible", n===2);
+    }
 
     const renderedNow = renderActiveTab();
 
@@ -7440,6 +7503,37 @@ async function queryData(){
 // Không chạy lại bot và không gọi nút 查询数据.
 function refreshDashboardPage(){
     window.location.reload();
+}
+
+/*
+ * TAB 2: ẩn/hiện hai nhóm 昨日数据 và cột 加减比例.
+ * Chỉ toggle 1 class trên table, không render lại dữ liệu và không quét toàn bộ cell.
+ */
+function toggleYesterdayData(){
+    hideYesterdayData = !hideYesterdayData;
+
+    const table = document.getElementById("summaryTable");
+    const btn = document.getElementById("toggleYesterdayBtn");
+    const title = document.getElementById("tableMainTitle");
+
+    if(table){
+        table.classList.toggle("hide-yesterday-data", hideYesterdayData);
+    }
+
+    if(btn){
+        btn.textContent = hideYesterdayData ? "显示昨日数据" : "隐藏昨日数据";
+        btn.classList.toggle("active", hideYesterdayData);
+        btn.setAttribute("aria-pressed", hideYesterdayData ? "true" : "false");
+    }
+
+    // Giữ colspan tiêu đề chính khớp số cột đang hiển thị.
+    if(title){
+        const baseColSpan =
+            (currentSite === "73J" || currentSite === "23A" || currentSite === "23E")
+                ? 38
+                : 36;
+        title.colSpan = baseColSpan - (hideYesterdayData ? 5 : 0);
+    }
 }
 
 function toggleZeroSwitch(){

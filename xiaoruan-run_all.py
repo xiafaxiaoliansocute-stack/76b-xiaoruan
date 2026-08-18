@@ -169,7 +169,12 @@ TASKS = [
         "name": "游戏跟进",
         "type": "游戏跟进",
         "file": BASE_DIR / "test-data-py" / "datahuiyuan.py",
-    },    
+    },       
+   {
+        "name": "K1自动",
+        "type": "K1自动",
+        "file": BASE_DIR / "test-data-py" / "K1.py",
+    },       
     
 
 ]
