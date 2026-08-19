@@ -2097,7 +2097,7 @@ placeholder="请输入密码">
 <table id="summaryTable">
 <thead>
 <tr class="table-main-title">
-<th colspan="36" id="tableMainTitle">15016-73J</th>
+<th colspan="40" id="tableMainTitle">15016-73J</th>
 </tr>
 <tr>
 <th rowspan="2" style="width:280px">字段</th>
@@ -2130,6 +2130,7 @@ placeholder="请输入密码">
 <th style="width:90px">TT-PWA</th>
 <th style="width:90px">KW-PWA</th>
 <th style="width:90px" id="wsH5Header">WS-H5</th>
+<th id="avgWsH5Header" style="width:90px;display:none;">WS-H5</th>
 <th id="avgExtraHeader" style="width:90px;display:none;">上架包</th>
 <th style="width:250px">类型</th>
 <th style="width:90px">比例</th>
@@ -2141,6 +2142,7 @@ placeholder="请输入密码">
 <th>TT-PWA</th>
 <th>KW</th>
 <th>TT-H5</th>
+<th id="retentionWsH5Header" style="display:none;">WS-H5</th>
 <th id="retentionExtraHeader" style="display:none;">上架包</th>
 </tr>
 </thead>
@@ -2197,11 +2199,17 @@ const extraHeader =
 const avgGroupHeader =
     document.getElementById("avgGroupHeader");
 
+const avgWsH5Header =
+    document.getElementById("avgWsH5Header");
+
 const retentionExtraHeader =
     document.getElementById("retentionExtraHeader");
 
 const retentionGroupHeader =
     document.getElementById("retentionGroupHeader");
+
+const retentionWsH5Header =
+    document.getElementById("retentionWsH5Header");
 
 const tableMainTitle =
     document.getElementById("tableMainTitle");
@@ -2215,11 +2223,28 @@ if(wsH5Header) {
     }
 }
 
-if(site === "73J" || site === "23A" || site === "23E"){
+if(site === "73J"){
 
+    // 73J: 人均表现 = ... TT-H5, WS-H5, 上架包
+    avgWsH5Header.style.display = "";
+    extraHeader.style.display = "";
+    avgGroupHeader.colSpan = 12;
+
+    // 73J: 留存率 = ... TT-H5, WS-H5, 上架包
+    retentionWsH5Header.style.display = "";
+    retentionExtraHeader.style.display = "";
+    retentionGroupHeader.colSpan = 8;
+
+    tableMainTitle.colSpan = hideYesterdayData ? 35 : 40;
+
+}else if(site === "23A" || site === "23E"){
+
+    // Giữ nguyên 23A / 23E
+    avgWsH5Header.style.display = "none";
     extraHeader.style.display = "";
     avgGroupHeader.colSpan = 11;
 
+    retentionWsH5Header.style.display = "none";
     retentionExtraHeader.style.display = "";
     retentionGroupHeader.colSpan = 7;
 
@@ -2227,9 +2252,12 @@ if(site === "73J" || site === "23A" || site === "23E"){
 
 }else{
 
+    // Giữ nguyên NN22 / TEST3
+    avgWsH5Header.style.display = "none";
     extraHeader.style.display = "none";
     avgGroupHeader.colSpan = 10;
 
+    retentionWsH5Header.style.display = "none";
     retentionExtraHeader.style.display = "none";
     retentionGroupHeader.colSpan = 6;
 
@@ -2671,6 +2699,7 @@ function renderTab1_23E(data){
 {key:"fb-pwa-b",name:"FB-PWA-B"},
 {key:"kwai-pwa",name:"KWAI-PWA"},
 {key:"tt-pwa",name:"TT-PWA"},
+{key:"ws-h5",name:"WS-H5"},
 {key:"上架包",name:"上架包"},
 {key:"DL",name:"DL"},
 {key:"其他",name:"其他"},
@@ -3058,6 +3087,7 @@ const list=[
 {show:"上架包",key:"上架包"},
 {show:"FB-H5-B",key:"fb-h5-b"},
 {show:"TT-H5",key:"tt-h5"},
+{show:"WS-H5",key:"ws-h5"},
 {show:"DL",key:"DL"},
 {show:"官方渠道",key:"官方渠道"},
 {show:"其他",key:"其他"},
@@ -3088,6 +3118,7 @@ list.forEach(item=>{
             "fb-ios",
             "tt-pwa",
             "tt-h5",
+            "ws-h5",
             "kwai-pwa",
             "上架包",
             "DL",
@@ -3216,11 +3247,15 @@ let dsp = globalData["上架包"]?.normalList || {};
 let dspParent = globalData["上架包"]?.parentList || {};
 let dspChild = globalData["上架包"]?.childList || {};
 
-// 👈 ĐÃ SỬA: Thay ws-h5 thành tt-h5
-// ===== TT-H5 (Thay thế cho WS) =====
+// ===== TT-H5 =====
 let ttH5 = globalData["tt-h5"]?.normalList || {};
 let ttH5Parent = globalData["tt-h5"]?.parentList || {};
 let ttH5Child = globalData["tt-h5"]?.childList || {};
+
+// ===== WS-H5 (chỉ thêm cho 73J) =====
+let wsH5 = globalData["ws-h5"]?.normalList || {};
+let wsH5Parent = globalData["ws-h5"]?.parentList || {};
+let wsH5Child = globalData["ws-h5"]?.childList || {};
 
 // ===== 上架包 =====
 let sjb = globalData["上架包"]?.normalList || {};
@@ -3236,8 +3271,8 @@ let pwaAvg = pwaCount ? (pwaAmount / pwaCount).toFixed(2) : "0.00";
 let iosAvg=ios.rechargeCount?(ios.rechargeAmount/ios.rechargeCount).toFixed(2):0;
 let ttAvg=tt.rechargeCount?(tt.rechargeAmount/tt.rechargeCount).toFixed(2):0;
 let kwAvg=kw.rechargeCount?(kw.rechargeAmount/kw.rechargeCount).toFixed(2):0;
-// 👈 ĐÃ SỬA: Đổi wsAvg thành ttH5Avg
 let ttH5Avg=ttH5.rechargeCount?(ttH5.rechargeAmount/ttH5.rechargeCount).toFixed(2):0;
+let wsH5Avg=wsH5.rechargeCount?(wsH5.rechargeAmount/wsH5.rechargeCount).toFixed(2):0;
 let sjbAvg=sjb.rechargeCount?(sjb.rechargeAmount/sjb.rechargeCount).toFixed(2):0;
 
 // ===== TÍNH GỘP FB RENJUN =====
@@ -3523,7 +3558,6 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                                           ? retentionRate("kwai-pwa", 59)                                       
                                                                           : "";
 
-    // 👈 ĐÃ SỬA: Đổi wsRate thành ttH5Rate và gọi "tt-h5"
     let ttH5Rate = item.show === "大盘"
         ? retentionRate("tt-h5", 1)
         : item.show === "FB-H5-A"
@@ -3543,8 +3577,30 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                                     : item.show === "上架包"
                                       ? retentionRate("tt-h5", 29)
                                       : item.show === "FB-H5-B"
-                                          ? retentionRate("tt-h5", 59)                                      
-                                                                          : "";
+                                          ? retentionRate("tt-h5", 59)
+                                          : "";
+
+    let wsH5Rate = item.show === "大盘"
+        ? retentionRate("ws-h5", 1)
+        : item.show === "FB-H5-A"
+            ? retentionRate("ws-h5", 2)
+            : item.show === "FB-PWA"
+                ? retentionRate("ws-h5", 3)
+                : item.show === "FB-PWA-A"
+                    ? retentionRate("ws-h5", 4)
+                    : item.show === "FB-PWA-B"
+                        ? retentionRate("ws-h5", 5)
+                        : item.show === "FB-IOS"
+                            ? retentionRate("ws-h5", 6)
+                            : item.show === "TT-PWA"
+                                ? retentionRate("ws-h5", 9)
+                                : item.show === "KW-PWA"
+                                    ? retentionRate("ws-h5", 13)
+                                    : item.show === "上架包"
+                                        ? retentionRate("ws-h5", 29)
+                                        : item.show === "FB-H5-B"
+                                            ? retentionRate("ws-h5", 59)
+                                            : "";
 
     let sjbRate = item.show === "大盘"
     ? retentionRate("上架包", 1)
@@ -3717,7 +3773,6 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                     ? (kw.firstRechargeCount ? (kw.firstRechargeAmount / kw.firstRechargeCount).toFixed(2) : 0)
                     : "";
     
-    // 👈 ĐÃ SỬA: Đổi wsAvgText thành ttH5AvgText
     let ttH5AvgText = item.key === "ALL_TOTAL"
         ? ttH5Avg
         : item.key === "fb-h5-a"
@@ -3726,6 +3781,16 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                 ? (ttH5Child.rechargeCount ? (ttH5Child.rechargeAmount / ttH5Child.rechargeCount).toFixed(2) : 0)
                 : item.key === "fb-pwa-a"
                     ? (ttH5.firstRechargeCount ? (ttH5.firstRechargeAmount / ttH5.firstRechargeCount).toFixed(2) : 0)
+                    : "";
+
+    let wsH5AvgText = item.key === "ALL_TOTAL"
+        ? wsH5Avg
+        : item.key === "fb-h5-a"
+            ? (wsH5Parent.rechargeCount ? (wsH5Parent.rechargeAmount / wsH5Parent.rechargeCount).toFixed(2) : 0)
+            : item.key === "fb-pwa"
+                ? (wsH5Child.rechargeCount ? (wsH5Child.rechargeAmount / wsH5Child.rechargeCount).toFixed(2) : 0)
+                : item.key === "fb-pwa-a"
+                    ? (wsH5.firstRechargeCount ? (wsH5.firstRechargeAmount / wsH5.firstRechargeCount).toFixed(2) : 0)
                     : "";
 
      let sjbAvgText = item.key === "ALL_TOTAL"
@@ -3809,8 +3874,8 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
       <td>${iosAvgText}</td>
       <td>${ttAvgText}</td>
       <td>${kwAvgText}</td>
-      <!-- 👈 ĐÃ SỬA: Đổi wsAvgText thành ttH5AvgText ở đây -->
       <td>${ttH5AvgText}</td>
+      <td>${wsH5AvgText}</td>
       <td>${sjbAvgText}</td>
       <td class="label-col">${item.show}</td>
       <td class="${firstRechargeRatioClass}">${firstRechargeRatioText}</td>
@@ -3821,8 +3886,8 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
       <td>${fbRate}</td>
       <td>${ttRate}</td>
       <td>${kwRate}</td>
-      <!-- 👈 Đổi wsRate thành ttH5Rate ở đây -->
       <td>${ttH5Rate}</td>
+      <td>${wsH5Rate}</td>
       <td>${sjbRate}</td>
       </tr>`;
     
@@ -7526,14 +7591,10 @@ function toggleYesterdayData(){
         btn.setAttribute("aria-pressed", hideYesterdayData ? "true" : "false");
     }
 
-    // Giữ colspan tiêu đề chính khớp số cột đang hiển thị.
-    if(title){
-        const baseColSpan =
-            (currentSite === "73J" || currentSite === "23A" || currentSite === "23E")
-                ? 38
-                : 36;
-        title.colSpan = baseColSpan - (hideYesterdayData ? 5 : 0);
-    }
+    // Đồng bộ lại colspan theo từng đài.
+    // 73J có thêm 2 cột WS-H5 nên tổng là 40 cột (ẩn 昨日数据 còn 35).
+    // 23A/23E giữ 38 cột; NN22/TEST3 giữ 36 cột.
+    updateSiteHeaders(currentSite);
 }
 
 function toggleZeroSwitch(){
