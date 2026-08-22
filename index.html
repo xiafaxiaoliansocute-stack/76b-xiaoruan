@@ -2408,6 +2408,21 @@ loadData();
 function switchTab(n){
     activeTab = n;
 
+    // TAB 3 实时数据报表 / TAB 4 留存率报表:
+    // 自动隐藏顶部Banner区域，滚动到数据区域，方便查看数据
+    if(n===3 || n===4){
+        setTimeout(()=>{
+            const nav = document.querySelector(".dashboard-nav-shell");
+            if(nav){
+                const y = nav.getBoundingClientRect().top + window.pageYOffset - 8;
+                window.scrollTo({
+                    top:y,
+                    behavior:"smooth"
+                });
+            }
+        },80);
+    }
+
     document.getElementById("tab1").style.display =
         n===1 ? "block" : "none";
 
