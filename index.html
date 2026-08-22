@@ -2690,7 +2690,16 @@ let list=d[b.key]||{};
 html+=`<div class="sub-title">${b.name}</div><table><tr>`;
 fields.forEach(f=>{html+=`<th>${f[1]}</th>`;});
 html+="</tr><tr>";
-fields.forEach(f=>{html+=`<td>${list[f[0]]??0}</td>`;});
+fields.forEach(f=>{
+    let value = list[f[0]] ?? 0;
+
+    if(f[0] === "reward"){
+        value = Number(value) / 100;
+        value = value.toFixed(2);
+    }
+
+    html += `<td>${value}</td>`;
+});
 html+="</tr></table>";
 });
 html+="</div>";
@@ -2742,7 +2751,16 @@ let list=d[b.key]||{};
 html+=`<div class="sub-title">${b.name}</div><table><tr>`;
 fields.forEach(f=>{html+=`<th>${f[1]}</th>`;});
 html+="</tr><tr>";
-fields.forEach(f=>{html+=`<td>${list[f[0]]??0}</td>`;});
+fields.forEach(f=>{
+    let value = list[f[0]] ?? 0;
+
+    if(f[0] === "reward"){
+        value = Number(value) / 100;
+        value = value.toFixed(2);
+    }
+
+    html += `<td>${value}</td>`;
+});
 html+="</tr></table>";
 });
 html+="</div>";
@@ -2795,7 +2813,16 @@ let list=d[b.key]||{};
 html+=`<div class="sub-title">${b.name}</div><table><tr>`;
 fields.forEach(f=>{html+=`<th>${f[1]}</th>`;});
 html+="</tr><tr>";
-fields.forEach(f=>{html+=`<td>${list[f[0]]??0}</td>`;});
+fields.forEach(f=>{
+    let value = list[f[0]] ?? 0;
+
+    if(f[0] === "reward"){
+        value = Number(value) / 100;
+        value = value.toFixed(2);
+    }
+
+    html += `<td>${value}</td>`;
+});
 html+="</tr></table>";
 });
 html+="</div>";
@@ -2849,7 +2876,16 @@ let list=d[b.key]||{};
 html+=`<div class="sub-title">${b.name}</div><table><tr>`;
 fields.forEach(f=>{html+=`<th>${f[1]}</th>`;});
 html+="</tr><tr>";
-fields.forEach(f=>{html+=`<td>${list[f[0]]??0}</td>`;});
+fields.forEach(f=>{
+    let value = list[f[0]] ?? 0;
+
+    if(f[0] === "reward"){
+        value = Number(value) / 100;
+        value = value.toFixed(2);
+    }
+
+    html += `<td>${value}</td>`;
+});
 html+="</tr></table>";
 });
 html+="</div>";

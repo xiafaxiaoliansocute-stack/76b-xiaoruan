@@ -92,7 +92,7 @@ yesterday = yesterday_day.strftime("%Y-%m-%d")
 
 # NGÀY CỐ ĐỊNH 
 
-DEFAULT_RETENTION_START = "2026-06-26"
+DEFAULT_RETENTION_START = "2026-06-24"
 
 # TỰ ĐÔNG LẤY ĐẾN HÔM NAY 
 
