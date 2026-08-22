@@ -2,6 +2,7 @@ import warnings
 warnings.filterwarnings("ignore")
 import requests
 import json
+from datetime import datetime
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
@@ -83,8 +84,23 @@ yesterday_day = report_day - timedelta(days=1)
 yesterday = yesterday_day.strftime("%Y-%m-%d")
 
 
-# retention lấy theo ngày báo cáo
-retention_start = (report_day - timedelta(days=29)).strftime("%Y-%m-%d")
+# ======================
+# RETENTION DATE RANGE  LIUCUN
+# ======================
+
+# NGÀY CỐ ĐỊNH 
+
+DEFAULT_RETENTION_START = "2026-07-21"
+
+# TỰ ĐÔNG LẤY ĐẾN HÔM NAY 
+
+today = datetime.now().strftime("%Y-%m-%d")
+
+# THỜI GIAN CẦN LẤY LÀ TỪ NGÀY CỐ ĐỊNH ĐẾN HÔM NAY, KHÔNG LẤY QUÁ 90 NGÀY
+
+retention_start = DEFAULT_RETENTION_START
+
+print("Retention range:", retention_start, "→", today)
 
 result_data = {
     "update_time_brazil":
