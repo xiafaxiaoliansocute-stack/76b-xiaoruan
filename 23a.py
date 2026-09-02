@@ -85,23 +85,9 @@ today = report_day.strftime("%Y-%m-%d")
 yesterday_day = report_day - timedelta(days=1)
 yesterday = yesterday_day.strftime("%Y-%m-%d")
 
-# ======================
-# RETENTION DATE RANGE  LIUCUN
-# ======================
 
-# NGÀY CỐ ĐỊNH 
-
-DEFAULT_RETENTION_START = "2026-07-07"
-
-# TỰ ĐÔNG LẤY ĐẾN HÔM NAY 
-
-today = datetime.now().strftime("%Y-%m-%d")
-
-# THỜI GIAN CẦN LẤY LÀ TỪ NGÀY CỐ ĐỊNH ĐẾN HÔM NAY, KHÔNG LẤY QUÁ 90 NGÀY
-
-retention_start = DEFAULT_RETENTION_START
-
-print("Retention range:", retention_start, "→", today)
+# retention lấy theo ngày báo cáo
+retention_start = (report_day - timedelta(days=90)).strftime("%Y-%m-%d")
 
 result_data = {
     "update_time_brazil":
@@ -179,133 +165,11 @@ def fix_retention_amounts(row):
                 row[key] = round(row[key] / 100)
 
     return row
-# ======================
-# STEP 1: GET ALL TOTAL (IMPORTANT)
-# ======================
-
-params_all = {
-    "input": json.dumps({
-        "json": {
-            "startTime": today,
-            "endTime": today,
-            "tenantId": TENANT_ID,
-            "regionId": REGION_ID,
-            "page": 1,
-            "pageSize": 50,
-            "channelId": []   # 👈 ALL DATA FROM BACKEND
-        }
-    }, separators=(',', ':'))
-}
-
-try:
-    res_all = session.get(
-    BASE_URL,
-    params=params_all,
-    timeout=30
-)
-    all_json = safe_get(res_all.json())
-
-    result_data["ALL_TOTAL"] = {
-        "normalList": fix_amounts(all_json.get("normalList", {})),
-        "parentList": fix_amounts(all_json.get("parentList", {})),
-        "childList": fix_amounts(all_json.get("childList", {}))
-    }
-
-    # 推广 = 直推 + 裂变
-    parent = result_data["ALL_TOTAL"]["parentList"]
-    child = result_data["ALL_TOTAL"]["childList"]
-
-    promotion = {}
-
-    for key in set(parent.keys()) | set(child.keys()):
-        p = parent.get(key, 0)
-        c = child.get(key, 0)
-
-        if isinstance(p, (int, float)) and isinstance(c, (int, float)):
-            promotion[key] = p + c
-
-    result_data["ALL_TOTAL"]["promotionList"] = promotion
-
-    print("✅ ALL_TOTAL success")
-
-except Exception as e:
-    print("❌ ALL_TOTAL error:", e)
-    result_data["ALL_TOTAL"] = {}
 
 # ======================
-# STEP 2: GET EACH CHANNEL (FAST)
+# FAST PARALLEL ORCHESTRATION
 # ======================
 
-def load_channel(name, cid):
-
-    try:
-
-        params = {
-            "input": json.dumps({
-                "json": {
-                    "startTime": today,
-                    "endTime": today,
-                    "tenantId": TENANT_ID,
-                    "regionId": REGION_ID,
-                    "page": 1,
-                    "pageSize": 50,
-                    "channelId": [],
-                    "channelPromoterId": cid
-                }
-            }, separators=(',', ':'))
-        }
-
-        res = session.get(
-            BASE_URL,
-            params=params,
-            timeout=(3, 40)
-        )
-
-        data = safe_get(res.json())
-
-        result = {
-            "normalList": fix_amounts(data.get("normalList", {})),
-            "parentList": fix_amounts(data.get("parentList", {})),
-            "childList": fix_amounts(data.get("childList", {}))
-        }
-
-        parent = result["parentList"]
-        child = result["childList"]
-
-        promotion = {}
-
-        for key in set(parent.keys()) | set(child.keys()):
-            p = parent.get(key, 0)
-            c = child.get(key, 0)
-
-            if isinstance(p, (int, float)) and isinstance(c, (int, float)):
-                promotion[key] = p + c
-
-        result["promotionList"] = promotion
-
-        return name, result
-
-    except Exception as e:
-        print(f"❌ {name} error:", e)
-        return None
-
-
-with ThreadPoolExecutor(max_workers=2) as executor:
-
-    futures = [
-        executor.submit(load_channel, name, cid)
-        for name, cid in CHANNELS.items()
-    ]
-
-    for future in as_completed(futures):
-
-        data = future.result()
-
-        if data:
-            name, result = data
-            result_data[name] = result
-            print(f"✅ {name} success")
-        
 def fix_hour_amounts(obj):
     if not isinstance(obj, dict):
         return obj
@@ -378,6 +242,7 @@ def fix_realtime_amounts(item):
             round(item.get("discountAmount",0)/100,2)
 
     }
+
 # ======================
 # HOUR REPORT (昨日) & RETENTION HELPER
 # ======================
@@ -396,10 +261,16 @@ def fetch_hour_with_retry(params):
                 timeout=(5, 60)
             )
             
-            # Nếu bị lỗi 429 hoặc lỗi Server (5xx)
+            # Chỉ nghỉ khi API thực sự giới hạn/lỗi. Nếu server trả Retry-After thì ưu tiên dùng nó.
             if res.status_code == 429 or res.status_code >= 500:
-                print(f"⚠️ Bị giới hạn/lỗi server (Mã: {res.status_code}), đang thử lại lần {attempt} sau {delay}s...")
-                time.sleep(delay)
+                retry_after = res.headers.get("Retry-After")
+                try:
+                    wait_s = float(retry_after) if retry_after is not None else delay
+                except (TypeError, ValueError):
+                    wait_s = delay
+                wait_s = max(0.1, min(wait_s, 30))
+                print(f"⚠️ Bị giới hạn/lỗi server (Mã: {res.status_code}), thử lại lần {attempt} sau {wait_s:g}s...")
+                time.sleep(wait_s)
                 attempt += 1
                 delay = min(delay * 1.5, 30)
                 continue
@@ -468,61 +339,149 @@ print("Yesterday  :", yesterday_day)
 print("Hour start :", hour_start)
 print("Hour end   :", hour_end)
 
-# ALL TOTAL (Hour)
-try:
-    params = {
+# ======================
+# STEP 3: GET RETENTION
+# ======================
+
+
+
+RETENTION_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.dayRetention"
+
+result_data["retention"] = {}
+result_data["repeat_rate"] = {}
+result_data["next_avg"] = {}
+
+def task_effects():
+    # ======================
+    # STEP 1: GET ALL TOTAL (IMPORTANT)
+    # ======================
+
+    params_all = {
         "input": json.dumps({
             "json": {
+                "startTime": today,
+                "endTime": today,
                 "tenantId": TENANT_ID,
                 "regionId": REGION_ID,
-                "channelId": [],
                 "page": 1,
                 "pageSize": 50,
-                "order": [
-                    {
-                        "key": "firstRechargeCount",
-                        "type": "asc"
-                    }
-                ],
-                "startTime": hour_start.isoformat().replace("+00:00", "Z"),
-                "endTime": hour_end.isoformat().replace("+00:00", "Z")
+                "channelId": []   # 👈 ALL DATA FROM BACKEND
             }
         }, separators=(',', ':'))
     }
 
-    # 👈 Sử dụng hàm retry thay cho session.get trực tiếp
-    hour_json = fetch_hour_with_retry(params)
+    try:
+        res_all = session.get(
+        BASE_URL,
+        params=params_all,
+        timeout=30
+    )
+        all_json = safe_get(res_all.json())
 
-    result_data["hour_report"]["ALL_TOTAL"] = fix_hour_amounts(hour_json)
-    result_data["hour_report"]["ALL_TOTAL"]["promotionList"] = {
-    "firstRechargeCount":
-        result_data["hour_report"]["ALL_TOTAL"].get("firstRechargeCount", 0)
-        + result_data["hour_report"]["ALL_TOTAL"].get("splitFirstRechargeCount", 0),
+        result_data["ALL_TOTAL"] = {
+            "normalList": fix_amounts(all_json.get("normalList", {})),
+            "parentList": fix_amounts(all_json.get("parentList", {})),
+            "childList": fix_amounts(all_json.get("childList", {}))
+        }
 
-    "firstRechargeAmount":
-        result_data["hour_report"]["ALL_TOTAL"].get("firstRechargeAmount", 0)
-        + result_data["hour_report"]["ALL_TOTAL"].get("splitFirstRechargeAmount", 0),
+        # 推广 = 直推 + 裂变
+        parent = result_data["ALL_TOTAL"]["parentList"]
+        child = result_data["ALL_TOTAL"]["childList"]
 
-    "rechargeCount":
-        result_data["hour_report"]["ALL_TOTAL"].get("rechargeCount", 0)
-        + result_data["hour_report"]["ALL_TOTAL"].get("splitRechargeCount", 0),
+        promotion = {}
 
-    "rechargeAmount":
-        result_data["hour_report"]["ALL_TOTAL"].get("rechargeAmount", 0)
-        + result_data["hour_report"]["ALL_TOTAL"].get("splitRechargeAmount", 0)
-}
+        for key in set(parent.keys()) | set(child.keys()):
+            p = parent.get(key, 0)
+            c = child.get(key, 0)
 
-    print("✅ hour ALL_TOTAL")
-    time.sleep(1) # Nghỉ nhẹ 1 giây sau khi gọi tổng
+            if isinstance(p, (int, float)) and isinstance(c, (int, float)):
+                promotion[key] = p + c
 
-except Exception as e:
-    print("❌ hour ALL_TOTAL", e)
+        result_data["ALL_TOTAL"]["promotionList"] = promotion
 
-# ======================
-# HOUR REPORT EACH CHANNEL (CHẠY TUẦN TỰ)
-# ======================
+        print("✅ ALL_TOTAL success")
 
-for name, cid in CHANNELS.items():
+    except Exception as e:
+        print("❌ ALL_TOTAL error:", e)
+        result_data["ALL_TOTAL"] = {}
+
+    # ======================
+    # STEP 2: GET EACH CHANNEL (FAST)
+    # ======================
+
+    def load_channel(name, cid):
+
+        try:
+
+            params = {
+                "input": json.dumps({
+                    "json": {
+                        "startTime": today,
+                        "endTime": today,
+                        "tenantId": TENANT_ID,
+                        "regionId": REGION_ID,
+                        "page": 1,
+                        "pageSize": 50,
+                        "channelId": [],
+                        "channelPromoterId": cid
+                    }
+                }, separators=(',', ':'))
+            }
+
+            res = session.get(
+                BASE_URL,
+                params=params,
+                timeout=(3, 40)
+            )
+
+            data = safe_get(res.json())
+
+            result = {
+                "normalList": fix_amounts(data.get("normalList", {})),
+                "parentList": fix_amounts(data.get("parentList", {})),
+                "childList": fix_amounts(data.get("childList", {}))
+            }
+
+            parent = result["parentList"]
+            child = result["childList"]
+
+            promotion = {}
+
+            for key in set(parent.keys()) | set(child.keys()):
+                p = parent.get(key, 0)
+                c = child.get(key, 0)
+
+                if isinstance(p, (int, float)) and isinstance(c, (int, float)):
+                    promotion[key] = p + c
+
+            result["promotionList"] = promotion
+
+            return name, result
+
+        except Exception as e:
+            print(f"❌ {name} error:", e)
+            return None
+
+
+    with ThreadPoolExecutor(max_workers=len(CHANNELS)) as executor:
+
+        futures = [
+            executor.submit(load_channel, name, cid)
+            for name, cid in CHANNELS.items()
+        ]
+
+        for future in as_completed(futures):
+
+            data = future.result()
+
+            if data:
+                name, result = data
+                result_data[name] = result
+                print(f"✅ {name} success")
+    return True
+
+def task_hour_report():
+    # ALL TOTAL (Hour)
     try:
         params = {
             "input": json.dumps({
@@ -530,7 +489,6 @@ for name, cid in CHANNELS.items():
                     "tenantId": TENANT_ID,
                     "regionId": REGION_ID,
                     "channelId": [],
-                    "channelPromoterId": cid,
                     "page": 1,
                     "pageSize": 50,
                     "order": [
@@ -545,116 +503,99 @@ for name, cid in CHANNELS.items():
             }, separators=(',', ':'))
         }
 
-        # Sử dụng hàm retry không bao giờ bỏ cuộc
+        # 👈 Sử dụng hàm retry thay cho session.get trực tiếp
         hour_json = fetch_hour_with_retry(params)
 
-        data = fix_hour_amounts(hour_json)
+        result_data["hour_report"]["ALL_TOTAL"] = fix_hour_amounts(hour_json)
+        result_data["hour_report"]["ALL_TOTAL"]["promotionList"] = {
+        "firstRechargeCount":
+            result_data["hour_report"]["ALL_TOTAL"].get("firstRechargeCount", 0)
+            + result_data["hour_report"]["ALL_TOTAL"].get("splitFirstRechargeCount", 0),
 
-        data["promotionList"] = {
-            "firstRechargeCount":
-                data.get("firstRechargeCount", 0)
-                + data.get("splitFirstRechargeCount", 0),
+        "firstRechargeAmount":
+            result_data["hour_report"]["ALL_TOTAL"].get("firstRechargeAmount", 0)
+            + result_data["hour_report"]["ALL_TOTAL"].get("splitFirstRechargeAmount", 0),
 
-            "firstRechargeAmount":
-                data.get("firstRechargeAmount", 0)
-                + data.get("splitFirstRechargeAmount", 0),
+        "rechargeCount":
+            result_data["hour_report"]["ALL_TOTAL"].get("rechargeCount", 0)
+            + result_data["hour_report"]["ALL_TOTAL"].get("splitRechargeCount", 0),
 
-            "rechargeCount":
-                data.get("rechargeCount", 0)
-                + data.get("splitRechargeCount", 0),
-
-            "rechargeAmount":
-                data.get("rechargeAmount", 0)
-                + data.get("splitRechargeAmount", 0)
-        }
-
-        result_data["hour_report"][name] = data
-        print(f"✅ hour {name} thành công")
-
-        # Nghỉ nhẹ 0.5s giữa các channel
-        time.sleep(0.5)
-
-    except Exception as e:
-        print(f"❌ hour {name}", e)
-
-    
-# ======================
-# STEP 3: GET RETENTION
-# ======================
-
-
-
-RETENTION_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.dayRetention"
-
-result_data["retention"] = {}
-# ======================
-# ALL RETENTION
-# ======================
-
-try:
-
-    retention_params = {
-        "input": json.dumps({
-            "json": {
-                "tenantId": TENANT_ID,
-                "regionId": REGION_ID,
-                "startTime": retention_start,
-                "endTime": today,
-                "type": "recharge",
-
-                "channelIds": [],
-
-                "parentType": "none",
-                "page": 1,
-                "pageSize": 50,
-                "timeType": "days_90",
-
-                "order": [
-                    {
-                        "key": "time",
-                        "type": "desc"
-                    }
-                ],
-
-                "retentionDays": [0,1,2,3,4,5,6,9,13,29,59]
-            }
-        }, separators=(',', ':'))
+        "rechargeAmount":
+            result_data["hour_report"]["ALL_TOTAL"].get("rechargeAmount", 0)
+            + result_data["hour_report"]["ALL_TOTAL"].get("splitRechargeAmount", 0)
     }
 
-    retention_res = session.get(
-    RETENTION_URL,
-    params=retention_params,
-    timeout=(3, 40)
-)
+        print("✅ hour ALL_TOTAL")
+        # Không nghỉ cố định: gọi channel tiếp theo ngay. Chỉ chờ khi API trả 429/5xx.
 
-    retention_json = retention_res.json()
+    except Exception as e:
+        print("❌ hour ALL_TOTAL", e)
 
-    retention_data = (
-        retention_json.get("result", {})
-        .get("data", {})
-        .get("json", {})
-        .get("data", {})
-        .get("retentionList", [])
-    )
+    # ======================
+    # HOUR REPORT EACH CHANNEL (CHẠY TUẦN TỰ)
+    # ======================
 
-    for row in retention_data:
-        row = fix_retention_amounts(row)
-        day = row.get("time")
+    for name, cid in CHANNELS.items():
+        try:
+            params = {
+                "input": json.dumps({
+                    "json": {
+                        "tenantId": TENANT_ID,
+                        "regionId": REGION_ID,
+                        "channelId": [],
+                        "channelPromoterId": cid,
+                        "page": 1,
+                        "pageSize": 50,
+                        "order": [
+                            {
+                                "key": "firstRechargeCount",
+                                "type": "asc"
+                            }
+                        ],
+                        "startTime": hour_start.isoformat().replace("+00:00", "Z"),
+                        "endTime": hour_end.isoformat().replace("+00:00", "Z")
+                    }
+                }, separators=(',', ':'))
+            }
 
-        if day not in result_data["retention"]:
-            result_data["retention"][day] = {}
+            # Sử dụng hàm retry không bao giờ bỏ cuộc
+            hour_json = fetch_hour_with_retry(params)
 
-        result_data["retention"][day]["ALL"] = row
+            data = fix_hour_amounts(hour_json)
 
-    print("✅ retention ALL")
+            data["promotionList"] = {
+                "firstRechargeCount":
+                    data.get("firstRechargeCount", 0)
+                    + data.get("splitFirstRechargeCount", 0),
 
-except Exception as e:
-    print("❌ retention ALL error:", e)
-# ======================
-# RETENTION EACH CHANNEL (FAST)
-# ======================
+                "firstRechargeAmount":
+                    data.get("firstRechargeAmount", 0)
+                    + data.get("splitFirstRechargeAmount", 0),
 
-def load_retention_channel(name, cid):
+                "rechargeCount":
+                    data.get("rechargeCount", 0)
+                    + data.get("splitRechargeCount", 0),
+
+                "rechargeAmount":
+                    data.get("rechargeAmount", 0)
+                    + data.get("splitRechargeAmount", 0)
+            }
+
+            result_data["hour_report"][name] = data
+            print(f"✅ hour {name} thành công")
+
+            # Không nghỉ cố định giữa các channel. Nếu gọi quá nhanh và bị 429,
+            # fetch_hour_with_retry() sẽ tự chờ đúng lúc rồi thử lại.
+
+        except Exception as e:
+            print(f"❌ hour {name}", e)
+
+    return True
+
+def task_retention_bundle():
+    # ======================
+    # ALL RETENTION
+    # ======================
 
     try:
 
@@ -666,28 +607,31 @@ def load_retention_channel(name, cid):
                     "startTime": retention_start,
                     "endTime": today,
                     "type": "recharge",
+
                     "channelIds": [],
-                    "channelPromoterId": cid,
+
                     "parentType": "none",
                     "page": 1,
                     "pageSize": 50,
                     "timeType": "days_90",
+
                     "order": [
                         {
                             "key": "time",
                             "type": "desc"
                         }
                     ],
+
                     "retentionDays": [0,1,2,3,4,5,6,9,13,29,59]
                 }
             }, separators=(',', ':'))
         }
 
         retention_res = session.get(
-            RETENTION_URL,
-            params=retention_params,
-            timeout=(3, 40)
-        )
+        RETENTION_URL,
+        params=retention_params,
+        timeout=(3, 40)
+    )
 
         retention_json = retention_res.json()
 
@@ -699,257 +643,333 @@ def load_retention_channel(name, cid):
             .get("retentionList", [])
         )
 
-        return name, retention_data
-
-    except Exception as e:
-        print(f"❌ retention {name} error:", e)
-        return None
-
-
-with ThreadPoolExecutor(max_workers=5) as executor:
-
-    futures = [
-        executor.submit(load_retention_channel, name, cid)
-        for name, cid in CHANNELS.items()
-    ]
-
-    for future in as_completed(futures):
-
-        result = future.result()
-
-        if not result:
-            continue
-
-        name, retention_data = result
-
         for row in retention_data:
-
             row = fix_retention_amounts(row)
             day = row.get("time")
 
             if day not in result_data["retention"]:
                 result_data["retention"][day] = {}
 
-            result_data["retention"][day][name] = row
+            result_data["retention"][day]["ALL"] = row
 
-        print(f"✅ retention {name}")
+        print("✅ retention ALL")
 
-        # ======================
-# REPEAT RATE
-# ======================
+    except Exception as e:
+        print("❌ retention ALL error:", e)
+    # ======================
+    # RETENTION EACH CHANNEL (FAST)
+    # ======================
 
-result_data["repeat_rate"] = {}
-# ======================
-# NEXT AVG
-# ======================
+    def load_retention_channel(name, cid):
 
-result_data["next_avg"] = {}
+        try:
 
-NEXT_TYPES = {
-    "first": "none",
-    "parent": "direct",
-    "child": "split"
-}
+            retention_params = {
+                "input": json.dumps({
+                    "json": {
+                        "tenantId": TENANT_ID,
+                        "regionId": REGION_ID,
+                        "startTime": retention_start,
+                        "endTime": today,
+                        "type": "recharge",
+                        "channelIds": [],
+                        "channelPromoterId": cid,
+                        "parentType": "none",
+                        "page": 1,
+                        "pageSize": 50,
+                        "timeType": "days_90",
+                        "order": [
+                            {
+                                "key": "time",
+                                "type": "desc"
+                            }
+                        ],
+                        "retentionDays": [0,1,2,3,4,5,6,9,13,29,59]
+                    }
+                }, separators=(',', ':'))
+            }
 
-for key, parent_type in NEXT_TYPES.items():
-
-    try:
-
-        params = {
-            "input": json.dumps({
-                "json": {
-                    "tenantId": TENANT_ID,
-                    "regionId": REGION_ID,
-                    "startTime": retention_start,
-                    "endTime": today,
-                    "type": "recharge",
-                    "channelIds": [],
-                    "parentType": parent_type,
-                    "page": 1,
-                    "pageSize": 50,
-                    "timeType": "days_90",
-                    "retentionDays": [0,1]
-                }
-            }, separators=(',', ':'))
-        }
-
-        res = session.get(
-    RETENTION_URL,
-    params=params,
-    timeout=30
-)
-
-        data = (
-            res.json()
-            .get("result", {})
-            .get("data", {})
-            .get("json", {})
-            .get("data", {})
-            .get("retentionList", [])
-        )
-
-        if len(data) >= 2:
-
-            yesterday = yesterday_day.strftime("%Y-%m-%d")
-
-            row = next(
-                (r for r in data if r.get("time") == yesterday),
-                None
+            retention_res = session.get(
+                RETENTION_URL,
+                params=retention_params,
+                timeout=(3, 40)
             )
 
-            if row:
+            retention_json = retention_res.json()
 
-                amount1 = row.get("amount1", 0) / 100
-                count1 = row.get("count1", 0)
+            retention_data = (
+                retention_json.get("result", {})
+                .get("data", {})
+                .get("json", {})
+                .get("data", {})
+                .get("retentionList", [])
+            )
 
-                result_data["next_avg"][key] = (
-                    round(amount1 / count1, 2)
-                    if count1 else 0
+            return name, retention_data
+
+        except Exception as e:
+            print(f"❌ retention {name} error:", e)
+            return None
+
+
+    with ThreadPoolExecutor(max_workers=len(CHANNELS)) as executor:
+
+        futures = [
+            executor.submit(load_retention_channel, name, cid)
+            for name, cid in CHANNELS.items()
+        ]
+
+        for future in as_completed(futures):
+
+            result = future.result()
+
+            if not result:
+                continue
+
+            name, retention_data = result
+
+            for row in retention_data:
+
+                row = fix_retention_amounts(row)
+                day = row.get("time")
+
+                if day not in result_data["retention"]:
+                    result_data["retention"][day] = {}
+
+                result_data["retention"][day][name] = row
+
+            print(f"✅ retention {name}")
+
+            # ======================
+    # REPEAT RATE
+    # ======================
+
+    # ======================
+    # NEXT AVG
+    # ======================
+
+
+    NEXT_TYPES = {
+        "first": "none",
+        "parent": "direct",
+        "child": "split"
+    }
+
+    for key, parent_type in NEXT_TYPES.items():
+
+        try:
+
+            params = {
+                "input": json.dumps({
+                    "json": {
+                        "tenantId": TENANT_ID,
+                        "regionId": REGION_ID,
+                        "startTime": retention_start,
+                        "endTime": today,
+                        "type": "recharge",
+                        "channelIds": [],
+                        "parentType": parent_type,
+                        "page": 1,
+                        "pageSize": 50,
+                        "timeType": "days_90",
+                        "retentionDays": [0,1]
+                    }
+                }, separators=(',', ':'))
+            }
+
+            res = session.get(
+        RETENTION_URL,
+        params=params,
+        timeout=30
+    )
+
+            data = (
+                res.json()
+                .get("result", {})
+                .get("data", {})
+                .get("json", {})
+                .get("data", {})
+                .get("retentionList", [])
+            )
+
+            if len(data) >= 2:
+
+                yesterday = yesterday_day.strftime("%Y-%m-%d")
+
+                row = next(
+                    (r for r in data if r.get("time") == yesterday),
+                    None
                 )
+
+                if row:
+
+                    amount1 = row.get("amount1", 0) / 100
+                    count1 = row.get("count1", 0)
+
+                    result_data["next_avg"][key] = (
+                        round(amount1 / count1, 2)
+                        if count1 else 0
+                    )
+
+                else:
+                    result_data["next_avg"][key] = 0
 
             else:
                 result_data["next_avg"][key] = 0
 
-        else:
+        except Exception as e:
+            print("next avg error:", key, e)
             result_data["next_avg"][key] = 0
 
-    except Exception as e:
-        print("next avg error:", key, e)
-        result_data["next_avg"][key] = 0
+    REPEAT_TYPES = {
+        "first": "none",      # 首充
+        "parent": "direct",   # 直推首充
+        "child": "split"      # 裂变首充
+    }
 
-REPEAT_TYPES = {
-    "first": "none",      # 首充
-    "parent": "direct",   # 直推首充
-    "child": "split"      # 裂变首充
-}
+    for key, parent_type in REPEAT_TYPES.items():
 
-for key, parent_type in REPEAT_TYPES.items():
+        try:
 
-    try:
+            params = {
+                "input": json.dumps({
+                    "json": {
+                        "tenantId": TENANT_ID,
+                        "regionId": REGION_ID,
+                        "startTime": today,
+                        "endTime": today,
+                        "type": "recharge",
+                        "channelIds": [],
+                        "parentType": parent_type,
+                        "page": 1,
+                        "pageSize": 50,
+                        "timeType": "days_90",
+                        "retentionDays": [0]
+                    }
+                }, separators=(',', ':'))
+            }
 
-        params = {
-            "input": json.dumps({
-                "json": {
-                    "tenantId": TENANT_ID,
-                    "regionId": REGION_ID,
-                    "startTime": today,
-                    "endTime": today,
-                    "type": "recharge",
-                    "channelIds": [],
-                    "parentType": parent_type,
-                    "page": 1,
-                    "pageSize": 50,
-                    "timeType": "days_90",
-                    "retentionDays": [0]
-                }
-            }, separators=(',', ':'))
-        }
+            res = session.get(
+        RETENTION_URL,
+        params=params,
+        timeout=30
+    )
 
-        res = session.get(
-    RETENTION_URL,
-    params=params,
-    timeout=30
-)
-
-        data = (
-            res.json()
-            .get("result", {})
-            .get("data", {})
-            .get("json", {})
-            .get("data", {})
-            .get("retentionList", [])
-        )
-
-        if data:
-            row = data[-1]   # hôm nay
-
-            count = row.get("count", 0)
-            repeat = row.get("repeatRechargeCount", 0)
-
-            result_data["repeat_rate"][key] = (
-                round(repeat / count * 100, 2)
-                if count else 0
+            data = (
+                res.json()
+                .get("result", {})
+                .get("data", {})
+                .get("json", {})
+                .get("data", {})
+                .get("retentionList", [])
             )
-        else:
-            result_data["repeat_rate"][key] = 0
 
-    except Exception as e:
-        print("repeat rate error:", key, e)
-        result_data["repeat_rate"][key] = 0
+            if data:
+                row = data[-1]   # hôm nay
 
- # ======================
-# REALTIME (4 DAYS)
-# ======================
+                count = row.get("count", 0)
+                repeat = row.get("repeatRechargeCount", 0)
 
-print("Loading realtime data...")
-
-from datetime import datetime
-
-dates = [
-    (report_day - timedelta(days=i)).strftime("%Y-%m-%d")
-    for i in range(4)
-]
-
-for date in dates:
-
-    try:
-
-        params = {
-            "input": json.dumps({
-                "json": {
-                    "tenantId": TENANT_ID,
-                    "dateTime": date
-                }
-            }, separators=(',', ':'))
-        }
-
-        res = session.get(
-            REALTIME_URL,
-            params=params,
-            timeout=(3,40)
-        )
-
-        realtime_json = (
-            res.json()
-            .get("result", {})
-            .get("data", {})
-            .get("json", [])
-        )
-
-        for item in realtime_json:
-
-            try:
-
-                utc_time = datetime.fromisoformat(
-                    item["createTime"].replace("Z","")
+                result_data["repeat_rate"][key] = (
+                    round(repeat / count * 100, 2)
+                    if count else 0
                 )
+            else:
+                result_data["repeat_rate"][key] = 0
 
-                brazil_time = utc_time - timedelta(hours=3)
+        except Exception as e:
+            print("repeat rate error:", key, e)
+            result_data["repeat_rate"][key] = 0
+    return True
 
-                   # lấy đầy đủ 5 phút/lần
-                time_key = brazil_time.strftime("%H:%M")
+def task_realtime():
+     # ======================
+    # REALTIME (4 DAYS)
+    # ======================
 
-                time_key = brazil_time.strftime("%H:%M")
+    print("Loading realtime data...")
 
-                if time_key not in result_data["realtime"]:
-                    result_data["realtime"][time_key] = {}
+    from datetime import datetime
 
-                result_data["realtime"][time_key][date] = fix_realtime_amounts(item)
-                    
-                result_data["realtime"] = dict(
-    sorted(result_data["realtime"].items())
-)
+    dates = [
+        (report_day - timedelta(days=i)).strftime("%Y-%m-%d")
+        for i in range(4)
+    ]
 
-            except Exception as e:
-                print("Realtime Parse Error:", e)
+    def load_realtime_date(date):
+        try:
+            params = {
+                "input": json.dumps({
+                    "json": {
+                        "tenantId": TENANT_ID,
+                        "dateTime": date
+                    }
+                }, separators=(',', ':'))
+            }
 
-        print(f"✅ realtime {date}")
+            # Tạo session riêng cho từng worker để chạy song song ổn định
+            s = make_session()
+            res = s.get(REALTIME_URL, params=params, timeout=(3, 40))
+            res.raise_for_status()
 
-    except Exception as e:
+            realtime_json = (
+                res.json()
+                .get("result", {})
+                .get("data", {})
+                .get("json", [])
+            )
+            return date, realtime_json
 
-        print(f"❌ realtime {date}", e)      
-# ======================
-# SAVE JSON
+        except Exception as e:
+            print(f"❌ realtime {date}", e)
+            return date, []
+
+
+    # 4 ngày = 4 request chạy cùng lúc
+    with ThreadPoolExecutor(max_workers=len(dates)) as executor:
+        futures = [executor.submit(load_realtime_date, date) for date in dates]
+
+        for future in as_completed(futures):
+            date, realtime_json = future.result()
+
+            for item in realtime_json:
+                try:
+                    utc_time = datetime.fromisoformat(
+                        item["createTime"].replace("Z", "")
+                    )
+                    brazil_time = utc_time - timedelta(hours=3)
+                    time_key = brazil_time.strftime("%H:%M")
+
+                    if time_key not in result_data["realtime"]:
+                        result_data["realtime"][time_key] = {}
+
+                    result_data["realtime"][time_key][date] = fix_realtime_amounts(item)
+
+                except Exception as e:
+                    print("Realtime Parse Error:", e)
+
+            print(f"✅ realtime {date}")
+
+    result_data["realtime"] = dict(sorted(result_data["realtime"].items()))
+
+    return True
+
+# Chạy 4 nhóm API CÙNG LÚC. hourReportSum vẫn tuần tự bên trong task riêng.
+with ThreadPoolExecutor(max_workers=4) as stage_executor:
+    stage_futures = {
+        stage_executor.submit(task_effects): "channel.effect",
+        stage_executor.submit(task_hour_report): "channel.hourReportSum",
+        stage_executor.submit(task_retention_bundle): "channel.dayRetention",
+        stage_executor.submit(task_realtime): "realTimeData.list",
+    }
+    for future in as_completed(stage_futures):
+        stage = stage_futures[future]
+        try:
+            future.result()
+            print(f"✅ STAGE {stage} hoàn thành")
+        except Exception as e:
+            print(f"❌ STAGE {stage} lỗi:", e)
+
 # ======================
 
 

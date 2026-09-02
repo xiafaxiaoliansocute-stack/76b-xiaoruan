@@ -61,6 +61,26 @@ CURRENT_TUNNEL_URL = ""
 # không tự giẫm nhau. Các script con vẫn được giữ nguyên như trước.
 GIT_LOCK = threading.Lock()
 
+# =====================================================================
+# CHỐNG MẠNG YẾU / RỚT MẠNG ĐỘT NGỘT
+# - Không thay đổi logic dữ liệu hoặc lịch chạy.
+# - Chỉ tăng retry, timeout và backoff cho các thao tác phụ thuộc mạng.
+# =====================================================================
+NETWORK_RETRY_DELAYS = (2, 4, 8, 15, 25, 35, 45, 60)
+GIT_PUSH_MAX_ATTEMPTS = None  # None = retry Git/network vô hạn cho đến khi kết nối lại
+GIT_COMMAND_TIMEOUT = 120
+TUNNEL_RECONNECT_DELAYS = (3, 5, 10, 15, 20, 30, 45, 60)
+TUNNEL_STARTUP_WAIT = 60
+TUNNEL_PUBLISH_WAIT = 45
+
+
+def _sleep_retry(attempt, delays=NETWORK_RETRY_DELAYS, quiet=False):
+    idx = min(max(attempt - 1, 0), len(delays) - 1)
+    delay = delays[idx]
+    if not quiet:
+        print(f"🌐 网络不稳定，{delay} 秒后重试...", flush=True)
+    time.sleep(delay)
+
 # Có thể ghi đè bằng biến môi trường RUN_ALLOWED_ORIGINS, phân cách bằng dấu phẩy.
 DEFAULT_ALLOWED_ORIGINS = {
     "https://xiaoruan.vip",
@@ -138,9 +158,9 @@ def run_all(trigger="hourly"):
                 flush=True,
             )
 
-            # Chờ tối đa 30 phút. Các bot hiện tại có cơ chế retry nên không để
-            # request web treo vô hạn nếu có sự cố kéo dài.
-            deadline = time.time() + 30 * 60
+            # Chờ tối đa 45 phút để chịu được mạng chậm/rớt tạm thời.
+            # Vẫn có giới hạn để request không treo vô hạn.
+            deadline = time.time() + 45 * 60
             while IS_RUNNING and RUN_NUMBER == waiting_for:
                 remaining = deadline - time.time()
                 if remaining <= 0:
@@ -258,7 +278,9 @@ def _git_sync_files(file_names, commit_message, success_message):
     last_error = "unknown git error"
 
     with GIT_LOCK:
-        for attempt in range(1, 6):
+        attempt = 0
+        while True:
+            attempt += 1
             try:
                 add = subprocess.run(
                     # -f để tunnel.json vẫn được sync ngay cả khi .gitignore đang bỏ qua file này.
@@ -266,6 +288,7 @@ def _git_sync_files(file_names, commit_message, success_message):
                     cwd=BASE_DIR,
                     capture_output=True,
                     text=True,
+                    timeout=GIT_COMMAND_TIMEOUT,
                 )
                 if add.returncode != 0:
                     raise RuntimeError((add.stderr or add.stdout or "git add failed").strip())
@@ -273,6 +296,7 @@ def _git_sync_files(file_names, commit_message, success_message):
                 diff = subprocess.run(
                     ["git", "diff", "--cached", "--quiet", "--", *existing],
                     cwd=BASE_DIR,
+                    timeout=GIT_COMMAND_TIMEOUT,
                 )
 
                 committed = False
@@ -282,6 +306,7 @@ def _git_sync_files(file_names, commit_message, success_message):
                         cwd=BASE_DIR,
                         capture_output=True,
                         text=True,
+                        timeout=GIT_COMMAND_TIMEOUT,
                     )
                     if commit.returncode != 0:
                         raise RuntimeError(
@@ -296,6 +321,7 @@ def _git_sync_files(file_names, commit_message, success_message):
                     cwd=BASE_DIR,
                     capture_output=True,
                     text=True,
+                    timeout=GIT_COMMAND_TIMEOUT,
                 )
                 if push.returncode != 0:
                     raise RuntimeError(
@@ -307,14 +333,18 @@ def _git_sync_files(file_names, commit_message, success_message):
 
             except Exception as e:
                 last_error = str(e)
-                if attempt < 5:
+
+                # Retry vô hạn cho đến khi Git/network kết nối lại.
+                # Lỗi 1-4 im lặng; chỉ báo ở mốc 5, 10, 15, 20...
+                should_report = attempt >= 5 and attempt % 5 == 0
+                if should_report:
                     print(
-                        f"⚠️ Git sync lần {attempt}/5 lỗi, thử lại: {last_error}",
+                        f"⚠️ Git/network 已连续失败 {attempt} 次: "
+                        f"{last_error}",
                         flush=True,
                     )
-                    time.sleep(min(2 * attempt, 8))
 
-    return {"success": False, "error": last_error}
+                _sleep_retry(attempt, quiet=not should_report)
 
 
 def sync_json_to_github():
@@ -391,6 +421,8 @@ def tunnel_manager_loop():
     """
     global TUNNEL_PROCESS, CURRENT_TUNNEL_URL
 
+    failure_count = 0
+
     while not TUNNEL_STOP_EVENT.is_set():
         cloudflared = _find_cloudflared()
         if not cloudflared:
@@ -432,8 +464,6 @@ def tunnel_manager_loop():
                         break
 
                     line = raw_line.rstrip()
-                    if line:
-                        print(f"[Tunnel] {line}", flush=True)
 
                     match = TUNNEL_URL_RE.search(line)
                     if match:
@@ -441,6 +471,7 @@ def tunnel_manager_loop():
                         if public_url != CURRENT_TUNNEL_URL:
                             CURRENT_TUNNEL_URL = public_url
                             found_url = True
+                            failure_count = 0
                             TUNNEL_READY_EVENT.set()
                             TUNNEL_PUBLISH_DONE_EVENT.clear()
                             _write_tunnel_info(public_url)
@@ -449,16 +480,29 @@ def tunnel_manager_loop():
                 break
 
             return_code = proc.wait()
-            print(
-                f"⚠️ Cloudflare Tunnel 已断开 (exit={return_code}), 5秒后自动重连...",
-                flush=True,
-            )
+            failure_count += 1
+            reconnect_delay = TUNNEL_RECONNECT_DELAYS[
+                min(failure_count - 1, len(TUNNEL_RECONNECT_DELAYS) - 1)
+            ]
+            # 1-4 lần rớt liên tiếp: reconnect âm thầm.
+            # Từ lần thứ 5 mới hiện cảnh báo.
+            if failure_count >= 5 and failure_count % 5 == 0:
+                print(
+                    f"⚠️ Cloudflare Tunnel 已连续断线 {failure_count} 次 "
+                    f"(exit={return_code}), {reconnect_delay}秒后自动重连...",
+                    flush=True,
+                )
 
             if not found_url:
                 TUNNEL_PUBLISH_DONE_EVENT.set()
 
         except Exception as e:
-            print(f"❌ Cloudflare Tunnel error: {e}", flush=True)
+            failure_count += 1
+            if failure_count >= 5 and failure_count % 5 == 0:
+                print(
+                    f"❌ Cloudflare Tunnel/network 已连续失败 {failure_count} 次: {e}",
+                    flush=True,
+                )
             TUNNEL_PUBLISH_DONE_EVENT.set()
 
         finally:
@@ -466,7 +510,10 @@ def tunnel_manager_loop():
                 if TUNNEL_PROCESS is not None and TUNNEL_PROCESS.poll() is not None:
                     TUNNEL_PROCESS = None
 
-        TUNNEL_STOP_EVENT.wait(5)
+        reconnect_delay = TUNNEL_RECONNECT_DELAYS[
+            min(max(failure_count - 1, 0), len(TUNNEL_RECONNECT_DELAYS) - 1)
+        ]
+        TUNNEL_STOP_EVENT.wait(reconnect_delay)
 
 
 def stop_tunnel_manager():
@@ -491,10 +538,20 @@ def stop_tunnel_manager():
         TUNNEL_PROCESS = None
 
 
-def read_json_file(filename):
+def read_json_file(filename, max_retries=5):
     path = os.path.join(BASE_DIR, filename)
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    last_error = None
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except (OSError, json.JSONDecodeError) as e:
+            last_error = e
+            if attempt < max_retries:
+                time.sleep(min(attempt, 3))
+
+    raise last_error
 
 
 # =====================================================================
@@ -584,8 +641,8 @@ class RunApiHandler(BaseHTTPRequestHandler):
             except Exception:
                 after_run = 0
 
-            # 70 phút: đủ để chờ qua lượt chạy tự động kế tiếp theo giờ.
-            deadline = time.time() + 70 * 60
+            # 90 phút: dư thời gian khi mạng yếu làm bot hoặc GitHub chậm hơn bình thường.
+            deadline = time.time() + 90 * 60
             timed_out = False
             reset_counter = False
             last_result = None
@@ -882,6 +939,11 @@ def scheduler_loop():
         time.sleep(sleep_seconds)
 
 
+class ResilientThreadingHTTPServer(ThreadingHTTPServer):
+    daemon_threads = True
+    allow_reuse_address = True
+
+
 def main():
     print("=" * 60, flush=True)
     print("Xiaoruan Run Forever + Auto Cloudflare Tunnel", flush=True)
@@ -891,7 +953,7 @@ def main():
     print("=" * 60, flush=True)
 
     # Tạo/bind HTTP server trước để cloudflared có local service đích.
-    server = ThreadingHTTPServer((API_HOST, API_PORT), RunApiHandler)
+    server = ResilientThreadingHTTPServer((API_HOST, API_PORT), RunApiHandler)
 
     # Tunnel tự động: URL mới sẽ được ghi tunnel.json và push lên GitHub.
     tunnel_thread = threading.Thread(
@@ -903,11 +965,12 @@ def main():
 
     # Chờ một chút để tunnel có URL trước khi 4 bot bắt đầu thao tác git.
     # Nếu Cloudflare chậm/mất mạng thì không chặn hệ thống quá lâu.
-    if TUNNEL_READY_EVENT.wait(timeout=25):
-        TUNNEL_PUBLISH_DONE_EVENT.wait(timeout=20)
+    if TUNNEL_READY_EVENT.wait(timeout=TUNNEL_STARTUP_WAIT):
+        TUNNEL_PUBLISH_DONE_EVENT.wait(timeout=TUNNEL_PUBLISH_WAIT)
     else:
         print(
-            "⚠️ 25秒内还没拿到 Tunnel URL，API 本地和定时任务仍会继续运行。",
+            f"⚠️ {TUNNEL_STARTUP_WAIT}秒内还没拿到 Tunnel URL，"
+            "API 本地和定时任务仍会继续运行，Tunnel 会在后台持续重连。",
             flush=True,
         )
 

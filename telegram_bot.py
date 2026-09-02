@@ -15,7 +15,7 @@ from telegram.ext import (
     ContextTypes,
 )
 
-BOT_VERSION = "DIRECT_LOG_ROWS_SAFE_V3"
+BOT_VERSION = "MULTI_PROJECT_CONFIG_V1"
 
 # =====================================================
 # CONFIG
@@ -27,21 +27,93 @@ BASE_DIR = Path(__file__).resolve().parent
 LINE = "━━━━━━━━━━━━━━━━━━━━━━"
 
 # =====================================================
-# TASKS
+# PROJECT CONFIG
+# =====================================================
+# SAU NÀY ĐỔI / THÊM WEB MỚI: CHỦ YẾU CHỈ SỬA KHỐI PROJECTS NÀY.
+# Bot sẽ tự tạo lệnh:
+# /abc_start
+# /del_shouchong abc YYYY-MM-DD
+# /del_recharge abc YYYY-MM-DD
+# /del_all abc
+# /confirm_del_all abc
 # =====================================================
 
-TASKS = {
-    "23E-计算留存": [
-        ("💰 充值用户", "23E-liucun/23echongzhi.py", 5),
-        ("👤 首充用户", "23E-liucun/23eshoucun.py", 10),
-        ("📊 留存计算", "23E-liucun/23eliucun.py", 0),
-    ],
-    "73J-计算留存": [
-        ("💰 充值用户", "73J-liucun/73jchongzhi.py", 5),
-        ("👤 首充用户", "73J-liucun/73jshouchong.py", 10),
-        ("📊 留存计算", "73J-liucun/73jliucun.py", 0),
-    ],
+PROJECTS = {
+    "9SSS": {
+        "display_name": "9SSS",
+        "folder": "9SSS-liucun",
+        "db": "9SSS.db",
+        "scripts": {
+            "recharge": "9SSSchongzhi.py",
+            "first": "9SSShoucun.py",
+            "retention": "9SSSliucun.py",
+        },
+        "wait": {
+            "recharge": 5,
+            "first": 10,
+            "retention": 0,
+        },
+    },
+
+# =====================================================
+
+    "73J": {
+        "display_name": "73J",
+        "folder": "73J-liucun",
+        "db": "73J.db",
+        "scripts": {
+            "recharge": "73Jchongzhi.py",
+            "first": "73Jshouchong.py",
+            "retention": "73Jliucun.py",
+        },
+        "wait": {
+            "recharge": 5,
+            "first": 10,
+            "retention": 0,
+        },
+    },
 }
+
+
+def normalize_project_key(project_type: str) -> str:
+    """Chuẩn hóa tên project không phân biệt hoa/thường.
+
+    Ví dụ: 9SSS / 9sss / 9SsS đều map về key "9SSS";
+    73J / 73j đều map về key "73J".
+    """
+    raw = str(project_type or "").strip()
+    folded = raw.casefold()
+
+    for key in PROJECTS:
+        if key.casefold() == folded:
+            return key
+
+    allowed = ", ".join(PROJECTS.keys())
+    raise ValueError(f"项目名称错误，可用项目: {allowed}")
+
+
+def get_project(project_type: str) -> dict:
+    key = normalize_project_key(project_type)
+    return PROJECTS[key]
+
+
+def build_tasks(project_type: str):
+    project = get_project(project_type)
+    folder = project["folder"]
+    scripts = project["scripts"]
+    waits = project["wait"]
+
+    return [
+        ("💰 充值用户", f"{folder}/{scripts['recharge']}", waits["recharge"]),
+        ("👤 首充用户", f"{folder}/{scripts['first']}", waits["first"]),
+        ("📊 留存计算", f"{folder}/{scripts['retention']}", waits["retention"]),
+    ]
+
+
+def project_group_name(project_type: str) -> str:
+    project = get_project(project_type)
+    return f"{project['display_name']}-计算留存"
+
 
 # =====================================================
 # GLOBAL
@@ -163,31 +235,26 @@ def execute_script(script: str):
 # /del_recharge  -> chỉ xóa recharge
 # =====================================================
 
-
 def get_project_db(project_type: str) -> Path:
-    project_lower = project_type.lower().strip()
+    project = get_project(project_type)
 
-    if project_lower == "23e":
-        folder = BASE_DIR / "23E-liucun"
-        expected = folder / "23E.db"
-    elif project_lower == "73j":
-        folder = BASE_DIR / "73J-liucun"
-        expected = folder / "73J.db"
-    else:
-        raise ValueError("项目名称错误，只能使用 23e 或 73j")
+    folder = BASE_DIR / project["folder"]
+    expected = folder / project["db"]
 
     if expected.exists() and expected.is_file():
         return expected
 
-    # Linux phân biệt chữ hoa/chữ thường. Nếu tên DB hơi khác,
-    # chỉ tự chọn khi trong thư mục có đúng 1 file .db.
+    # Linux phân biệt chữ hoa/chữ thường.
+    # Nếu tên DB hơi khác, chỉ tự chọn khi thư mục có đúng 1 file .db.
     if folder.exists() and folder.is_dir():
         db_files = sorted(
             p for p in folder.iterdir()
             if p.is_file() and p.suffix.lower() == ".db"
         )
+
         if len(db_files) == 1:
             return db_files[0]
+
         if len(db_files) > 1:
             names = ", ".join(p.name for p in db_files)
             raise FileNotFoundError(
@@ -290,6 +357,34 @@ def execute_delete_recharge(project_type: str, date_str: str) -> int:
     finally:
         conn.close()
 
+
+
+def execute_delete_all(project_type: str) -> tuple[int, int]:
+    """Xóa toàn bộ dữ liệu shouchong và recharge, giữ nguyên DB/schema."""
+    db_path = get_project_db(project_type)
+    conn = sqlite3.connect(str(db_path), timeout=30)
+    try:
+        # Kiểm tra hai bảng tồn tại trước khi xóa để tránh xóa dở một bảng.
+        cursor = conn.cursor()
+        for table_name in ("shouchong", "recharge"):
+            cursor.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name=? LIMIT 1",
+                (table_name,),
+            )
+            if cursor.fetchone() is None:
+                raise RuntimeError(f"数据库中找不到表: {table_name}")
+
+        cursor.execute('DELETE FROM "shouchong"')
+        shouchong_count = cursor.rowcount
+        cursor.execute('DELETE FROM "recharge"')
+        recharge_count = cursor.rowcount
+        conn.commit()
+        return shouchong_count, recharge_count
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
 
 
 
@@ -406,14 +501,17 @@ async def telegram_error_handler(update, context):
 # =====================================================
 
 
-async def run_group(group_name: str, message) -> None:
+async def run_group(project_type: str, message) -> None:
     global running
     global current_task
     global task_start_time
 
-    if group_name not in TASKS:
+    try:
+        group_name = project_group_name(project_type)
+        tasks = build_tasks(project_type)
+    except Exception as exc:
         await message.reply_text(
-            f"❌ 任务未配置: {group_name}"
+            f"❌ 任务未配置: {exc}"
         )
         return
 
@@ -431,7 +529,6 @@ async def run_group(group_name: str, message) -> None:
     current_task = group_name
     task_start_time = time.time()
 
-    tasks = TASKS[group_name]
     total_start = time.time()
 
     task_status = [
@@ -592,14 +689,14 @@ async def delete_shouchong_cmd(
     args = context.args
     if len(args) != 2:
         await update.message.reply_text(
-            "⚠️ 格式错误 / Sai cú pháp!\n\n"
-            "📌 示例 / Ví dụ:\n"
-            "/del_shouchong 23e 2026-08-11\n"
-            "/del_shouchong 73j 2026-08-11"
+            "⚠️ 格式错误!\n\n"
+            "📌 格式:\n"
+            "/del_shouchong 项目 YYYY-MM-DD\n\n"
+            f"可用项目: {', '.join(PROJECTS.keys())}"
         )
         return
 
-    project_type = args[0].lower().strip()
+    project_type = normalize_project_key(args[0])
     target_date = args[1].strip()
 
     try:
@@ -634,14 +731,14 @@ async def delete_recharge_cmd(
     args = context.args
     if len(args) != 2:
         await update.message.reply_text(
-            "⚠️ 格式错误 / Sai cú pháp!\n\n"
-            "📌 示例 / Ví dụ:\n"
-            "/del_recharge 23e 2026-08-11\n"
-            "/del_recharge 73j 2026-08-11"
+            "⚠️ 格式错误!\n\n"
+            "📌 格式:\n"
+            "/del_recharge 项目 YYYY-MM-DD\n\n"
+            f"可用项目: {', '.join(PROJECTS.keys())}"
         )
         return
 
-    project_type = args[0].lower().strip()
+    project_type = normalize_project_key(args[0])
     target_date = args[1].strip()
 
     try:
@@ -663,28 +760,100 @@ async def delete_recharge_cmd(
         )
 
 
-async def run23e(
+async def delete_all_cmd(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ) -> None:
     if not allow(update) or update.message is None:
         return
-    context.application.create_task(
-        run_group("23E-计算留存", update.message),
-        update=update,
+
+    args = context.args
+    if len(args) != 1:
+        await update.message.reply_text(
+            "⚠️ 格式错误!\n\n"
+            "📌 格式:\n"
+            "/del_all 项目\n\n"
+            f"可用项目: {', '.join(PROJECTS.keys())}"
+        )
+        return
+
+    try:
+        project_type = normalize_project_key(args[0])
+    except ValueError as exc:
+        await update.message.reply_text(f"❌ {exc}")
+        return
+    await update.message.reply_text(
+        "⚠️ 危险操作\n\n"
+        f"📂 项目: {project_type.upper()}\n"
+        "🗑 将删除全部数据:\n"
+        "• shouchong\n"
+        "• recharge\n\n"
+        "✅ 数据库和表结构会保留。\n\n"
+        "如确认删除，请发送：\n"
+        f"/confirm_del_all {project_type}"
     )
 
 
-async def run73j(
+async def confirm_delete_all_cmd(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ) -> None:
     if not allow(update) or update.message is None:
         return
-    context.application.create_task(
-        run_group("73J-计算留存", update.message),
-        update=update,
-    )
+
+    args = context.args
+    if len(args) != 1:
+        await update.message.reply_text(
+            "⚠️ 格式错误!\n\n"
+            "📌 格式:\n"
+            "/confirm_del_all 项目\n\n"
+            f"可用项目: {', '.join(PROJECTS.keys())}"
+        )
+        return
+
+    try:
+        project_type = normalize_project_key(args[0])
+    except ValueError as exc:
+        await update.message.reply_text(f"❌ {exc}")
+        return
+    try:
+        shouchong_count, recharge_count = await asyncio.to_thread(
+            execute_delete_all, project_type
+        )
+        await update.message.reply_text(
+            "✅ 全部数据删除完成\n\n"
+            f"📂 项目: {project_type.upper()}\n"
+            f"🗑 shouchong: {shouchong_count:,} 行\n"
+            f"🗑 recharge: {recharge_count:,} 行\n"
+            f"🗑 合计: {shouchong_count + recharge_count:,} 行\n\n"
+            "✅ 数据库和表结构已保留。"
+        )
+    except Exception as exc:
+        await update.message.reply_text(
+            f"❌ 全部数据删除失败\n\n{exc}"
+        )
+
+
+def make_start_handler(project_type: str):
+    async def start_project(
+        update: Update,
+        context: ContextTypes.DEFAULT_TYPE,
+    ) -> None:
+        if not allow(update) or update.message is None:
+            return
+
+        try:
+            normalized_project = normalize_project_key(project_type)
+        except ValueError as exc:
+            await update.message.reply_text(f"❌ {exc}")
+            return
+
+        context.application.create_task(
+            run_group(normalized_project, update.message),
+            update=update,
+        )
+
+    return start_project
 
 
 async def status(
@@ -710,17 +879,40 @@ async def help_cmd(
     if not allow(update) or update.message is None:
         return
 
-    await update.message.reply_text(
-        "🤖 数据机器人\n\n"
-        "/23e_start\n"
-        "/73j_start\n\n"
-        "/del_shouchong 23e YYYY-MM-DD\n"
-        "/del_shouchong 73j YYYY-MM-DD\n\n"
-        "/del_recharge 23e YYYY-MM-DD\n"
-        "/del_recharge 73j YYYY-MM-DD\n\n"
-        "/status\n"
-        "/help"
-    )
+    lines = [
+        "🤖 数据机器人",
+        "",
+        "🚀 启动任务:",
+    ]
+
+    for key, project in PROJECTS.items():
+        lines.append(f"/{key}_start    # {project['display_name']}")
+
+    lines.extend([
+        "",
+        "🗑 删除指定日期:",
+    ])
+
+    for key in PROJECTS:
+        lines.append(f"/del_shouchong {key} YYYY-MM-DD")
+        lines.append(f"/del_recharge {key} YYYY-MM-DD")
+
+    lines.extend([
+        "",
+        "⚠️ 删除全部数据:",
+    ])
+
+    for key in PROJECTS:
+        lines.append(f"/del_all {key}")
+        lines.append(f"/confirm_del_all {key}")
+
+    lines.extend([
+        "",
+        "/status",
+        "/help",
+    ])
+
+    await update.message.reply_text("\n".join(lines))
 
 
 # =====================================================
@@ -729,14 +921,22 @@ async def help_cmd(
 
 
 def register(app) -> None:
-    app.add_handler(CommandHandler("23e_start", run23e))
-    app.add_handler(CommandHandler("73j_start", run73j))
+    # Tự động tạo /<project>_start theo PROJECTS.
+    for project_key in PROJECTS:
+        app.add_handler(
+            CommandHandler(
+                f"{project_key}_start",
+                make_start_handler(project_key),
+            )
+        )
+
     app.add_handler(CommandHandler("status", status))
     app.add_handler(CommandHandler("help", help_cmd))
 
-    # Hai lệnh xóa hoàn toàn độc lập.
     app.add_handler(CommandHandler("del_shouchong", delete_shouchong_cmd))
     app.add_handler(CommandHandler("del_recharge", delete_recharge_cmd))
+    app.add_handler(CommandHandler("del_all", delete_all_cmd))
+    app.add_handler(CommandHandler("confirm_del_all", confirm_delete_all_cmd))
 
     app.add_error_handler(telegram_error_handler)
 

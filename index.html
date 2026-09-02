@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -2116,7 +2115,6 @@ placeholder="请输入密码">
         <div class="site-btn" onclick="switchSite('NN22',this)">16011-NN22</div>
         <div class="site-btn" onclick="switchSite('23A',this)">16021-23A</div>
         <div class="site-btn" onclick="switchSite('23E',this)">16028-23E</div>
-        <div class="site-btn" onclick="switchSite('TEST3',this)">TEST3</div>
     </div>
 
     <!-- Tab -->
@@ -2355,7 +2353,7 @@ if(site === "73J"){
 
 }else{
 
-    // Giữ nguyên NN22 / TEST3
+    // Giữ nguyên NN22
     avgWsH5Header.style.display = "none";
     extraHeader.style.display = "none";
     avgGroupHeader.colSpan = 10;
@@ -2374,8 +2372,7 @@ const siteFiles = {
     "73J": "data.json",
     "NN22": "nn22.json",
     "23A": "23a.json",
-    "23E": "23e.json",
-    "TEST3": "brazil.json"
+    "23E": "23e.json"
 };
 
 // ===== THÊM TÊN ĐÀI =====
@@ -2383,25 +2380,31 @@ const siteTitles = {
     "73J": "15016-73J",
     "NN22": "16011-NN22",
     "23A": "16021-23A",
-    "23E": "16028-23E",
-    "TEST3": "TEST"
+    "23E": "16028-23E"
 };
 
 
 
 function switchSite(site,obj){
-currentSite=site;
-updateSiteHeaders(site);
-document.querySelectorAll(".site-btn").forEach(btn=>{
-    btn.classList.remove("active");
-});
+    currentSite = site;
+    updateSiteHeaders(site);
 
-obj.classList.add("active");
-if(activeTab===4){
-    renderRetentionButtons();
-}
-loadData();
+    document.querySelectorAll(".site-btn").forEach(btn=>{
+        btn.classList.remove("active");
+    });
 
+    obj.classList.add("active");
+
+    if(activeTab===4){
+        renderRetentionButtons();
+    }
+
+    if(siteDataCache[site]){
+        applySiteDataFast(site, siteDataCache[site]);
+        return;
+    }
+
+    loadData();
 }
 
 /* ============ TAB SWITCHING ============ */
@@ -2482,6 +2485,102 @@ let activeTab = 1;
 let tabNeedsRender = {1:true,2:true,3:true,4:true};
 let loadDataSeq = 0;
 
+const siteDataCache = Object.create(null);
+let masterDataCache = null;
+let preloadAllPromise = null;
+let switchRenderSeq = 0;
+
+function getMasterUpdateTime(){
+    const d = masterDataCache || siteDataCache["73J"];
+    return d ? (d.update_time_brazil || d.update_time || "--") : "--";
+}
+
+function applySiteDataFast(site, data){
+    if(!data || site !== currentSite) return false;
+
+    historyData = data.history || {};
+    globalData = data;
+
+    masterUpdateTime = getMasterUpdateTime();
+    if(masterUpdateTime === "--"){
+        masterUpdateTime =
+            data.update_time_brazil ||
+            data.update_time ||
+            "--";
+    }
+
+    document.getElementById("updateTimeHero").textContent =
+        "📅 数据更新时间：" + masterUpdateTime;
+
+    document.getElementById("tableMainTitle").textContent =
+        `${siteTitles[site]}-实时数据汇总-更新时间(巴西)：${masterUpdateTime}`;
+
+    markAllTabsDirty();
+
+    const seq = ++switchRenderSeq;
+
+    requestAnimationFrame(()=>{
+        if(seq !== switchRenderSeq || site !== currentSite) return;
+
+        renderActiveTab(true);
+
+        const sw = document.getElementById("zeroSwitch");
+        if(sw){
+            sw.checked = !hideZero;
+        }
+    });
+
+    return true;
+}
+
+async function fetchSiteJson(site, cacheBust){
+    const jsonFile = siteFiles[site];
+
+    const res = await fetch(
+        jsonFile + "?t=" + cacheBust,
+        {cache:"no-store"}
+    );
+
+    if(!res.ok){
+        throw new Error("HTTP " + res.status + " - " + jsonFile);
+    }
+
+    const data = await res.json();
+    siteDataCache[site] = data;
+
+    if(site === "73J"){
+        masterDataCache = data;
+    }
+
+    return data;
+}
+
+async function preloadAllSiteData(force=false){
+    if(preloadAllPromise){
+        return preloadAllPromise;
+    }
+
+    const cacheBust = Date.now();
+
+    const sites = Object.keys(siteFiles).filter(site=>{
+        return force || !siteDataCache[site];
+    });
+
+    if(!sites.length){
+        return [];
+    }
+
+    preloadAllPromise = Promise.allSettled(
+        sites.map(site=>fetchSiteJson(site, cacheBust))
+    );
+
+    try{
+        return await preloadAllPromise;
+    }finally{
+        preloadAllPromise = null;
+    }
+}
+
 function markAllTabsDirty(){
     tabNeedsRender[1] = true;
     tabNeedsRender[2] = true;
@@ -2507,107 +2606,42 @@ function renderActiveTab(force=false){
     return true;
 }
 /* ============ LOAD DATA FROM JSON ============ */
-function loadData(){
+async function loadData(){
     updateSiteHeaders(currentSite);
 
     const requestedSite = currentSite;
-    const jsonFile = siteFiles[requestedSite];
+
+    if(siteDataCache[requestedSite]){
+        applySiteDataFast(requestedSite, siteDataCache[requestedSite]);
+        return true;
+    }
+
     const requestSeq = ++loadDataSeq;
     const cacheBust = Date.now();
 
-    return fetch(jsonFile + "?t=" + cacheBust, {cache:"no-store"})
-    .then(r=>{
-        if(!r.ok) throw new Error("HTTP " + r.status + " - " + jsonFile);
-        return r.json();
-    })
-    .then(data=>{
-        if(requestSeq !== loadDataSeq || requestedSite !== currentSite) return;
+    try{
+        const data = await fetchSiteJson(requestedSite, cacheBust);
 
-        historyData = data.history || {};
-        globalData = data;
-
-        // 73J chính là data.json: tái sử dụng dữ liệu vừa tải, không tải + parse lần 2.
-        const mainDataPromise = jsonFile === "data.json"
-            ? Promise.resolve(data)
-            : fetch("data.json?t=" + cacheBust, {cache:"no-store"})
-                .then(r=>{
-                    if(!r.ok) throw new Error("HTTP " + r.status + " - data.json");
-                    return r.json();
-                });
-
-        mainDataPromise
-        .then(mainData=>{
-            if(requestSeq !== loadDataSeq || requestedSite !== currentSite) return;
-
-            masterUpdateTime =
-                mainData.update_time_brazil ||
-                mainData.update_time ||
-                "--";
-
-            document.getElementById("updateTimeHero").textContent =
-                "📅 数据更新时间：" + masterUpdateTime;
-
-            document.getElementById("tableMainTitle").textContent =
-                `${siteTitles[requestedSite]}-实时数据汇总-更新时间(巴西)：${masterUpdateTime}`;
-        })
-        .catch(err=>{
-            console.warn("读取主更新时间失败:", err);
-        });
-
-        markAllTabsDirty();
-        renderActiveTab();
-
-        const sw = document.getElementById("zeroSwitch");
-        if(sw){
-            sw.checked = !hideZero;
+        if(requestSeq !== loadDataSeq || requestedSite !== currentSite){
+            return false;
         }
-    })
-    .catch(err=>{
-        if(requestSeq !== loadDataSeq || requestedSite !== currentSite) return;
 
-        console.log(err);
+        applySiteDataFast(requestedSite, data);
+
+        preloadAllSiteData(false).catch(()=>{});
+
+        return true;
+
+    }catch(err){
+        if(requestSeq !== loadDataSeq || requestedSite !== currentSite){
+            return false;
+        }
+
+        console.error("读取数据失败:", err);
 
         globalData = {};
         historyData = {};
         markAllTabsDirty();
-
-        document.getElementById("app").innerHTML = `
-            <div style="
-                background:#fff;
-                padding:80px;
-                border-radius:15px;
-                text-align:center;
-                font-size:36px;
-                font-weight:bold;
-                color:#999;">
-                暂无数据
-            </div>
-        `;
-
-        document.getElementById("body").innerHTML = `
-            <tr>
-                <td colspan="36"
-                    style="height:120px;font-size:30px;color:#999;">
-                    暂无数据
-                </td>
-            </tr>
-        `;
-
-        document.getElementById("realtimeTable").innerHTML = `
-            <tr>
-                <td style="height:120px;text-align:center;font-size:30px;color:#999;">
-                    暂无数据
-                </td>
-            </tr>
-        `;
-
-        document.getElementById("retentionTable").innerHTML = `
-            <tr>
-                <td style="height:120px;text-align:center;font-size:30px;color:#999;">
-                    暂无数据
-                </td>
-            </tr>
-        `;
 
         document.getElementById("updateTimeHero").textContent =
             "📅 数据更新时间：--";
@@ -2615,13 +2649,10 @@ function loadData(){
         document.getElementById("tableMainTitle").textContent =
             "暂无数据";
 
-        // 4 tab đã có thông báo 暂无数据 ở trên, không cần render nặng thêm.
-        tabNeedsRender[1] = false;
-        tabNeedsRender[2] = false;
-        tabNeedsRender[3] = false;
-        tabNeedsRender[4] = false;
-    });
+        return false;
+    }
 }
+
 loadData();
 
 
@@ -7531,6 +7562,11 @@ function applyRunDataToDashboard(newData, updateTime){
     // Hủy hiệu lực request loadData cũ nếu người dùng vừa chạy 查询数据.
     loadDataSeq++;
 
+    siteDataCache[currentSite] = newData;
+    if(currentSite === "73J"){
+        masterDataCache = newData;
+    }
+
     historyData = newData.history || {};
     globalData = newData;
     masterUpdateTime =
@@ -7634,53 +7670,34 @@ async function queryData(){
         let newData = null;
         let updateTime = "--";
 
-        // TEST3 hiện không có script tương ứng trong run_forever.py.
-        if(currentSite === "TEST3"){
-            const jsonRes = await fetch(
-                siteFiles[currentSite] + "?t=" + Date.now(),
-                { cache: "no-store" }
-            );
+        const requestedSite = currentSite;
+        const res = await callRunForever(requestedSite);
 
-            if(!jsonRes.ok){
-                throw new Error("读取 TEST3 JSON 失败");
-            }
-
-            newData = await jsonRes.json();
-            updateTime =
-                newData.update_time_brazil ||
-                newData.update_time ||
-                "--";
-
-        }else{
-            const requestedSite = currentSite;
-            const res = await callRunForever(requestedSite);
-
-            let accepted;
-            try{
-                accepted = await res.json();
-            }catch(_){
-                throw new Error("机器人 API 返回格式错误");
-            }
-
-            if(!res.ok || !accepted.success){
-                throw new Error(accepted.error || ("HTTP " + res.status));
-            }
-
-            const targetRun = Number(accepted.run_number || 0);
-            if(!targetRun){
-                throw new Error("没有收到运行编号");
-            }
-
-            await waitForPublicRun(targetRun, requestedSite);
-
-            const latest = await loadLatestPublicData(requestedSite);
-            newData = latest.data;
-            updateTime =
-                latest.master_update_time ||
-                newData?.update_time_brazil ||
-                newData?.update_time ||
-                "--";
+        let accepted;
+        try{
+            accepted = await res.json();
+        }catch(_){
+            throw new Error("机器人 API 返回格式错误");
         }
+
+        if(!res.ok || !accepted.success){
+            throw new Error(accepted.error || ("HTTP " + res.status));
+        }
+
+        const targetRun = Number(accepted.run_number || 0);
+        if(!targetRun){
+            throw new Error("没有收到运行编号");
+        }
+
+        await waitForPublicRun(targetRun, requestedSite);
+
+        const latest = await loadLatestPublicData(requestedSite);
+        newData = latest.data;
+        updateTime =
+            latest.master_update_time ||
+            newData?.update_time_brazil ||
+            newData?.update_time ||
+            "--";
 
         if(!newData){
             throw new Error("没有收到最新数据");
@@ -7723,70 +7740,68 @@ async function queryData(){
     }
 }
 
-// Chỉ lấy lại dữ liệu public mới nhất từ GitHub sau 1.5 giây.
-function refreshDashboardData(){
+// 刷新：一次同步全部网站。
+async function refreshDashboardData(){
 
     const btn = document.getElementById("dataRefreshBtn");
 
     if(btn){
         btn.disabled = true;
-        btn.innerHTML = '<span class="refresh-spinner"><i></i><i></i><i></i><i></i><i></i><i></i></span><span>正在同步最新数据...</span>';
+        btn.innerHTML =
+            '<span class="refresh-spinner"><i></i><i></i><i></i><i></i><i></i><i></i></span>' +
+            '<span>正在同步全部网站...</span>';
         btn.classList.add("loading");
     }
 
-    setTimeout(async ()=>{
+    // Giữ hiệu ứng xoay đủ lâu để nhìn tự nhiên như code cũ,
+    // nhưng dữ liệu vẫn bắt đầu đồng bộ ngay, không trì hoãn request.
+    const minSpinTime = new Promise(resolve => setTimeout(resolve, 1500));
 
-        try{
+    try{
+        const syncPromise = preloadAllSiteData(true);
 
-            const cacheBust = Date.now();
-            const jsonFile = siteFiles[currentSite];
+        const [results] = await Promise.all([
+            syncPromise,
+            minSpinTime
+        ]);
 
-            const res = await fetch(
-                jsonFile + "?t=" + cacheBust,
-                {cache:"no-store"}
+        const successCount = results.filter(
+            item => item.status === "fulfilled"
+        ).length;
+
+        const totalCount = Object.keys(siteFiles).length;
+
+        if(siteDataCache[currentSite]){
+            applySiteDataFast(
+                currentSite,
+                siteDataCache[currentSite]
             );
-
-            if(!res.ok){
-                throw new Error("读取最新数据失败");
-            }
-
-            const newData = await res.json();
-
-            globalData = newData;
-            historyData = newData.history || {};
-
-            const updateTime =
-                newData.update_time_brazil ||
-                newData.update_time ||
-                "--";
-
-            applyRunDataToDashboard(newData, updateTime);
-
-            if(btn){
-                btn.innerHTML = "✅ 已更新";
-            }
-
-        }catch(err){
-
-            console.error("刷新失败:", err);
-
-            if(btn){
-                btn.innerHTML = "❌ 刷新失败";
-            }
-
-        }finally{
-
-            setTimeout(()=>{
-                if(btn){
-                    btn.disabled = false;
-                    btn.classList.remove("loading");
-                    btn.innerHTML = "🔄 刷新";
-                }
-            },1000);
-
         }
 
-    },1500);
+        if(btn){
+            btn.innerHTML =
+                successCount === totalCount
+                ? `✅ 全部已同步 (${successCount}/${totalCount})`
+                : `⚠️ 已同步 (${successCount}/${totalCount})`;
+        }
+
+    }catch(err){
+        await minSpinTime;
+        console.error("刷新失败:", err);
+
+        if(btn){
+            btn.innerHTML = "❌ 刷新失败";
+        }
+
+    }finally{
+        setTimeout(()=>{
+            if(btn){
+                btn.disabled = false;
+                btn.classList.remove("loading");
+                btn.innerHTML = "🔄 刷新";
+            }
+        }, 700);
+    }
 }
 
 /*
@@ -7812,7 +7827,7 @@ function toggleYesterdayData(){
 
     // Đồng bộ lại colspan theo từng đài.
     // 73J có thêm 2 cột WS-H5 nên tổng là 40 cột (ẩn 昨日数据 còn 35).
-    // 23A/23E giữ 38 cột; NN22/TEST3 giữ 36 cột.
+    // 23A/23E giữ 38 cột; NN22 giữ 36 cột.
     updateSiteHeaders(currentSite);
 }
 
