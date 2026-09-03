@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -1892,6 +1893,182 @@ tbody tr:hover{
     to{transform:rotate(360deg);}
 }
 
+
+/* =========================================================
+   FULL PAGE F5 LOADING — trắng, tối giản, chuyên nghiệp
+   Chỉ hiện khi tải/F5 trang. Không ảnh hưởng nút 刷新.
+   ========================================================= */
+#pageBootLoader{
+    position:fixed;
+    inset:0;
+    z-index:2147483647;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#ffffff;
+    opacity:1;
+    visibility:visible;
+    transition:opacity .38s ease, visibility .38s ease;
+}
+
+#pageBootLoader.boot-hide{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+}
+
+.boot-loader-card{
+    width:min(420px,88vw);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    transform:translateY(-2vh);
+}
+
+.boot-logo{
+    position:relative;
+    font-size:34px;
+    line-height:1;
+    font-weight:900;
+    letter-spacing:2px;
+    color:#222;
+    margin-bottom:30px;
+    animation:bootLogoPulse 1.8s ease-in-out infinite;
+}
+
+.boot-logo::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-12px;
+    width:42px;
+    height:3px;
+    border-radius:999px;
+    background:linear-gradient(90deg,#1677ff,#5ba7ff,#1677ff);
+    transform:translateX(-50%);
+    background-size:200% 100%;
+    animation:bootShimmer 1.25s linear infinite;
+}
+
+.boot-spinner{
+    position:relative;
+    width:82px;
+    height:82px;
+    margin-bottom:24px;
+}
+
+.boot-ring{
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    border:3px solid transparent;
+    border-top-color:#1677ff;
+    border-right-color:#77b6ff;
+    animation:bootSpin 1s linear infinite;
+}
+
+.boot-ring.r2{
+    inset:10px;
+    border-width:3px;
+    border-top-color:#8ec5ff;
+    border-left-color:#2f88ff;
+    animation-duration:.72s;
+    animation-direction:reverse;
+}
+
+.boot-ring.r3{
+    inset:22px;
+    border-width:3px;
+    border-top-color:#1677ff;
+    border-bottom-color:#b9dcff;
+    animation-duration:1.35s;
+}
+
+.boot-core{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:12px;
+    height:12px;
+    margin:-6px 0 0 -6px;
+    border-radius:50%;
+    background:#1677ff;
+    box-shadow:
+        0 0 0 7px rgba(22,119,255,.08),
+        0 0 20px rgba(22,119,255,.28);
+    animation:bootCorePulse 1s ease-in-out infinite;
+}
+
+.boot-dots{
+    display:flex;
+    gap:7px;
+    height:10px;
+    margin-bottom:16px;
+}
+
+.boot-dots span{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#7fb9ff;
+    animation:bootDot 1.15s ease-in-out infinite;
+}
+
+.boot-dots span:nth-child(2){animation-delay:.14s;}
+.boot-dots span:nth-child(3){animation-delay:.28s;}
+.boot-dots span:nth-child(4){animation-delay:.42s;}
+
+.boot-title{
+    color:#24292f;
+    font-size:20px;
+    font-weight:800;
+    letter-spacing:.5px;
+    margin-bottom:7px;
+}
+
+.boot-subtitle{
+    color:#8a949e;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.3px;
+}
+
+@keyframes bootSpin{
+    to{transform:rotate(360deg);}
+}
+
+@keyframes bootLogoPulse{
+    0%,100%{transform:scale(1);opacity:.94;}
+    50%{transform:scale(1.035);opacity:1;}
+}
+
+@keyframes bootCorePulse{
+    0%,100%{transform:scale(.85);opacity:.7;}
+    50%{transform:scale(1.15);opacity:1;}
+}
+
+@keyframes bootDot{
+    0%,100%{transform:translateY(0) scale(.8);opacity:.35;}
+    50%{transform:translateY(-5px) scale(1.15);opacity:1;}
+}
+
+@keyframes bootShimmer{
+    from{background-position:200% 0;}
+    to{background-position:-200% 0;}
+}
+
+@media (prefers-reduced-motion: reduce){
+    .boot-ring,
+    .boot-logo,
+    .boot-core,
+    .boot-dots span,
+    .boot-logo::after{
+        animation-duration:2.4s !important;
+    }
+}
+
 </style>
 </head>
 <script>
@@ -1928,6 +2105,62 @@ document.addEventListener("visibilitychange",()=>{
 });
 </script>
 <body>
+
+<!-- ===== FULL PAGE BOOT LOADER: hiện khi F5 / mở trang ===== -->
+<div id="pageBootLoader" aria-label="Loading">
+    <div class="boot-loader-card">
+        <div class="boot-logo">荣耀数据</div>
+
+        <div class="boot-spinner">
+            <div class="boot-ring r1"></div>
+            <div class="boot-ring r2"></div>
+            <div class="boot-ring r3"></div>
+            <div class="boot-core"></div>
+        </div>
+
+        <div class="boot-dots">
+            <span></span><span></span><span></span><span></span>
+        </div>
+
+        <div class="boot-title">实时数据系统</div>
+        <div class="boot-subtitle">正在同步最新数据...</div>
+    </div>
+</div>
+
+<script>
+(function(){
+    // Ghi lại lúc loader bắt đầu để tránh chớp quá nhanh trên mạng nhanh.
+    window.__bootLoaderStartedAt = performance.now();
+
+    window.hidePageBootLoader = function(){
+        var loader = document.getElementById("pageBootLoader");
+        if(!loader) return;
+
+        var elapsed = performance.now() - (window.__bootLoaderStartedAt || 0);
+        var wait = Math.max(0, 900 - elapsed);
+
+        setTimeout(function(){
+            loader.classList.add("boot-hide");
+            setTimeout(function(){
+                if(loader && loader.parentNode){
+                    loader.parentNode.removeChild(loader);
+                }
+            }, 420);
+        }, wait);
+    };
+
+    // Khi toàn bộ tài nguyên trang đã load xong thì fade-out.
+    window.addEventListener("load", function(){
+        window.hidePageBootLoader();
+    }, {once:true});
+
+    // Fallback: dù có tài nguyên ngoài lỗi, loader không bao giờ kẹt vô hạn.
+    setTimeout(function(){
+        window.hidePageBootLoader();
+    }, 5000);
+})();
+</script>
+
 <!-- ============ LOGIN PAGE ============ -->
 <div id="loginPage">
 <div class="login-overlay"></div>
