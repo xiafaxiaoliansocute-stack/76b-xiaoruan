@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -3338,6 +3337,13 @@ async function copyTab2Data(){
         if(!srcCell) return;
 
         const cs = getComputedStyle(srcCell);
+
+        // Nếu ô đang bị ẩn trên giao diện (ví dụ nhấn 隐藏昨日数据),
+        // loại hẳn ô đó khỏi bản COPY để Excel/WPS cũng không nhận dữ liệu ẩn.
+        if(cs.display === "none"){
+            cell.remove();
+            return;
+        }
 
         // MÀU NỀN GỐC
         const bgHex = colorToHex(
