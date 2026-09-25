@@ -154,53 +154,36 @@ def stop_existing_script_processes(script_path):
 
 TASKS = [
     {
-        "name": "数据跟进",
-        "type": "数据跟进",
-       "file": BASE_DIR / "shujugenjin" / "shujugenjin.py",
-    },
-
-    {
         "name": "TELEGRAM_BOT",
         "type": "TELEGRAM_BOT",
         "file": BASE_DIR / "telegram_bot.py",
     },
-
     {
         "name": "全局报表",
         "type": "全局报表",
         "file": BASE_DIR / "quanju-baobiao" / "runquanju.py",
-    },
-
-    {
-        "name": "推广汇总",
-        "type": "推广汇总",
-        "file": BASE_DIR / "run_forever.py",
     },
     {
         "name": "检查彩金",
         "type": "检查彩金",
         "file": BASE_DIR / "jiancha.py",
     },
-   {
-        "name": "游戏跟进",
-        "type": "游戏跟进",
-        "file": BASE_DIR / "test-data-py" / "datahuiyuan.py",
-    },       
-   {
+    {
         "name": "K1自动",
         "type": "K1自动",
         "file": BASE_DIR / "test-data-py" / "K1.py",
-    },
-   {
-        "name": "操作记录",
-        "type": "操作记录",
-        "file": BASE_DIR / "caozuojilu.py",
-    },          
-   {
-        "name": "菲律宾",
-        "type": "菲律宾",
-        "file": "/Users/xiaoruan/Documents/philippin/run.py",
     },   
+    {
+        "name": "集团数据",
+        "type": "集团数据",
+        "file": BASE_DIR / "jituan-shuju" / "jituan1.py",
+    },
+    {
+        "name": "推广汇总",
+        "type": "推广汇总",
+        "file": BASE_DIR / "run_forever.py",
+    },
+ 
 ]
 
 # ============================================================
@@ -212,8 +195,8 @@ workers = []
 # Khóa danh sách worker khi thêm task động trong lúc hệ thống đang chạy.
 WORKERS_LOCK = threading.RLock()
 
-# Dynamic TASKS: khi chính file RUN ALL được Save, hệ thống đọc lại biến TASKS
-# và tự start các task mới mà không cần restart RUN ALL.
+# Dynamic TASKS: khi chính file RUN ALL được Save, hệ thống đọc lại biến TASKS.
+# Thêm mục -> tự start. Xóa mục -> tự stop. Không cần restart RUN ALL.
 DYNAMIC_TASK_CHECK_SECONDS = 1.0
 DYNAMIC_TASK_DEBOUNCE_SECONDS = 2.0
 
@@ -534,15 +517,21 @@ class Worker:
     # ========================================================
 
     def stop(self):
+        """Dừng chủ động worker. Task bị xóa khỏi TASKS sẽ không tự restart lại."""
 
         with self.lock:
-
             self.running = False
+            self.finished = True
+            self.restarting = False
 
             try:
-                if self.process:
-                    self.process.kill()
-            except:
+                if self.process and self.process.poll() is None:
+                    self.process.terminate()
+                    try:
+                        self.process.wait(timeout=HOT_RELOAD_GRACEFUL_STOP_SECONDS)
+                    except subprocess.TimeoutExpired:
+                        self.process.kill()
+            except Exception:
                 pass
 
     # ========================================================
@@ -845,14 +834,40 @@ def _cfg_task_key(cfg):
     return (str(cfg.get("name", "")), str(cfg.get("type", "")), file_key)
 
 
-def add_dynamic_tasks(new_tasks):
+def sync_dynamic_tasks(new_tasks):
     """
-    Chỉ thêm task chưa tồn tại. Task đang chạy không bị restart/đụng tới.
-    Việc thêm task là thay đổi chủ động nên không gửi Telegram.
+    Đồng bộ TASKS ngay sau khi Save file RUN ALL:
+
+    - Thêm mục mới vào TASKS  -> tự start task mới.
+    - Xóa một mục khỏi TASKS  -> tự dừng task đó ngay và loại khỏi workers.
+    - Mục vẫn còn nguyên       -> giữ process hiện tại, không restart.
+
+    Toàn bộ thay đổi cấu hình này chỉ ghi terminal/log, không gửi Telegram.
     """
     added = 0
+    removed = 0
+
+    wanted = {_cfg_task_key(cfg): cfg for cfg in new_tasks}
 
     with WORKERS_LOCK:
+        removed_workers = [
+            w for w in workers
+            if _worker_task_key(w) not in wanted
+        ]
+
+        if removed_workers:
+            removed_ids = {id(w) for w in removed_workers}
+            workers[:] = [w for w in workers if id(w) not in removed_ids]
+
+        for w in removed_workers:
+            log(w.name, "➖ TASK已从配置删除，正在停止（Telegram静默）")
+            try:
+                w.stop()
+                log(w.name, "✅ 已停止并从RUN ALL移除")
+            except Exception as e:
+                log(w.name, f"⚠️ 停止已删除TASK失败: {type(e).__name__}: {e}")
+            removed += 1
+
         existing = {_worker_task_key(w) for w in workers}
 
         for cfg in new_tasks:
@@ -875,13 +890,14 @@ def add_dynamic_tasks(new_tasks):
             added += 1
             time.sleep(0.5)
 
-    return added
+    return added, removed
 
 
 def dynamic_task_watcher():
     """
     Theo dõi chính file RUN ALL. Khi Save, debounce rồi đọc lại TASKS.
-    Task mới được start ngay; task cũ giữ nguyên trạng thái/process.
+    Task mới được start ngay; task bị xóa khỏi TASKS sẽ được stop ngay.
+    Task còn nguyên giữ nguyên process hiện tại.
     """
     source_path = Path(__file__).resolve()
 
@@ -915,11 +931,15 @@ def dynamic_task_watcher():
 
                 try:
                     newest_tasks = load_tasks_from_running_source()
-                    added = add_dynamic_tasks(newest_tasks)
-                    if added:
-                        print(f"[RUN ALL] ✅ 已动态新增并启动 {added} 个TASK")
+                    added, removed = sync_dynamic_tasks(newest_tasks)
+
+                    if added or removed:
+                        print(
+                            f"[RUN ALL] ✅ TASKS已同步 | "
+                            f"新增并启动 {added} 个 | 删除并停止 {removed} 个"
+                        )
                     else:
-                        print("[RUN ALL] ✅ TASKS已重新读取，无新增TASK")
+                        print("[RUN ALL] ✅ TASKS已重新读取，无变化")
                 except SyntaxError as e:
                     # Save giữa chừng/cú pháp chưa hoàn chỉnh: chỉ terminal, không Telegram.
                     print(f"[RUN ALL] ⚠️ TASKS暂时无法读取（语法未完成）: {e}")

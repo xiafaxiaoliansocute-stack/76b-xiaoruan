@@ -9,19 +9,83 @@ from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 # ======================
-# CONFIG
+# CONFIG - LUÔN ĐỌC DỮ LIỆU MỚI NHẤT TỪ web_config.py MỖI LẦN CHẠY
 # ======================
 
-ACCOUNT = "nn22"
-TOKEN = "jp1249qg9f47jwealsc7gdnc250lgyq4zkfz3nxu"
+import importlib
+import sys
 
-BASE_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.effect"
-HOUR_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.hourReportSum"
-REALTIME_URL = "https://api6.o-9-d-4.com/api/backend/trpc/realTimeData.list"
+WEB_CONFIG_DIR = "/Users/xiaoruan/Desktop/shujugenjin"
 
+if WEB_CONFIG_DIR not in sys.path:
+    sys.path.insert(0, WEB_CONFIG_DIR)
 
-TENANT_ID = 2175621
-REGION_ID = 1
+import web_config
+importlib.invalidate_caches()
+web_config = importlib.reload(web_config)
+
+# TÌM DANH SÁCH WEB TRONG web_config.py
+SITES = getattr(web_config, "SITES", None)
+if SITES is None:
+    SITES = getattr(web_config, "WEBS", None)
+if SITES is None:
+    SITES = getattr(web_config, "websites", None)
+
+if not SITES:
+    raise RuntimeError(
+        "Không tìm thấy danh sách web trong web_config.py. "
+        "Cần có SITES, WEBS hoặc websites."
+    )
+
+# ĐIỀN TÊN WEB CẦN LẤY DỮ LIỆU TỪ web_config.py
+
+TARGET_WEB_NAME = "16011-NN22"
+
+def _pick_current_web(items):
+    """LUÔN LẤY ĐÚNG WEB 16011-NN22 TỪ web_config.py."""
+    for web in items:
+        if str(web.get("name", "")).strip() == TARGET_WEB_NAME:
+            return web
+    raise RuntimeError(f"Không tìm thấy {TARGET_WEB_NAME} trong web_config.py")
+
+CURRENT_WEB = _pick_current_web(SITES)
+
+ACCOUNT = str(CURRENT_WEB.get("account") or "").strip()
+TOKEN = str(
+    CURRENT_WEB.get("token")
+    or CURRENT_WEB.get("admin_token")
+    or ""
+).strip()
+
+TENANT_ID = int(CURRENT_WEB.get("tenantId") or CURRENT_WEB.get("tenant_id"))
+REGION_ID = int(CURRENT_WEB.get("regionId") or CURRENT_WEB.get("region_id") or 1)
+
+API_HOST = str(CURRENT_WEB.get("api") or "").strip().rstrip("/")
+if not API_HOST:
+    raise RuntimeError("Thiếu api trong cấu hình web 16011-NN22 của web_config.py")
+
+BASE_URL = f"{API_HOST}/api/backend/trpc/channel.effect"
+HOUR_URL = f"{API_HOST}/api/backend/trpc/channel.hourReportSum"
+REALTIME_URL = f"{API_HOST}/api/backend/trpc/realTimeData.list"
+
+ADMIN_HOST = str(
+    CURRENT_WEB.get("adminHost")
+    or CURRENT_WEB.get("admin_host")
+    or ""
+).strip()
+
+if ADMIN_HOST.startswith("https://"):
+    ADMIN_HOST = ADMIN_HOST[8:]
+elif ADMIN_HOST.startswith("http://"):
+    ADMIN_HOST = ADMIN_HOST[7:]
+ADMIN_HOST = ADMIN_HOST.rstrip("/")
+
+FINGERPRINT = str(
+    CURRENT_WEB.get("fingerprint")
+    or CURRENT_WEB.get("fingerprintId")
+    or CURRENT_WEB.get("fingerprint_id")
+    or ""
+).strip()
 
 CHANNELS = {
     "fb-h5": 35,
@@ -38,6 +102,9 @@ CHANNELS = {
 
 }
 
+print(f"✅ ĐÃ ĐỌC web_config.py: {web_config.__file__}")
+print(f"✅ WEB ĐANG CHẠY: {CURRENT_WEB.get('name', '')} | account={ACCOUNT} | tenantId={TENANT_ID}")
+
 # ======================
 # HEADER
 # ======================
@@ -48,9 +115,16 @@ headers = {
     "authorization": f"Bearer {TOKEN}",
     "client-language": "zh-CN",
     "content-type": "application/json",
-    "origin": "https://admin-16011-34bc8f.c-9-m-1.com",
-    "referer": "https://admin-16011-34bc8f.c-9-m-1.com/",
 }
+
+if ADMIN_HOST:
+    headers["origin"] = f"https://{ADMIN_HOST}"
+    headers["referer"] = f"https://{ADMIN_HOST}/"
+    headers["x-admin-host"] = ADMIN_HOST
+
+if FINGERPRINT:
+    headers["fingerprint-id"] = FINGERPRINT
+
 from requests.adapters import HTTPAdapter
 
 session = requests.Session()
@@ -345,7 +419,7 @@ print("Hour end   :", hour_end)
 
 
 
-RETENTION_URL = "https://api6.o-9-d-4.com/api/backend/trpc/channel.dayRetention"
+RETENTION_URL = f"{API_HOST}/api/backend/trpc/channel.dayRetention"
 
 result_data["retention"] = {}
 result_data["repeat_rate"] = {}

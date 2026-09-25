@@ -45,7 +45,7 @@ PROJECTS = {
         "db": "9SSS.db",
         "scripts": {
             "recharge": "9SSSchongzhi.py",
-            "first": "9SSShoucun.py",
+            "first": "9SSSshoucun.py",
             "retention": "9SSSliucun.py",
         },
         "wait": {
