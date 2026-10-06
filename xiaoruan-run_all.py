@@ -178,12 +178,8 @@ TASKS = [
         "type": "集团数据",
         "file": BASE_DIR / "jituan-shuju" / "jituan1.py",
     },
-    {
-        "name": "推广汇总",
-        "type": "推广汇总",
-        "file": BASE_DIR / "run_forever.py",
-    },
- 
+
+
 ]
 
 # ============================================================
