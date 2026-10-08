@@ -17,8 +17,8 @@ import requests
 # TELEGRAM
 # ============================================================
 
-BOT_TOKEN = "8994992623:AAGc4TRHHEPHujeOUCa9VBPCYIR3bff6r6Y"
-CHAT_ID = "-5268959413"
+BOT_TOKEN = "8757702879:AAF5-vcvZPKceO_Lwkijq20IHJeVaI61nvU"
+CHAT_ID = "-1004495527155"
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1gfsTt_nL0wK2mepUAXkBgRqZHLYRY3xqWmbAxkzp0ao/edit?pli=1&gid=846636141#gid=846636141"
 WEB_URL = "https://xiafaxiaoliansocute-stack.github.io/76b-xiaoruan/"
 
@@ -178,7 +178,11 @@ TASKS = [
         "type": "集团数据",
         "file": BASE_DIR / "jituan-shuju" / "jituan1.py",
     },
-
+    {
+        "name": "推广汇总",
+        "type": "推广汇总",
+        "file": BASE_DIR / "run_forever.py",
+    },
 
 ]
 

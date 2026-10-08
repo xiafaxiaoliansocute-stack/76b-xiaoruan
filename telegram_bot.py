@@ -21,8 +21,8 @@ BOT_VERSION = "MULTI_PROJECT_CONFIG_V1"
 # CONFIG
 # =====================================================
 
-BOT_TOKEN = "8994992623:AAGc4TRHHEPHujeOUCa9VBPCYIR3bff6r6Y"
-CHAT_ID = -5268959413
+BOT_TOKEN = "8757702879:AAF5-vcvZPKceO_Lwkijq20IHJeVaI61nvU"
+CHAT_ID = -1004495527155  # Chạy /chatid rồi thay None bằng ID nhận được (số nguyên).
 BASE_DIR = Path(__file__).resolve().parent
 LINE = "━━━━━━━━━━━━━━━━━━━━━━"
 
@@ -676,6 +676,22 @@ async def run_group(project_type: str, message) -> None:
 # =====================================================
 
 
+async def chatid_cmd(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+) -> None:
+    # Không kiểm tra allow(): cần lấy ID trước khi cấu hình CHAT_ID.
+    chat = update.effective_chat
+    message = update.effective_message
+    if chat is None or message is None:
+        return
+
+    await message.reply_text(
+        f"🆔 Chat ID: {chat.id}\n"
+        f"📌 CHAT_ID = {chat.id}"
+    )
+
+
 async def delete_shouchong_cmd(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
@@ -908,6 +924,7 @@ async def help_cmd(
 
     lines.extend([
         "",
+        "/chatid    # 获取当前聊天 ID",
         "/status",
         "/help",
     ])
@@ -930,6 +947,7 @@ def register(app) -> None:
             )
         )
 
+    app.add_handler(CommandHandler(["chatid", "get_chat_id"], chatid_cmd))
     app.add_handler(CommandHandler("status", status))
     app.add_handler(CommandHandler("help", help_cmd))
 

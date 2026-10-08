@@ -2634,6 +2634,7 @@ placeholder="请输入密码">
 <th style="width:90px" id="wsH5Header">WS-H5</th>
 <th id="avgWsH5Header" style="width:90px;display:none;">WS-H5</th>
 <th id="avgExtraHeader" style="width:90px;display:none;">上架包</th>
+<th id="avgOfficialHeader" style="width:90px;display:none;">官方渠道</th>
 <th style="width:250px">类型</th>
 <th style="width:90px">比例</th>
 <th style="width:140px">类型</th>
@@ -2695,6 +2696,7 @@ const LOGIN_VERSION = "2";
 
     function updateSiteHeaders(site){
 const is9SSS = site === "9SSS";
+document.getElementById("avgOfficialHeader").style.display = is9SSS ? "" : "none";
 document.getElementById("avgFbTotalHeader").style.display = is9SSS ? "none" : "";
 document.getElementById("avgFbH5Header").style.display = is9SSS ? "none" : "";
 document.getElementById("avgKwHeader").innerText = is9SSS ? "WS-H5" : "KW-PWA";
@@ -2753,11 +2755,11 @@ if(site === "73J"){
     wsH5Header.innerText = "DX";
     avgWsH5Header.style.display = "";
     extraHeader.style.display = "";
-    avgGroupHeader.colSpan = 10;
+    avgGroupHeader.colSpan = 11;
     retentionWsH5Header.style.display = "";
     retentionExtraHeader.style.display = "";
     retentionGroupHeader.colSpan = 8;
-    tableMainTitle.colSpan = hideYesterdayData ? 33 : 38;
+    tableMainTitle.colSpan = hideYesterdayData ? 34 : 39;
 
 }else if(site === "23A"){
 
@@ -5941,6 +5943,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
 
 
 function renderTab2_9SSS(){
+const officialChannels = ["fb-pwa", "fb-ios", "tt-pwa", "ws-h5", "dx", "dx-h5", "DL", "其他"];
 const list=[
 {show:"大盘",key:"ALL_TOTAL"},
 {show:"FB-PWA",key:"fb-pwa"},
@@ -5970,17 +5973,7 @@ list.forEach(item=>{
 
         const all = globalData["ALL_TOTAL"] || {};
 
-        const channels = [
-            "fb-pwa",
-            "fb-ios",
-            "tt-pwa",
-            "ws-h5",
-            "dx",
-            "dx-h5",
-            "DL",
-            "其他"
-            
-        ];
+        const channels = officialChannels;
 
         d = {
             normalList:{},
@@ -6087,7 +6080,16 @@ function channelAverage(channel){
         : item.key === "fb-ios" ? "childList"
         : item.key === "tt-pwa" ? "normalList" : null;
     if(!type) return "";
-    const row = data[type] || {};
+    let row = data[type] || {};
+    if(channel === "官方渠道"){
+        const total = globalData.ALL_TOTAL?.[type] || {};
+        row = {};
+        ["rechargeCount", "rechargeAmount", "firstRechargeCount", "firstRechargeAmount"].forEach(field=>{
+            row[field] = Number(total[field] || 0) - officialChannels.reduce(
+                (sum, key)=>sum + Number(globalData[key]?.[type]?.[field] || 0), 0
+            );
+        });
+    }
     const first = item.key === "tt-pwa";
     const count = Number(row[first ? "firstRechargeCount" : "rechargeCount"] || 0);
     const amount = Number(row[first ? "firstRechargeAmount" : "rechargeAmount"] || 0);
@@ -6344,6 +6346,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
     const dxAvgText = channelAverage("dx");
     const dxH5AvgText = channelAverage("dx-h5");
     const sjbAvgText = channelAverage("DL");
+    const officialAvgText = channelAverage("官方渠道");
 
     let firstRechargeRatioText = n.rechargeCount > c.firstRechargeCount
         ? (c.firstRechargeCount / (n.rechargeCount - c.firstRechargeCount) * 100).toFixed(2) + "%"
@@ -6384,6 +6387,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
       <td>${dxAvgText}</td>
       <td>${dxH5AvgText}</td>
       <td>${sjbAvgText}</td>
+      <td>${officialAvgText}</td>
       <td class="label-col">${item.show}</td>
       <td class="${firstRechargeRatioClass}">${firstRechargeRatioText}</td>
       <td class="label-col">${showLabel}</td>
@@ -7953,7 +7957,7 @@ function toggleYesterdayData(){
 
     // Đồng bộ lại colspan theo từng đài.
     // 73J有添加 2 cột WS-H5 nên tổng là 40 cột (ẩn 昨日数据 còn 35).
-    // 23A/9SSS giữ 38 cột; NN22 giữ 36 cột.
+    // 9SSS có 39 cột (ẩn 昨日数据 còn 34); 23A có 38; NN22 có 36.
     updateSiteHeaders(currentSite);
 }
 
