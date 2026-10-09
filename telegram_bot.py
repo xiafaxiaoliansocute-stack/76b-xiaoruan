@@ -10,6 +10,7 @@ from pathlib import Path
 from telegram import Update
 from telegram.error import BadRequest, NetworkError, RetryAfter, TimedOut
 from telegram.ext import (
+    Application,
     ApplicationBuilder,
     CommandHandler,
     ContextTypes,
@@ -21,7 +22,7 @@ BOT_VERSION = "MULTI_PROJECT_CONFIG_V1"
 # CONFIG
 # =====================================================
 
-BOT_TOKEN = "8757702879:AAF5-vcvZPKceO_Lwkijq20IHJeVaI61nvU"
+BOT_TOKEN = "8578617262:AAHbDtSKyqlTIp813kDdyl5iU7_G0n7PFaY"
 CHAT_ID = -1004495527155  # Chạy /chatid rồi thay None bằng ID nhận được (số nguyên).
 BASE_DIR = Path(__file__).resolve().parent
 LINE = "━━━━━━━━━━━━━━━━━━━━━━"
@@ -964,17 +965,54 @@ def register(app) -> None:
 # =====================================================
 
 
+class ResilientApplication(Application):
+    async def initialize(self) -> None:
+        attempt = 0
+        while True:
+            try:
+                await super().initialize()
+                return
+            except BadRequest:
+                # API request errors need correction, not a network retry.
+                raise
+            except NetworkError as exc:
+                attempt += 1
+                delay = min(5 * (2 ** min(attempt - 1, 4)), 60)
+                print(
+                    f"[TELEGRAM_BOT] Telegram connection failed "
+                    f"({type(exc).__name__}), retry #{attempt} in {delay}s...",
+                    flush=True,
+                )
+                await asyncio.sleep(delay)
+
+
+async def on_bot_initialized(app) -> None:
+    print("Bot connected to Telegram. Starting polling...", flush=True)
+
+
 def main() -> None:
     print("=" * 50)
     print("Telegram Bot Starting...")
     print("Version:", BOT_VERSION)
     print("=" * 50)
 
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
+    app = (
+        ApplicationBuilder()
+        .application_class(ResilientApplication)
+        .token(BOT_TOKEN)
+        .connect_timeout(30)
+        .read_timeout(60)
+        .write_timeout(30)
+        .pool_timeout(30)
+        .get_updates_connect_timeout(30)
+        .get_updates_read_timeout(30)
+        .get_updates_write_timeout(30)
+        .get_updates_pool_timeout(30)
+        .post_init(on_bot_initialized)
+        .build()
+    )
     register(app)
-
-    print("Bot Started.")
-    app.run_polling(drop_pending_updates=True)
+    app.run_polling(drop_pending_updates=True, bootstrap_retries=-1)
 
 
 # =====================================================

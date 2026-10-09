@@ -154,11 +154,6 @@ def stop_existing_script_processes(script_path):
 
 TASKS = [
     {
-        "name": "TELEGRAM_BOT",
-        "type": "TELEGRAM_BOT",
-        "file": BASE_DIR / "telegram_bot.py",
-    },
-    {
         "name": "全局报表",
         "type": "全局报表",
         "file": BASE_DIR / "quanju-baobiao" / "runquanju.py",
@@ -183,7 +178,11 @@ TASKS = [
         "type": "推广汇总",
         "file": BASE_DIR / "run_forever.py",
     },
-
+    {
+        "name": "留存",
+        "type": "留存",
+        "file": BASE_DIR / "telegram_bot.py",
+    },
 ]
 
 # ============================================================
