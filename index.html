@@ -2635,6 +2635,8 @@ placeholder="请输入密码">
 <th id="avgWsH5Header" style="width:90px;display:none;">WS-H5</th>
 <th id="avgExtraHeader" style="width:90px;display:none;">上架包</th>
 <th id="avgOfficialHeader" style="width:90px;display:none;">官方渠道</th>
+<th id="avgKwPwaHeader" style="width:90px;display:none;">KW-PWA</th>
+<th id="avgSjbHeader" style="width:90px;display:none;">上架包</th>
 <th style="width:250px">类型</th>
 <th style="width:90px">比例</th>
 <th style="width:140px">类型</th>
@@ -2647,6 +2649,8 @@ placeholder="请输入密码">
 <th id="retentionTtH5Header">TT-H5</th>
 <th id="retentionWsH5Header" style="display:none;">WS-H5</th>
 <th id="retentionExtraHeader" style="display:none;">上架包</th>
+<th id="retentionKwPwaHeader" style="display:none;">KW-PWA</th>
+<th id="retentionSjbHeader" style="display:none;">上架包</th>
 </tr>
 </thead>
 <tbody id="body"></tbody>
@@ -2699,6 +2703,10 @@ const is9SSS = site === "9SSS";
 document.getElementById("avgOfficialHeader").style.display = is9SSS ? "" : "none";
 document.getElementById("avgFbTotalHeader").style.display = is9SSS ? "none" : "";
 document.getElementById("avgFbH5Header").style.display = is9SSS ? "none" : "";
+document.getElementById("avgKwPwaHeader").style.display = is9SSS ? "" : "none";
+document.getElementById("avgSjbHeader").style.display = is9SSS ? "" : "none";
+document.getElementById("retentionKwPwaHeader").style.display = is9SSS ? "" : "none";
+document.getElementById("retentionSjbHeader").style.display = is9SSS ? "" : "none";
 document.getElementById("avgKwHeader").innerText = is9SSS ? "WS-H5" : "KW-PWA";
 document.getElementById("avgWsH5Header").innerText = is9SSS ? "DX-H5" : "WS-H5";
 document.getElementById("avgExtraHeader").innerText = is9SSS ? "DL" : "上架包";
@@ -2755,11 +2763,11 @@ if(site === "73J"){
     wsH5Header.innerText = "DX";
     avgWsH5Header.style.display = "";
     extraHeader.style.display = "";
-    avgGroupHeader.colSpan = 11;
+    avgGroupHeader.colSpan = 13;
     retentionWsH5Header.style.display = "";
     retentionExtraHeader.style.display = "";
-    retentionGroupHeader.colSpan = 8;
-    tableMainTitle.colSpan = hideYesterdayData ? 34 : 39;
+    retentionGroupHeader.colSpan = 10;
+    tableMainTitle.colSpan = hideYesterdayData ? 38 : 43;
 
 }else if(site === "23A"){
 
@@ -3296,7 +3304,9 @@ function renderTab1_9SSS(data){
 {key:"ws-h5",name:"WS-H5"},
 {key:"dx",name:"DX"},
 {key:"dx-h5",name:"DX-H5"},
-{key:"dl",name:"DL"}
+{key:"dl",name:"DL"},
+{key:"kw",name:"KW-PWA"},
+{key:"上架包",name:"上架包"}
 
 ];
 const blocks=[
@@ -5943,7 +5953,7 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
 
 
 function renderTab2_9SSS(){
-const officialChannels = ["fb-pwa", "fb-ios", "tt-pwa", "ws-h5", "dx", "dx-h5", "DL", "其他"];
+const officialChannels = ["fb-pwa", "fb-ios", "tt-pwa", "ws-h5", "dx", "dx-h5", "DL", "kw", "上架包", "其他"];
 const list=[
 {show:"大盘",key:"ALL_TOTAL"},
 {show:"FB-PWA",key:"fb-pwa"},
@@ -5953,6 +5963,8 @@ const list=[
 {show:"DX",key:"dx"},
 {show:"DX-H5",key:"dx-h5"},
 {show:"DL",key:"DL"},
+{show:"KW-PWA",key:"kw"},
+{show:"上架包",key:"上架包"},
 {show:"官方渠道",key:"官方渠道"},
 {show:"其他",key:"其他"},
 
@@ -6157,9 +6169,9 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                             ? "10日留存"
                             : item.show === "DL"
                                 ? "14日留存"
-                                : item.show === "官方渠道"
+                                : item.show === "KW-PWA"
                                     ? "30日留存"
-                                    : item.show === "其他"
+                                    : item.show === "上架包"
                                         ? "60日留存"
                                         : "-";
 
@@ -6173,163 +6185,29 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
                 : "";
 
 
-    let allRate = item.show === "大盘"
-        ? retentionRate("ALL", 1)
-        : item.show === "FB-PWA"
-            ? retentionRate("ALL", 2)
-            : item.show === "FB-IOS"
-                ? retentionRate("ALL", 3)
-                : item.show === "TT-PWA"
-                    ? retentionRate("ALL", 4)
-                    : item.show === "WS-H5"
-                        ? retentionRate("ALL", 5)
-                        : item.show === "DX"
-                            ? retentionRate("ALL", 6)
-                            : item.show === "DX-H5"
-                                ? retentionRate("ALL", 9)
-                                : item.show === "DL"
-                                    ? retentionRate("ALL", 13)
-                                    : item.show === "官方渠道"
-                                        ? retentionRate("ALL", 29)
-                                       : item.show === "其他"
-                                           ? retentionRate("ALL", 59)                                           
-                                                                        : "";
+    const retentionFieldByRow = {
+        "大盘": 1,
+        "FB-PWA": 2,
+        "FB-IOS": 3,
+        "TT-PWA": 4,
+        "WS-H5": 5,
+        "DX": 6,
+        "DX-H5": 9,
+        "DL": 13,
+        "KW-PWA": 29,
+        "上架包": 59
+    };
+    const retentionField = retentionFieldByRow[item.show];
+    let allRate = retentionField ? retentionRate("ALL", retentionField) : "";
+    let fbRate = retentionField ? retentionRateFB(retentionField) : "";
+    let ttRate = retentionField ? retentionRate("tt-pwa", retentionField) : "";
+    let kwRate = retentionField ? retentionRate("dx", retentionField) : "";
+    let ttH5Rate = retentionField ? retentionRate("dx-h5", retentionField) : "";
+    let wsH5Rate = retentionField ? retentionRate("ws-h5", retentionField) : "";
+    let sjbRate = retentionField ? retentionRate("DL", retentionField) : "";
+    let kwPwaRate = retentionField ? retentionRate("kw", retentionField) : "";
+    let sjbChannelRate = retentionField ? retentionRate("上架包", retentionField) : "";
 
-    let fbRate = item.show === "大盘"
-        ? retentionRateFB(1)
-        : item.show === "FB-PWA"
-            ? retentionRateFB(2)
-            : item.show === "FB-IOS"
-                ? retentionRateFB(3)
-                : item.show === "TT-PWA"
-                    ? retentionRateFB(4)
-                    : item.show === "WS-H5"
-                        ? retentionRateFB(5)
-                        : item.show === "DX"
-                            ? retentionRateFB(6)
-                            : item.show === "DX-H5"
-                                ? retentionRateFB(9)
-                                : item.show === "DL"
-                                    ? retentionRateFB(13)
-                                    : item.show === "官方渠道"
-                                      ? retentionRateFB(29)
-                                       : item.show === "其他"
-                                        ? retentionRateFB(59)
-                                                                    : "";
-
-    let ttRate = item.show === "大盘"
-        ? retentionRate("tt-pwa", 1)
-        : item.show === "FB-PWA"
-            ? retentionRate("tt-pwa", 2)
-            : item.show === "FB-IOS"
-                ? retentionRate("tt-pwa", 3)
-                : item.show === "TT-PWA"
-                    ? retentionRate("tt-pwa", 4)
-                    : item.show === "WS-H5"
-                        ? retentionRate("tt-pwa", 5)
-                        : item.show === "DX"
-                           ? retentionRate("tt-pwa", 6)
-                            : item.show === "DX-H5"
-                                ? retentionRate("tt-pwa", 9)
-                              : item.show === "DL"
-                                 ? retentionRate("tt-pwa", 13)
-                                : item.show === "官方渠道"
-                                    ? retentionRate("tt-pwa", 29)
-                                    : item.show === "其他"
-                                         ? retentionRate("tt-pwa", 59)
-                                                                          : "";
-
-    let kwRate = item.show === "大盘"
-        ? retentionRate("dx", 1)
-        : item.show === "FB-PWA"
-            ? retentionRate("dx", 2)
-            : item.show === "FB-IOS"
-                ? retentionRate("dx", 3)
-                : item.show === "TT-PWA"
-                    ? retentionRate("dx", 4)
-                    : item.show === "WS-H5"
-                        ? retentionRate("dx", 5)
-                        : item.show === "DX"
-                            ? retentionRate("dx", 6)
-                            : item.show === "DX-H5"
-                                ? retentionRate("dx", 9)
-                              : item.show === "DL"
-                                    ? retentionRate("dx", 13)
-                                : item.show === "官方渠道"
-                                       ? retentionRate("dx", 29)
-                                    : item.show === "其他"
-                                          ? retentionRate("dx", 59)                                       
-                                                                          : "";
-
-    let ttH5Rate = item.show === "大盘"
-        ? retentionRate("dx-h5", 1)
-        : item.show === "FB-PWA" 
-          ? retentionRate("dx-h5", 2)
-            : item.show === "FB-IOS" 
-            ? retentionRate("dx-h5", 3)
-                 : item.show === "TT-PWA" 
-              ? retentionRate("dx-h5", 4)
-                   : item.show === "WS-H5" 
-                 ? retentionRate("dx-h5", 5)
-                     : item.show === "DX" 
-                    ? retentionRate("dx-h5", 6)
-                       : item.show === "DX-H5" 
-                        ? retentionRate("dx-h5", 9)
-                          : item.show === "DL" 
-                          ? retentionRate("dx-h5", 13)
-                              : item.show === "官方渠道" 
-                              ? retentionRate("dx-h5", 29)
-                                : item.show === "其他" 
-                                     ? retentionRate("dx-h5", 59)
-                                                         : "";
-
-    let wsRate = item.show === "大盘"
-        ? retentionRate("ws-h5", 1)
-        : item.show === "FB-PWA"
-            ? retentionRate("ws-h5", 2)
-            : item.show === "FB-IOS"
-                ? retentionRate("ws-h5", 3)
-                : item.show === "TT-PWA"
-                    ? retentionRate("ws-h5", 4)
-                    : item.show === "WS-H5"
-                        ? retentionRate("ws-h5", 5)
-                        : item.show === "DX"
-                            ? retentionRate("ws-h5", 6)
-                            : item.show === "DX-H5"
-                                ? retentionRate("ws-h5", 9)
-                              : item.show === "DL"
-                                    ? retentionRate("ws-h5", 13)
-                                : item.show === "官方渠道"
-                                      ? retentionRate("ws-h5", 29)
-                                    : item.show === "其他"
-                                          ? retentionRate("ws-h5", 59)                                      
-                                                                          : "";
-
-    let wsH5Rate = wsRate;
-
-    let sjbRate = item.show === "大盘"
-       ? retentionRate("DL", 1)
-        : item.show === "FB-PWA"
-          ? retentionRate("DL", 2)
-            : item.show === "FB-IOS"
-             ? retentionRate("DL", 3)
-                : item.show === "TT-PWA"
-                ? retentionRate("DL", 4)
-                    : item.show === "WS-H5"
-                   ? retentionRate("DL", 5)
-                        : item.show === "DX"
-                      ? retentionRate("DL", 6)
-                            : item.show === "DX-H5"
-                        ? retentionRate("DL", 9)
-                              : item.show === "DL"
-                           ? retentionRate("DL", 13)
-                                : item.show === "官方渠道"
-                              ? retentionRate("DL", 29)
-                                    : item.show === "其他"
-                                   ? retentionRate("DL", 59)
-
-                                                       : "";
-                                    
     let avgText =
         item.key === "ALL_TOTAL" || item.key === "fb-pwa" || item.key === "fb-ios" || item.key === "tt-pwa"
             ? avg
@@ -6347,6 +6225,8 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
     const dxH5AvgText = channelAverage("dx-h5");
     const sjbAvgText = channelAverage("DL");
     const officialAvgText = channelAverage("官方渠道");
+    const kwPwaAvgText = channelAverage("kw");
+    const sjbChannelAvgText = channelAverage("上架包");
 
     let firstRechargeRatioText = n.rechargeCount > c.firstRechargeCount
         ? (c.firstRechargeCount / (n.rechargeCount - c.firstRechargeCount) * 100).toFixed(2) + "%"
@@ -6388,6 +6268,8 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
       <td>${dxH5AvgText}</td>
       <td>${sjbAvgText}</td>
       <td>${officialAvgText}</td>
+      <td>${kwPwaAvgText}</td>
+      <td>${sjbChannelAvgText}</td>
       <td class="label-col">${item.show}</td>
       <td class="${firstRechargeRatioClass}">${firstRechargeRatioText}</td>
       <td class="label-col">${showLabel}</td>
@@ -6400,6 +6282,8 @@ let regRechargeRate = Number(n.registerCount || 0) > 0
       <td>${ttH5Rate}</td>
       <td>${wsH5Rate}</td>
       <td>${sjbRate}</td>
+      <td>${kwPwaRate}</td>
+      <td>${sjbChannelRate}</td>
       </tr>`;
     
     document.getElementById("body").innerHTML = html;
@@ -7576,6 +7460,16 @@ function renderRetentionButtons(){
         <button class="retBtn"
             onclick="changeRetention('dl',this)">
             DL
+        </button>
+
+        <button class="retBtn"
+            onclick="changeRetention('kw',this)">
+            KW-PWA
+        </button>
+
+        <button class="retBtn"
+            onclick="changeRetention('上架包',this)">
+            上架包
         </button>
 
         <button class="retBtn"
