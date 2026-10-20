@@ -168,11 +168,7 @@ TASKS = [
         "type": "K1自动",
         "file": BASE_DIR / "test-data-py" / "K1.py",
     },   
-    {
-        "name": "集团数据",
-        "type": "集团数据",
-        "file": BASE_DIR / "jituan-shuju" / "jituan1.py",
-    },
+
     {
         "name": "推广汇总",
         "type": "推广汇总",
@@ -182,6 +178,16 @@ TASKS = [
         "name": "留存",
         "type": "留存",
         "file": BASE_DIR / "telegram_bot.py",
+    },
+    {
+        "name": "渠道报表",
+        "type": "渠道报表",
+        "file": BASE_DIR / "tuiguangqudao" / "tuiguangqudao.py",
+    },
+    {
+        "name": "渠道报表",
+        "type": "渠道报表",
+        "file": BASE_DIR / "jituan-shuju" / "jituan1.py",
     },
 ]
 

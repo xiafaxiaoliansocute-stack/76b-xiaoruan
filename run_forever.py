@@ -19,21 +19,21 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FILES = [
     "main.py",
     "nn22.py",
-    "23a.py",
+    "nn44.py",
     "9sss.py",
 ]
 
 SITE_TO_JSON = {
     "73J": "data.json",
     "NN22": "nn22.json",
-    "23A": "23a.json",
+    "NN44": "nn44.json",
     "9SSS": "9sss.json",
 }
 
 SITE_TO_SCRIPT = {
     "73J": "main.py",
     "NN22": "nn22.py",
-    "23A": "23a.py",
+    "NN44": "nn44.py",
     "9SSS": "9sss.py",
 }
 
@@ -352,7 +352,7 @@ def sync_json_to_github():
     Sau khi 4 bot chạy xong, đồng bộ lại JSON dữ liệu.
     Nếu tunnel.json đang có thay đổi chưa push được trước đó thì đồng bộ luôn.
     """
-    files_to_sync = ["data.json", "nn22.json", "23a.json", "9sss.json"]
+    files_to_sync = ["data.json", "nn22.json", "nn44.json", "9sss.json"]
     if os.path.exists(TUNNEL_INFO_PATH):
         files_to_sync.append(TUNNEL_INFO_NAME)
 

@@ -58,14 +58,14 @@ PROJECTS = {
 
 # =====================================================
 
-    "73J": {
-        "display_name": "73J",
-        "folder": "73J-liucun",
-        "db": "73J.db",
+    "NN44": {
+        "display_name": "NN44",
+        "folder": "NN44-liucun",
+        "db": "NN44.db",
         "scripts": {
-            "recharge": "73Jchongzhi.py",
-            "first": "73Jshouchong.py",
-            "retention": "73Jliucun.py",
+            "recharge": "NN44chongzhi.py",
+            "first": "NN44shouchong.py",
+            "retention": "NN44liucun.py",
         },
         "wait": {
             "recharge": 5,
@@ -80,7 +80,7 @@ def normalize_project_key(project_type: str) -> str:
     """Chuẩn hóa tên project không phân biệt hoa/thường.
 
     Ví dụ: 9SSS / 9sss / 9SsS đều map về key "9SSS";
-    73J / 73j đều map về key "73J".
+    NN44 / nn44 đều map về key "NN44".
     """
     raw = str(project_type or "").strip()
     folded = raw.casefold()
